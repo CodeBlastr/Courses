@@ -1,12 +1,13 @@
 <?php
-App::uses('AppController', 'Controller');
+App::uses('CoursesAppController', 'Courses.Controller');
 /**
  * Courses Controller
  *
  * @property Course $Course
  */
-class CoursesController extends AppController {
+class CoursesController extends CoursesAppController {
 
+	public $name = 'Courses';
 
 /**
  * index method
@@ -47,8 +48,8 @@ class CoursesController extends AppController {
 				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
 			}
 		}
-		$parentCourses = $this->Course->ParentCourse->find('list');
-		$this->set(compact('parentCourses'));
+//		$parentCourses = $this->Course->Lesson->find('list');
+//		$this->set(compact('parentCourses'));
 	}
 
 /**
@@ -72,8 +73,8 @@ class CoursesController extends AppController {
 		} else {
 			$this->request->data = $this->Course->read(null, $id);
 		}
-		$parentCourses = $this->Course->ParentCourse->find('list');
-		$this->set(compact('parentCourses'));
+//		$parentCourses = $this->Course->ParentCourse->find('list');
+//		$this->set(compact('parentCourses'));
 	}
 
 /**

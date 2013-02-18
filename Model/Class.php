@@ -1,13 +1,14 @@
 <?php
 App::uses('CoursesAppModel', 'Courses.Model');
 /**
- * Course Model
+ * Lesson Model
  *
  * @property Course $ParentCourse
- * @property Course $ChildCourse
  */
-class Course extends CoursesAppModel {
-	public $name = 'Course';
+class Lesson extends CoursesAppModel {
+	
+	public $name = 'Lesson';
+	
 /**
  * Display field
  *
@@ -18,23 +19,17 @@ class Course extends CoursesAppModel {
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
- * hasMany associations
+ * belongsTo associations
  *
  * @var array
  */
-	public $hasMany = array(
-		'Lesson' => array(
+	public $belongsTo = array(
+		'Course' => array(
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
-			'dependent' => false,
 			'conditions' => '',
 			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
+			'order' => ''
 		)
 	);
 
