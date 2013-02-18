@@ -3,19 +3,19 @@
 	<fieldset>
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
-		echo $this->Form->input('parent_id');
-		echo $this->Form->input('name');
-		echo $this->Form->input('description');
-		echo $this->Form->input('location');
-		echo $this->Form->input('school');
-		echo $this->Form->input('grade');
-		echo $this->Form->input('language');
-		echo $this->Form->input('start');
-		echo $this->Form->input('end');
-		echo $this->Form->input('is_published');
-		echo $this->Form->input('is_private');
-		echo $this->Form->input('is_persistant');
-		echo $this->Form->input('is_sequential');
+		echo $this->Form->input('Course.parent_id');
+		echo $this->Form->input('Course.name');
+		echo $this->Form->input('Course.description', array('label' => 'Description'));
+		echo $this->Form->input('Course.location');
+		echo $this->Form->input('Course.school');
+		echo $this->Form->input('Course.grade');
+		echo $this->Form->input('Course.language');
+		echo $this->Form->input('Course.start', array('type' => 'time'));
+		echo $this->Form->input('Course.end', array('type' => 'time'));
+		echo $this->Form->input('Course.is_published', array('label' => 'Active / Inactive'));
+		echo $this->Form->input('Course.is_persistant', array('label' => 'Allow access when Inactive'));
+		echo $this->Form->input('Course.is_private', array('label' => 'Public / Private'));
+		echo $this->Form->input('Course.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
