@@ -8,6 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class CoursesController extends CoursesAppController {
 
 	public $name = 'Courses';
+	public $uses = 'Courses.Course';
 
 /**
  * index method
@@ -35,21 +36,23 @@ class CoursesController extends CoursesAppController {
 
 /**
  * add method
- *
+ * 
+ * @param string $type (series|course|lesson)
  * @return void
  */
-	public function add() {
+	public function add($type = 'course') {
 		if ($this->request->is('post')) {
 			$this->Course->create();
 			if ($this->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The course has been saved'));
+				$this->Session->setFlash(__('The course has been created'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
 			}
 		}
-//		$parentCourses = $this->Course->Lesson->find('list');
-//		$this->set(compact('parentCourses'));
+		$parentCourses = $this->Course->Lesson->find('list');
+		$this->set(compact('parentCourses'));
+		$this->render('add_'.$type);
 	}
 
 /**

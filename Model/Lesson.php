@@ -23,14 +23,14 @@ class Lesson extends CoursesAppModel {
  *
  * @var array
  */
-	public $belongsTo = array(
-		'Course' => array(
-			'className' => 'Courses.Course',
-			'foreignKey' => 'parent_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
+//	public $belongsTo = array(
+//		'Course' => array(
+//			'className' => 'Courses.Course',
+//			'foreignKey' => 'parent_id',
+//			'conditions' => '',
+//			'fields' => '',
+//			'order' => ''
+//		)
+//	);
 
 }
