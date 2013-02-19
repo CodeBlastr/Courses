@@ -1,7 +1,7 @@
 <div class="courses form">
 <?php echo $this->Form->create('Course');?>
 	<fieldset>
-		<legend><?php echo __('Add Course'); ?></legend>
+		<legend><?php echo __('Add Lesson'); ?></legend>
 	<?php
 		echo $this->Form->input('Course.parent_id');
 		echo $this->Form->input('Course.name');
@@ -24,5 +24,8 @@
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
 		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index'));?></li>
+		<li><?php echo $this->Html->link(__('Add Series'), array('action' => 'add', 'series'));?></li>
+		<li><?php echo $this->Html->link(__('Add Course'), array('action' => 'add', 'course'));?></li>
+		<li><?php echo $this->Html->link(__('Add Lesson'), array('action' => 'add', 'lesson'));?></li>
 	</ul>
 </div>

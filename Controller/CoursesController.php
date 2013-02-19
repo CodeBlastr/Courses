@@ -76,8 +76,8 @@ class CoursesController extends CoursesAppController {
 		} else {
 			$this->request->data = $this->Course->read(null, $id);
 		}
-//		$parentCourses = $this->Course->ParentCourse->find('list');
-//		$this->set(compact('parentCourses'));
+		$parentCourses = $this->Course->Lesson->find('list');
+		$this->set(compact('parentCourses'));
 	}
 
 /**
