@@ -5,10 +5,10 @@ App::uses('CoursesAppController', 'Courses.Controller');
  *
  * @property Course $Course
  */
-class CoursesController extends CoursesAppController {
+class LessonsController extends CoursesAppController {
 
-	public $name = 'Courses';
-	public $uses = 'Courses.Course';
+	public $name = 'Lessons';
+	public $uses = 'Courses.Lesson';
 
 /**
  * index method
@@ -16,16 +16,10 @@ class CoursesController extends CoursesAppController {
  * @return void
  */
 	public function index() {
-		$this->Course->recursive = 0;
-		$this->set('courses', $this->paginate());
+		$this->Lesson->recursive = 0;
+		$this->set('lessons', $this->paginate());
 	}
 
-	
-	public function my() {
-//		$this->Course->recursive = 0;
-//		$this->set('courses', $this->paginate());
-	}
-	
 /**
  * view method
  *
@@ -33,9 +27,9 @@ class CoursesController extends CoursesAppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->Course->id = $id;
-		if (!$this->Course->exists()) {
-			throw new NotFoundException(__('Invalid course'));
+		$this->Lesson->id = $id;
+		if (!$this->Lesson->exists()) {
+			throw new NotFoundException(__('Invalid Lesson'));
 		}
 		$this->set('course', $this->Course->read(null, $id));
 	}
