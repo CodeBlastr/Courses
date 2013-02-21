@@ -1,15 +1,15 @@
 <?php
 App::uses('CoursesAppModel', 'Courses.Model');
 /**
- * Lesson Model
+ * Grade Model
  *
  * @property Course $ParentCourse
  */
-class Lesson extends CoursesAppModel {
+class Grade extends CoursesAppModel {
 	
-	public $name = 'Lesson';
+	public $name = 'Grade';
 	
-	public $useTable = 'courses';
+	public $useTable = 'course_grades';
 	
 /**
  * Display field

@@ -43,10 +43,9 @@ class CoursesController extends CoursesAppController {
 /**
  * add method
  * 
- * @param string $type (series|course|lesson)
  * @return void
  */
-	public function add($type = 'course') {
+	public function add() {
 		if ($this->request->is('post')) {
 			$this->Course->create();
 			if ($this->Course->save($this->request->data)) {
@@ -58,7 +57,7 @@ class CoursesController extends CoursesAppController {
 		}
 		$parentCourses = $this->Course->Lesson->find('list');
 		$this->set(compact('parentCourses'));
-		$this->render('add_'.$type);
+		$this->render('add');
 	}
 
 /**

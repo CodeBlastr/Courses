@@ -1,8 +1,8 @@
 <ol>FLOW:
 	<li>Create the course</li>
-	<li><a href="/invites/invites/invitation">Invite people</a></li>
-	<li><a href="/courses/classes/add">Add Classes &AMP; Resources</a></li>
+	<li><a href="/courses/lessons/add">Add Classes &AMP; Resources</a></li>
 	<li><a href="/courses/course_grades/setup">Setup Gradebook</a></li>
+	<li><a href="/invites/invites/invitation">Invite people</a></li>
 </ol>
 <div class="courses form">
 <?php echo $this->Form->create('Course');?>
