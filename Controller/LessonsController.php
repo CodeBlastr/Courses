@@ -1,9 +1,9 @@
 <?php
 App::uses('CoursesAppController', 'Courses.Controller');
 /**
- * Courses Controller
+ * Lessons Controller
  *
- * @property Course $Course
+ * @property Lesson $Lesson
  */
 class LessonsController extends CoursesAppController {
 
@@ -29,30 +29,28 @@ class LessonsController extends CoursesAppController {
 	public function view($id = null) {
 		$this->Lesson->id = $id;
 		if (!$this->Lesson->exists()) {
-			throw new NotFoundException(__('Invalid Lesson'));
+			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$this->set('course', $this->Course->read(null, $id));
+		$this->set('lessons', $this->Lesson->read(null, $id));
 	}
 
 /**
  * add method
  * 
- * @param string $type (series|course|lesson)
  * @return void
  */
-	public function add($type = 'course') {
+	public function add() {
 		if ($this->request->is('post')) {
 			$this->Course->create();
 			if ($this->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The course has been created'));
+				$this->Session->setFlash(__('The lesson has been created'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
+				$this->Session->setFlash(__('The lesson could not be created. Please, try again.'));
 			}
 		}
-		$parentCourses = $this->Course->Lesson->find('list');
+		$parentCourses = $this->Lesson->Course->find('list');
 		$this->set(compact('parentCourses'));
-		$this->render('add_'.$type);
 	}
 
 /**
@@ -62,21 +60,21 @@ class LessonsController extends CoursesAppController {
  * @return void
  */
 	public function edit($id = null) {
-		$this->Course->id = $id;
-		if (!$this->Course->exists()) {
-			throw new NotFoundException(__('Invalid course'));
+		$this->Lesson->id = $id;
+		if (!$this->Lesson->exists()) {
+			throw new NotFoundException(__('Invalid lesson'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The course has been saved'));
+			if ($this->Lesson->save($this->request->data)) {
+				$this->Session->setFlash(__('The lesson has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The lesson could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->request->data = $this->Course->read(null, $id);
+			$this->request->data = $this->Lesson->read(null, $id);
 		}
-		$parentCourses = $this->Course->Lesson->find('list');
+		$parentCourses = $this->Lesson->Course->find('list');
 		$this->set(compact('parentCourses'));
 	}
 
@@ -90,15 +88,15 @@ class LessonsController extends CoursesAppController {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
-		$this->Course->id = $id;
-		if (!$this->Course->exists()) {
-			throw new NotFoundException(__('Invalid course'));
+		$this->Lesson->id = $id;
+		if (!$this->Lesson->exists()) {
+			throw new NotFoundException(__('Invalid lesson'));
 		}
-		if ($this->Course->delete()) {
-			$this->Session->setFlash(__('Course deleted'));
+		if ($this->Lesson->delete()) {
+			$this->Session->setFlash(__('Lesson deleted'));
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Course was not deleted'));
+		$this->Session->setFlash(__('Lesson was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
 }
