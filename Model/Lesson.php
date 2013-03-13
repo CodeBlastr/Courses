@@ -34,5 +34,21 @@ class Lesson extends CoursesAppModel {
 			'order' => ''
 		)
 	);
+	
+	public $hasMany = array(
+		'Media' => array(
+			'className' => 'Media.Media',
+			'foreignKey' => 'foreign_key',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 
 }

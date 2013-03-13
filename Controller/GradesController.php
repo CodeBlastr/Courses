@@ -8,7 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class GradesController extends CoursesAppController {
 
 	public $name = 'Grades';
-	public $uses = 'Courses.Grade';
+	public $uses = array('Courses.Grade');
 
 /**
  * index method
@@ -101,8 +101,27 @@ class GradesController extends CoursesAppController {
 	}
 	
 	
-	public function setup() {
-		
+/**
+ * 
+ * @param int $id
+ */
+	public function setup($id = null) {
+		$this->Grade->Course->id = $id;
+		if ( !$this->Grade->Course->exists() ) {
+			//throw new NotFoundException(__('Invalid Course'));
+		}
+		if ( $this->request->is('post') || $this->request->is('put') ) {
+			if ($this->Grade->Course->save($this->request->data)) {
+				$this->Session->setFlash(__('The Course\' Gradebook has been saved'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The Course\'s GradeBook could not be saved. Please, try again.'));
+			}
+		} else {
+			$this->request->data = $this->Grade->Course->read(null, $id);
+		}
+		$parentCourses = $this->Grade->Course->find('list');
+		$this->set(compact('parentCourses'));
 	}
 	
 }

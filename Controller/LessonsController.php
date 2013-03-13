@@ -41,15 +41,17 @@ class LessonsController extends CoursesAppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Course->create();
-			if ($this->Course->save($this->request->data)) {
+			$this->Lesson->create();
+			if ($this->Lesson->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The lesson has been created'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The lesson could not be created. Please, try again.'));
 			}
 		}
-		$parentCourses = $this->Lesson->Course->find('list');
+		$parentCourses = $this->Lesson->Course->find('list', array(
+			'conditions' => array('creator_id' => $this->userId)
+			));
 		$this->set(compact('parentCourses'));
 	}
 
@@ -65,7 +67,7 @@ class LessonsController extends CoursesAppController {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Lesson->save($this->request->data)) {
+			if ($this->Lesson->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The lesson has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {

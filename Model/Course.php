@@ -35,7 +35,13 @@ class Course extends CoursesAppModel {
 			'exclusive' => '',
 			'finderQuery' => '',
 			'counterQuery' => ''
+		),
+		'Student' => array(
+			'className' => 'Courses.CourseUsers',
+			'foreignKey' => 'student_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
-
 }

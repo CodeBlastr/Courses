@@ -106,4 +106,24 @@ class CoursesController extends CoursesAppController {
 		$this->Session->setFlash(__('Course was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+	
+	public function gradebook($id = null) {
+		$this->Course->id = $id;
+		if (!$this->Course->exists()) {
+			throw new NotFoundException(__('Invalid course'));
+		}
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if ($this->Course->save($this->request->data)) {
+				$this->Session->setFlash(__('The gradebook has been saved'));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The gradebook could not be saved. Please, try again.'));
+			}
+		} else {
+			$this->request->data = $this->Course->read(null, $id);
+		}
+		$parentCourses = $this->Course->Lesson->find('list');
+		$this->set(compact('parentCourses'));
+	}
+	
 }
