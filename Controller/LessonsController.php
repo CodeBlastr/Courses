@@ -40,13 +40,21 @@ class LessonsController extends CoursesAppController {
  * @return void
  */
 	public function add() {
-		if ($this->request->is('post')) {
+		if ( !empty($this->request->data) ) {
 			$this->Lesson->create();
 			if ($this->Lesson->saveAll($this->request->data)) {
-				$this->Session->setFlash(__('The lesson has been created'));
-				$this->redirect(array('action' => 'index'));
+				if ( $this->request->is('ajax') ) {
+					return new CakeResponse(array('body' => $this->Lesson->id));
+				} else {
+					$this->Session->setFlash(__('The lesson has been created'));
+					$this->redirect(array('action' => 'index'));
+				}
 			} else {
-				$this->Session->setFlash(__('The lesson could not be created. Please, try again.'));
+				if ( $this->request->is('ajax') ) {
+					return false;
+				} else {
+					$this->Session->setFlash(__('The lesson could not be created. Please, try again.'));
+				}
 			}
 		}
 		$parentCourses = $this->Lesson->Course->find('list', array(
