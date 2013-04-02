@@ -2,7 +2,7 @@
 	<li><a href="/courses/courses/add">Create the course</a></li>
 	<li>Add Classes &AMP; Resources</li>
 	<li><a href="/courses/grades/setup">Setup Gradebook</a></li>
-	<li><a href="/forms/forms/add">Add a Quiz</a></li>
+	<li><a href="/forms/form_inputs/create">Add a Quiz</a></li>
 	<li><a href="/invites/invites/invitation">Invite people</a></li>
 </ol>
 
