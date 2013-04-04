@@ -112,7 +112,7 @@ class GradesController extends CoursesAppController {
 		}
 		if ( $this->request->is('post') || $this->request->is('put') ) {
 			if ($this->Grade->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The Course\' Gradebook has been saved'));
+				$this->Session->setFlash(__('The Course\'s Gradebook has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The Course\'s GradeBook could not be saved. Please, try again.'));
