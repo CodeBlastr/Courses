@@ -10,19 +10,21 @@
 	<fieldset>
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
-		echo $this->Form->input('Course.parent_id');
-		echo $this->Form->input('Course.name');
-		echo $this->Form->input('Course.description', array('label' => 'Description'));
-		echo $this->Form->input('Course.location');
-		echo $this->Form->input('Course.school');
-		echo $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12')));
-		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
-		echo $this->Form->input('Course.start', array('type' => 'time'));
-		echo $this->Form->input('Course.end', array('type' => 'time'));
+		echo $this->Form->hidden('Course.parent_id');
+		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
+		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
+		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
+		echo $this->Html->tag('div',
+			$this->Form->input('Course.location', array('div' => array('class' => 'span3'), 'class' => 'required', 'placeholder' => 'Location', 'label' => false))
+			. $this->Form->input('Course.school', array('div' => array('class' => 'span4'), 'class' => 'required span12', 'placeholder' => 'School', 'label' => false))
+			. $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => false, 'class' => 'input-small required', 'div' => array('class' => 'span5')))
+		);
+		echo $this->Form->input('Course.description', array('label' => 'Description', 'class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
 		echo $this->Form->input('Course.is_published', array('label' => 'Active / Inactive'));
 		echo $this->Form->input('Course.is_persistant', array('label' => 'Allow access when Inactive'));
 		echo $this->Form->input('Course.is_private', array('label' => 'Public / Private'));
 		echo $this->Form->input('Course.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
+		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Submit'));?>
