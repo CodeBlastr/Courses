@@ -19,9 +19,18 @@ class CoursesSchema extends CakeSchema {
 		$this->UpdateSchema->after($event);
 	}
 
+	public $course_grades = array(
+		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
+		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'student_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'grade' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 3),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
+		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
+	);
 	public $courses = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-		'parent_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'parent_id' => array('type' => 'integer', 'null' => true, 'default' => NULL),
 		'lft' => array('type' => 'integer', 'null' => false, 'default' => NULL),
 		'rght' => array('type' => 'integer', 'null' => false, 'default' => NULL),
 		'name' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
@@ -36,7 +45,10 @@ class CoursesSchema extends CakeSchema {
 		'is_private' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
 		'is_persistant' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
 		'is_sequential' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
+		'settings' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'creator_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'created' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
-		'tableParameters' => array('charset' => 'latin1', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
+		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
 }
