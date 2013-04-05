@@ -46,6 +46,10 @@ class Course extends CoursesAppModel {
 		'Form' => array(
 			'className' => 'Forms.Form',
 			'foreignKey' => 'foreign_key'
+		),
+		'Media' => array(
+			'className' => 'Media.Media',
+			'foreignKey' => 'foreign_key'
 		)
 	);
 }

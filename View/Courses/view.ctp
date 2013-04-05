@@ -1,6 +1,6 @@
 <?php
 
-//debug($course);break;
+debug($course);break;
 
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
@@ -21,6 +21,13 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		echo '<h4>Quizzes / Tests</h4>';
 		foreach ( $course['Form'] as $form ) {
 			echo '<li>'. $this->Html->link($form['name'], array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'view', $form['id'])) . '</li>';
+		}
+	}
+	
+	if ( !empty($course['Media']) ) {
+		echo '<h4>Course Materials</h4>';
+		foreach ( $course['Media'] as $media ) {
+			echo '<li>'. $this->Html->link($media['title'], array('plugin' => 'media', 'controller' => 'media', 'action' => 'view', $media['id'])) . '</li>';
 		}
 	}
 	?>

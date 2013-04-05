@@ -40,7 +40,7 @@ class CoursesController extends CoursesAppController {
 		
 		$course = $this->Course->find('first', array(
 			'conditions' => array('Course.id' =>$id),
-			'contain' => array('Form', 'Lesson')
+			'contain' => array('Form', 'Lesson', 'Media')
 			));
 		$this->set('course', $course);
 	}
