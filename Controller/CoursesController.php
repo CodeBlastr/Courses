@@ -37,7 +37,12 @@ class CoursesController extends CoursesAppController {
 		if (!$this->Course->exists()) {
 			throw new NotFoundException(__('Invalid course'));
 		}
-		$this->set('course', $this->Course->read(null, $id));
+		
+		$course = $this->Course->find('first', array(
+			'conditions' => array('Course.id' =>$id),
+			'contain' => array('Form', 'Lesson')
+			));
+		$this->set('course', $course);
 	}
 
 /**

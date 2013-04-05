@@ -42,6 +42,10 @@ class Course extends CoursesAppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Form' => array(
+			'className' => 'Forms.Form',
+			'foreignKey' => 'foreign_key'
 		)
 	);
 }

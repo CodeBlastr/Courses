@@ -2,7 +2,7 @@
 	<li>Create the course</li>
 	<li><a href="/media/media/add_resource">Add Classes &AMP; Resources</a></li>
 	<li><a href="/courses/grades/setup">Setup Gradebook</a></li>
-	<li><a href="/forms/form_inputs/create">Add a Quiz</a></li>
+	<li><a href="/forms/forms/add/formanswer">Add a Quiz</a></li>
 	<li><a href="/invites/invites/invitation">Invite people</a></li>
 </ol>
 <div class="courses form">
@@ -27,7 +27,10 @@
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Submit'));?>
+<?php
+echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
+echo $this->Form->end();
+?>
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>

@@ -1,86 +1,52 @@
+<?php
+
+//debug($course);break;
+
+$start = strtotime($course['Course']['start']);
+$end = strtotime($course['Course']['end']);
+$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
+?>
 <div class="courses view">
-<h2><?php  echo __('Course');?></h2>
+	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>
+	<p><b><?php echo $course['Course']['school'] ?></b></p>
+	<p><?php echo $course['Course']['description'] ?></p>
+	<hr />
+	<p>
+		<b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)
+	</p>
+	<p><a href="#" class="btn btn-primary">Sign Up</a></p>
+	
+	<?php
+	if ( !empty($course['Form']) ) {
+		echo '<h4>Quizzes / Tests</h4>';
+		foreach ( $course['Form'] as $form ) {
+			echo '<li>'. $this->Html->link($form['name'], array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'view', $form['id'])) . '</li>';
+		}
+	}
+	?>
+	
+	
 	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['id']); ?>
-			&nbsp;
-		</dd>
+
 		<dt><?php echo __('Parent Course'); ?></dt>
 		<dd>
 			<?php echo $this->Html->link($course['ParentCourse']['name'], array('controller' => 'courses', 'action' => 'view', $course['ParentCourse']['id'])); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Lft'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['lft']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Rght'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['rght']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Name'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['name']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Description'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['description']); ?>
-			&nbsp;
-		</dd>
+
+
 		<dt><?php echo __('Location'); ?></dt>
 		<dd>
 			<?php echo h($course['Course']['location']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('School'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['school']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Grade'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['grade']); ?>
-			&nbsp;
-		</dd>
+
 		<dt><?php echo __('Language'); ?></dt>
 		<dd>
 			<?php echo h($course['Course']['language']); ?>
 			&nbsp;
 		</dd>
-		<dt><?php echo __('Start'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['start']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('End'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['end']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Published'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['is_published']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Private'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['is_private']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Persistant'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['is_persistant']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Sequential'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['is_sequential']); ?>
-			&nbsp;
-		</dd>
+
 	</dl>
 </div>
 <div class="actions">
@@ -90,8 +56,7 @@
 		<li><?php echo $this->Form->postLink(__('Delete Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete # %s?', $course['Course']['id'])); ?> </li>
 		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Courses'), array('controller' => 'courses', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Parent Course'), array('controller' => 'courses', 'action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])); ?> </li>
 	</ul>
 </div>
 <div class="related">
@@ -101,8 +66,6 @@
 	<tr>
 		<th><?php echo __('Id'); ?></th>
 		<th><?php echo __('Parent Id'); ?></th>
-		<th><?php echo __('Lft'); ?></th>
-		<th><?php echo __('Rght'); ?></th>
 		<th><?php echo __('Name'); ?></th>
 		<th><?php echo __('Description'); ?></th>
 		<th><?php echo __('Location'); ?></th>
@@ -123,8 +86,6 @@
 		<tr>
 			<td><?php echo $childCourse['id'];?></td>
 			<td><?php echo $childCourse['parent_id'];?></td>
-			<td><?php echo $childCourse['lft'];?></td>
-			<td><?php echo $childCourse['rght'];?></td>
 			<td><?php echo $childCourse['name'];?></td>
 			<td><?php echo $childCourse['description'];?></td>
 			<td><?php echo $childCourse['location'];?></td>

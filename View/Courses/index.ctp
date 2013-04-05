@@ -1,11 +1,35 @@
 <div class="courses index">
 	<h2><?php echo __('Courses');?></h2>
-	<table cellpadding="0" cellspacing="0">
+	
+	
+	<?php
+	foreach ($courses as $course) {
+		
+		$start = strtotime($course['Course']['start']);
+		$end = strtotime($course['Course']['end']);
+		$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
+		
+		echo $this->Html->tag('div',
+				$this->Html->tag('div',
+						$course['Course']['school'] . '<br />'
+						. '<b>'.$this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])).'</b>',
+						array('class' => 'span9')
+				)
+				. $this->Html->tag('div',
+						$this->Time->niceShort($course['Course']['start']). '<br />'
+						. $lengthOfCourse . ' weeks long',
+						array('class' => 'span3')
+				),
+				array( 'class' => 'row-fluid' )
+		);
+	}
+	?>
+	
+	
+<!--	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('id');?></th>
 			<th><?php echo $this->Paginator->sort('parent_id');?></th>
-			<th><?php echo $this->Paginator->sort('lft');?></th>
-			<th><?php echo $this->Paginator->sort('rght');?></th>
 			<th><?php echo $this->Paginator->sort('name');?></th>
 			<th><?php echo $this->Paginator->sort('description');?></th>
 			<th><?php echo $this->Paginator->sort('location');?></th>
@@ -27,8 +51,6 @@
 		<td>
 			<?php echo $this->Html->link($course['ParentCourse']['name'], array('controller' => 'courses', 'action' => 'view', $course['ParentCourse']['id'])); ?>
 		</td>
-		<td><?php echo h($course['Course']['lft']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['rght']); ?>&nbsp;</td>
 		<td><?php echo h($course['Course']['name']); ?>&nbsp;</td>
 		<td><?php echo h($course['Course']['description']); ?>&nbsp;</td>
 		<td><?php echo h($course['Course']['location']); ?>&nbsp;</td>
@@ -48,11 +70,11 @@
 		</td>
 	</tr>
 <?php endforeach; ?>
-	</table>
+	</table>-->
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+	'format' => __('Page {:page} of {:pages}, showing {:current} courses out of {:count} total')
 	));
 	?>	</p>
 
