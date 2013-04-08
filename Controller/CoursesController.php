@@ -43,6 +43,7 @@ class CoursesController extends CoursesAppController {
 			'contain' => array('Form', 'Lesson', 'Media')
 			));
 		$this->set('course', $course);
+		$this->set('title_for_layout', $course['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**

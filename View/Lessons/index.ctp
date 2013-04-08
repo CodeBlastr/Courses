@@ -1,16 +1,11 @@
-<div class="courses index">
-	<h2><?php echo __('Courses');?></h2>
+<div class="lessons index">
+	<h2><?php echo __('Lessons');?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
-			<th><?php echo $this->Paginator->sort('id');?></th>
 			<th><?php echo $this->Paginator->sort('parent_id');?></th>
-			<th><?php echo $this->Paginator->sort('lft');?></th>
-			<th><?php echo $this->Paginator->sort('rght');?></th>
 			<th><?php echo $this->Paginator->sort('name');?></th>
 			<th><?php echo $this->Paginator->sort('description');?></th>
 			<th><?php echo $this->Paginator->sort('location');?></th>
-			<th><?php echo $this->Paginator->sort('school');?></th>
-			<th><?php echo $this->Paginator->sort('grade');?></th>
 			<th><?php echo $this->Paginator->sort('language');?></th>
 			<th><?php echo $this->Paginator->sort('start');?></th>
 			<th><?php echo $this->Paginator->sort('end');?></th>
@@ -21,30 +16,25 @@
 			<th class="actions"><?php echo __('Actions');?></th>
 	</tr>
 	<?php
-	foreach ($courses as $course): ?>
+	foreach ($lessons as $lesson): ?>
 	<tr>
-		<td><?php echo h($course['Course']['id']); ?>&nbsp;</td>
 		<td>
-			<?php echo $this->Html->link($course['ParentCourse']['name'], array('controller' => 'courses', 'action' => 'view', $course['ParentCourse']['id'])); ?>
+			<?php echo $this->Html->link($lesson['Course']['name'], array('controller' => 'courses', 'action' => 'view', $lesson['Course']['id'])); ?>
 		</td>
-		<td><?php echo h($course['Course']['lft']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['rght']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['name']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['description']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['location']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['school']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['grade']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['language']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['start']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['end']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['is_published']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['is_private']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['is_persistant']); ?>&nbsp;</td>
-		<td><?php echo h($course['Course']['is_sequential']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['name']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['description']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['location']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['language']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['start']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['end']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['is_published']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['is_private']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['is_persistant']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['Lesson']['is_sequential']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $course['Course']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $course['Course']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete # %s?', $course['Course']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $lesson['Lesson']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $lesson['Lesson']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $lesson['Lesson']['id']), null, __('Are you sure you want to delete # %s?', $lesson['Lesson']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>
@@ -52,7 +42,7 @@
 	<p>
 	<?php
 	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
+	'format' => __('Page {:page} of {:pages}, showing {:current} lessons out of {:count} total, starting on lesson {:start}, ending on {:end}')
 	));
 	?>	</p>
 
@@ -67,8 +57,8 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Courses'), array('controller' => 'courses', 'action' => 'index')); ?> </li>
+		<li><?php echo $this->Html->link(__('New Lesson'), array('action' => 'add')); ?></li>
+		<li><?php echo $this->Html->link(__('List Lessons'), array('controller' => 'courses', 'action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Parent Course'), array('controller' => 'courses', 'action' => 'add')); ?> </li>
 	</ul>
 </div>

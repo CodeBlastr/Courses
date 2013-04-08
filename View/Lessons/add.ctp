@@ -11,7 +11,7 @@
 	<fieldset>
 		<legend><?php echo __('Add Lesson'); ?></legend>
 	<?php
-		echo $this->Form->input('Lesson.parent_id', array('options' => $parentCourses));
+		echo $this->Form->input('Lesson.parent_id', array('options' => $parentCourses, 'label' => 'Parent Course'));
 		echo $this->Form->input('Lesson.name');
 		echo $this->Form->input('Lesson.description', array('label' => 'Description'));
 //		echo $this->Form->input('Lesson.location');
@@ -26,12 +26,12 @@
 //		echo $this->Form->input('Lesson.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
 	?>
 	</fieldset>
-<?php echo $this->Form->end(__('Submit'));?>
+<?php echo $this->Form->end(__('Save'));?>
 </div>
 
 
 <div id="media-add" class="media add">
-    <h2>Submit Your Resources</h2>
+    <h2>Add Resources</h2>
 
     <?php
     echo $this->Form->create('Media', array('type' => 'file'));
@@ -51,7 +51,7 @@
 
     echo $this->Form->input('Media.description', array('type'=>'textarea', 'label' => 'Description:'));
 
-    echo $this->Form->end('Submit');
+    echo $this->Form->end('Save');
     ?>
 </div>
 
@@ -60,6 +60,6 @@
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index'));?></li>
+		<li><?php echo $this->Html->link(__('List Lessons'), array('action' => 'index'));?></li>
 	</ul>
 </div>

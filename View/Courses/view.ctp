@@ -1,6 +1,6 @@
 <?php
 
-debug($course);break;
+//debug($course);break;
 
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
@@ -14,7 +14,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p>
 		<b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)
 	</p>
-	<p><a href="#" class="btn btn-primary">Sign Up</a></p>
+	<p><a href="#" class="btn btn-primary">Register</a></p>
 	
 	<?php
 	if ( !empty($course['Form']) ) {
@@ -64,20 +64,17 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index')); ?> </li>
 		<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')); ?> </li>
 	</ul>
 </div>
 <div class="related">
-	<h3><?php echo __('Related Courses');?></h3>
-	<?php if (!empty($course['ChildCourse'])):?>
+	<h3><?php echo __('Related Lessons');?></h3>
+	<?php if (!empty($course['Lesson'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
-		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('Parent Id'); ?></th>
 		<th><?php echo __('Name'); ?></th>
 		<th><?php echo __('Description'); ?></th>
 		<th><?php echo __('Location'); ?></th>
-		<th><?php echo __('School'); ?></th>
-		<th><?php echo __('Grade'); ?></th>
 		<th><?php echo __('Language'); ?></th>
 		<th><?php echo __('Start'); ?></th>
 		<th><?php echo __('End'); ?></th>
@@ -89,15 +86,11 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	</tr>
 	<?php
 		$i = 0;
-		foreach ($course['ChildCourse'] as $childCourse): ?>
+		foreach ($course['Lesson'] as $childCourse): ?>
 		<tr>
-			<td><?php echo $childCourse['id'];?></td>
-			<td><?php echo $childCourse['parent_id'];?></td>
 			<td><?php echo $childCourse['name'];?></td>
 			<td><?php echo $childCourse['description'];?></td>
 			<td><?php echo $childCourse['location'];?></td>
-			<td><?php echo $childCourse['school'];?></td>
-			<td><?php echo $childCourse['grade'];?></td>
 			<td><?php echo $childCourse['language'];?></td>
 			<td><?php echo $childCourse['start'];?></td>
 			<td><?php echo $childCourse['end'];?></td>
@@ -117,7 +110,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 
 	<div class="actions">
 		<ul>
-			<li><?php echo $this->Html->link(__('New Child Course'), array('controller' => 'courses', 'action' => 'add'));?> </li>
+			<li><?php echo $this->Html->link(__('New Lesson'), array('controller' => 'lessons', 'action' => 'add'));?> </li>
 		</ul>
 	</div>
 </div>
