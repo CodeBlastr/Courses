@@ -34,7 +34,10 @@ class LessonsController extends CoursesAppController {
 		if (!$this->Lesson->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$this->set('lessons', $this->Lesson->read(null, $id));
+		$this->set('lessons', $this->Lesson->find('first', array(
+			'conditions' => array('id' => $id),
+//			'contain' => 'Course'
+		)));
 	}
 
 /**

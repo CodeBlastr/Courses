@@ -14,8 +14,14 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p>
 		<b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)
 	</p>
+	<p>
+		<b>Location: </b><?php echo $course['Course']['location'] ?>
+	</p>
+	<p>
+		<b>Language: </b><?php echo $course['Course']['language'] ?>
+	</p>
 	<p><a href="#" class="btn btn-primary">Register</a></p>
-	
+	<hr />
 	<?php
 	if ( !empty($course['Form']) ) {
 		echo '<h4>Quizzes / Tests</h4>';
@@ -34,27 +40,13 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	
 	
 	<dl>
-
-		<dt><?php echo __('Parent Course'); ?></dt>
+<!--		<dt><?php echo __('Parent Course'); ?></dt>
 		<dd>
 			<?php echo $this->Html->link($course['ParentCourse']['name'], array('controller' => 'courses', 'action' => 'view', $course['ParentCourse']['id'])); ?>
 			&nbsp;
-		</dd>
-
-
-		<dt><?php echo __('Location'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['location']); ?>
-			&nbsp;
-		</dd>
-
-		<dt><?php echo __('Language'); ?></dt>
-		<dd>
-			<?php echo h($course['Course']['language']); ?>
-			&nbsp;
-		</dd>
-
+		</dd>-->
 	</dl>
+	
 </div>
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
