@@ -30,7 +30,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	}
 	
 	if ( !empty($lessons['Media']) ) {
-		echo '<h4>Course Materials</h4>';
+		echo '<h4>Lesson Materials</h4>';
 		foreach ( $lessons['Media'] as $media ) {
 			echo '<li>'. $this->Html->link($media['title'], array('plugin' => 'media', 'controller' => 'media', 'action' => 'view', $media['id'])) . '</li>';
 		}

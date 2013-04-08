@@ -26,6 +26,8 @@ class LessonsController extends CoursesAppController {
 /**
  * view method
  *
+ * @todo contain[] Course!
+ * 
  * @param string $id
  * @return void
  */
@@ -34,10 +36,12 @@ class LessonsController extends CoursesAppController {
 		if (!$this->Lesson->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$this->set('lessons', $this->Lesson->find('first', array(
+		$lessons =  $this->Lesson->find('first', array(
 			'conditions' => array('id' => $id),
-//			'contain' => 'Course'
-		)));
+			'contain' => array('Form', 'Media')
+		));
+		$this->set(compact('lessons'));
+		$this->set('title_for_layout', $lessons['Lesson']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**
