@@ -119,7 +119,12 @@ class GradesController extends CoursesAppController {
 		} else {
 			//$this->request->data = $this->Grade->Course->read(null, $id);
 		}
-		$courses = $this->Grade->Course->find('list');
+		$courses = $this->Grade->Course->find('list', array(
+			'conditions' => array(
+				'parent_id' => null,
+				'creator_id' => $this->Auth->user('id')
+			)
+		));
 		$this->set(compact('courses'));
 	}
 	
