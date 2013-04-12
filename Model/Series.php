@@ -1,13 +1,13 @@
 <?php
 App::uses('CoursesAppModel', 'Courses.Model');
 /**
- * Lesson Model
+ * Series Model
  *
  * @property Course $ParentCourse
  */
-class Lesson extends CoursesAppModel {
+class Series extends CoursesAppModel {
 	
-	public $name = 'Lesson';
+	public $name = 'Series';
 	
 	public $useTable = 'courses';
 	
@@ -25,15 +25,6 @@ class Lesson extends CoursesAppModel {
  *
  * @var array
  */
-	public $belongsTo = array(
-		'Course' => array(
-			'className' => 'Courses.Course',
-			'foreignKey' => 'parent_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		)
-	);
 	
 	public $hasMany = array(
 		'Media' => array(
@@ -53,6 +44,13 @@ class Lesson extends CoursesAppModel {
 			'className' => 'Forms.Form',
 			'foreignKey' => 'foreign_key'
 		),
+		'Course' => array(
+			'className' => 'Courses.Course',
+			'foreignKey' => 'parent_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		)
 	);
 
 }

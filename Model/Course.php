@@ -37,8 +37,15 @@ class Course extends CoursesAppModel {
 			'counterQuery' => ''
 		),
 		'Student' => array(
-			'className' => 'Courses.CourseUsers',
+			'className' => 'Users.User',
 			'foreignKey' => 'student_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'CourseUser' => array(
+			'className' => 'Courses.CourseUser',
+			'foreignKey' => 'course_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -50,6 +57,14 @@ class Course extends CoursesAppModel {
 		'Media' => array(
 			'className' => 'Media.Media',
 			'foreignKey' => 'foreign_key'
+		),
+		'Task' => array(
+			'className' => 'Tasks.Task',
+			'foreignKey' => 'foreign_key'
+		),
+		'Grade' => array(
+			'className' => 'Courses.Grade',
+			'foreignKey' => 'course_id'
 		)
 	);
 }

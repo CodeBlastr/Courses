@@ -50,10 +50,10 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
-		<li><?php echo $this->Html->link(__('Edit Course'), array('action' => 'edit', $lessons['Lesson']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Course'), array('action' => 'delete', $lessons['Lesson']['id']), null, __('Are you sure you want to delete # %s?', $lessons['Lesson']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?> </li>
+		<li><?php echo $this->Html->link(__('View Course'), array('controller' => 'courses', 'action' => 'view', $lessons['Lesson']['parent_id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('Edit Lesson'), array('action' => 'edit', $lessons['Lesson']['id'])); ?> </li>
+		<li><?php echo $this->Form->postLink(__('Delete Lesson'), array('action' => 'delete', $lessons['Lesson']['id']), null, __('Are you sure you want to delete # %s?', $lessons['Lesson']['id'])); ?> </li>
+		<li><?php echo $this->Html->link(__('New Lesson'), array('action' => 'add')); ?> </li>
 		<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $lessons['Lesson']['id'])); ?> </li>
 		<li><?php echo $this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')); ?> </li>
 	</ul>
