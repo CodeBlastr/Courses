@@ -128,4 +128,28 @@ class GradesController extends CoursesAppController {
 		$this->set(compact('courses'));
 	}
 	
+	public function grade($formId, $userId) {
+		if ( $this->request->is('post') || $this->request->is('put') ) {
+			if ($this->Grade->save($this->request->data)) {
+				$this->Session->setFlash(__('Grade Saved.'));
+				$this->redirect(array('controller' => 'courses', 'action' => 'view', $this->request->data['Grade']['course_id']));
+			} else {
+				$this->Session->setFlash(__('Grade could not be saved.'));
+			}
+		}
+		$this->request->data = $this->Grade->find('first', array(
+			'conditions' => array( 'Grade.form_id' => $formId ),
+			'contain' => array(
+				'Form' => array(
+					'FormInput' => array(
+						'FormAnswer' => array(
+							'conditions' => array( 'FormAnswer.user_id' => $userId )
+						)
+					)
+				)
+			)
+		));
+
+	}
+	
 }

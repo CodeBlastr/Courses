@@ -1,6 +1,7 @@
 <?php
 
-//debug($course);break;
+//debug($course);
+//debug($courseUsers);
 
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
@@ -20,9 +21,43 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p>
 		<b>Language: </b><?php echo $course['Course']['language'] ?>
 	</p>
-	<p><a href="#" class="btn btn-primary">Register</a></p>
+	<p>
+		<?php
+//		debug($this->Session->read('Auth.User.id'));
+//		debug($courseUsers);
+		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+			echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+		} else {
+			echo $this->Html->link('Unregister', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+		}
+		?>
+	</p>
 	<hr />
 	<?php
+	if ( !empty($course['Media']) ) {
+		echo '<h4>Course Materials</h4>';
+		foreach ( $course['Media'] as $media ) {
+			echo '<li>'. $this->Html->link($media['title'], array('plugin' => 'media', 'controller' => 'media', 'action' => 'view', $media['id'])) . '</li>';
+		}
+	}
+	
+	if ( !empty($course['Task']) ) {
+		echo '<h4>Assignments</h4>';
+		foreach ( $course['Task'] as $task ) {
+			echo '<li>'. $this->Html->link($task['name'], array('action' => 'assignment', $task['id'])) . '</li>';
+			if ( !empty($task['ChildTask']) ) {
+				foreach ( $task['ChildTask'] as $childTask ) {
+					//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
+					$childTaskCells[] = array(
+						$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
+						$childTask['completed_date'],
+						$this->Html->link('view', array('action' => 'assignment', $childTask['id']))
+					);
+				}
+				echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date Completed', 'Actions')) . $this->Html->tableCells($childTaskCells));
+			}
+		}
+	}
 	if ( !empty($course['Form']) ) {
 		echo '<h4>Quizzes / Tests</h4>';
 		foreach ( $course['Form'] as $form ) {
@@ -30,11 +65,25 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		}
 	}
 	
-	if ( !empty($course['Media']) ) {
-		echo '<h4>Course Materials</h4>';
-		foreach ( $course['Media'] as $media ) {
-			echo '<li>'. $this->Html->link($media['title'], array('plugin' => 'media', 'controller' => 'media', 'action' => 'view', $media['id'])) . '</li>';
+	if ( !empty($course['Grade']) ) {
+		echo '<h4>Submitted Answers</h4>';
+		foreach ( $course['Grade'] as $grade ) {
+			$studentGradeCells[] = array(
+				$this->Html->link($courseUsers[$grade['student_id']]['User']['last_name'].', '.$courseUsers[$grade['student_id']]['User']['first_name'], array('plugin' => 'courses', 'controller' => 'grades', 'action' => 'grade', $grade['form_id'], $grade['student_id'])),
+				( $grade['grade'] === null ) ? '&mdash;' : $grade['grade']
+			);
 		}
+		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Grade')) . $this->Html->tableCells($studentGradeCells));
+	}
+	
+	if ( !empty($courseUsers) ) {
+		echo '<h4>Course Roster</h4>';
+		foreach ( $courseUsers as $user ) {
+			$userCells[] = array(
+				$this->Html->link($user['User']['last_name'].', '.$user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
+			);
+		}
+		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student Name')) . $this->Html->tableCells($userCells));
 	}
 	?>
 	
@@ -48,19 +97,9 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	</dl>
 	
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete # %s?', $course['Course']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')); ?> </li>
-	</ul>
-</div>
+
 <div class="related">
-	<h3><?php echo __('Related Lessons');?></h3>
+	<h4><?php echo __('Lessons');?></h4>
 	<?php if (!empty($course['Lesson'])):?>
 	<table cellpadding = "0" cellspacing = "0">
 	<tr>
@@ -91,18 +130,26 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			<td><?php echo $childCourse['is_persistant'];?></td>
 			<td><?php echo $childCourse['is_sequential'];?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'courses', 'action' => 'view', $childCourse['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'courses', 'action' => 'edit', $childCourse['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'courses', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
+				<?php echo $this->Html->link(__('View'), array('controller' => 'lessons', 'action' => 'view', $childCourse['id'])); ?>
+				<?php echo $this->Html->link(__('Edit'), array('controller' => 'lessons', 'action' => 'edit', $childCourse['id'])); ?>
+				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'lessons', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-
 	<div class="actions">
+		<h3><?php echo __('Actions'); ?></h3>
 		<ul>
+			<li><?php echo $this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])); ?> </li>
+			<li><?php echo $this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])); ?> </li>
+			<li><?php echo $this->Form->postLink(__('Delete Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete # %s?', $course['Course']['id'])); ?> </li>
+			<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?> </li>
 			<li><?php echo $this->Html->link(__('New Lesson'), array('controller' => 'lessons', 'action' => 'add'));?> </li>
+			<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])); ?> </li>
+			<li><?php echo $this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')); ?> </li>
+			<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index')); ?> </li>
 		</ul>
 	</div>
+
 </div>

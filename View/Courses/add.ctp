@@ -10,7 +10,8 @@
 	<fieldset>
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
-		echo $this->Form->hidden('Course.parent_id');
+		//echo $this->Form->input('Course.parent_id');
+		echo $this->Form->input('Course.parent_id', array('options' => $parentCourses, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Make Part of a Series?'));
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
 		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
 		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
@@ -32,6 +33,31 @@ echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
 echo $this->Form->end();
 ?>
 </div>
+
+
+<div class="courses form" id="seriesAdd" style="display:none; background: #fff; position: fixed; top: 33%; padding: 25px 50px; box-shadow: 5px 5px 10px #999; border: 1px solid #999; border-radius: 5px;">
+	<?php
+	echo $this->Form->create('Series', array('url' => '/courses/series/add'));
+	?>
+	<fieldset>
+		<legend><?php echo __('Create Series'); ?></legend>
+		<?php
+		echo $this->Form->input('Series.name');
+		echo $this->Form->input('Series.description', array('label' => 'Description'));
+		echo $this->Js->submit('Save', array(
+			'update' => '#content',
+			'url'=>'/courses/series/add',
+			'success' => 'setNewSeries(data);'
+			));
+		echo $this->Form->end();
+		echo $this->Js->writeBuffer();
+		?>
+	</fieldset>
+</div>
+
+
+
+
 <div class="actions">
 	<h3><?php echo __('Actions'); ?></h3>
 	<ul>
@@ -40,3 +66,21 @@ echo $this->Form->end();
 		<li><?php echo $this->Html->link(__('Add Lesson'), array('action' => 'add', 'lesson'));?></li>
 	</ul>
 </div>
+
+
+
+<script type="text/javascript">
+	$("#CourseParentId").change(function(){
+		if ( $(this).val() === 'true' ) {
+			$("#seriesAdd").show();
+		} else {
+			$("#seriesAdd").hide();
+		}
+	});
+	function setNewSeries(data) {
+		$("<option/>").val(data).text($("#SeriesName").val()).appendTo("#CourseParentId");
+		$("#MediaForeignKey").val(data);
+		$("#seriesAdd").hide();
+	}
+
+</script>

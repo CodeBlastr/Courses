@@ -32,12 +32,17 @@ class Grade extends CoursesAppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
-	);
-	public $hasAndBelongsToMany = array(
+		),
 		'Student' => array(
 			'className' => 'Users.User',
 			'foreignKey' => 'student_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Form' => array(
+			'className' => 'Forms.Form',
+			'foreignKey' => 'form_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
