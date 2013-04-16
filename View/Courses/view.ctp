@@ -11,6 +11,16 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>
 	<p><b><?php echo $course['Course']['school'] ?></b></p>
 	<p><?php echo $course['Course']['description'] ?></p>
+	
+	<?php
+	if ( !empty($course['Series']) ) {
+		echo $this->Html->tag('p',
+			$this->Html->tag('i',
+				'This course is part of the series: ' . $this->Html->link($course['Series']['name'], array('controller' => 'series', 'action' => 'view', $course['Series']['id']))
+			)
+		);
+	}
+	?>
 	<hr />
 	<p>
 		<b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)

@@ -18,7 +18,7 @@ class SeriesController extends CoursesAppController {
 	public function index() {
 		$this->Series->recursive = 0;
 		$this->paginate = array(
-			'conditions' => array('Series.parent_id !=' => null)
+			'conditions' => array('Series.parent_id' => null)
 		);
 		$this->set('series', $this->paginate());
 	}
@@ -38,10 +38,14 @@ class SeriesController extends CoursesAppController {
 		}
 		$series =  $this->Series->find('first', array(
 			'conditions' => array('id' => $id),
-			'contain' => array('Form', 'Media')
+			'contain' => array(
+				'Course' => array(
+					'order' => array('Course.order' => 'asc')
+				)
+			)
 		));
 		$this->set(compact('series'));
-		$this->set('title_for_layout', $series['Series']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+		$this->set('title_for_layout', $series['Series']['name'] . ' < Series | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**
@@ -67,10 +71,8 @@ class SeriesController extends CoursesAppController {
 				}
 			}
 		}
-		$parentCourses = $this->Series->Course->find('list', array(
-			'conditions' => array('creator_id' => $this->userId)
-			));
-		$this->set(compact('parentCourses'));
+		$courses = $this->Series->Course->find('list', array( 'conditions' => array('creator_id' => $this->userId) ));
+		$this->set(compact('courses'));
 	}
 
 /**
@@ -94,8 +96,12 @@ class SeriesController extends CoursesAppController {
 		} else {
 			$this->request->data = $this->Series->read(null, $id);
 		}
-		$parentCourses = $this->Series->Course->find('list');
-		$this->set(compact('parentCourses'));
+		$courses = $this->Series->Course->find('all', array(
+			'conditions' => array('creator_id' => $this->userId),
+			'fields' => array('Course.id', 'Course.parent_id', 'Course.name'),
+			'group' => 'Course.parent_id'
+			));
+		$this->set(compact('courses'));
 	}
 
 /**

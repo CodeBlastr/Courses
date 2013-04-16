@@ -17,9 +17,9 @@ class CoursesController extends CoursesAppController {
  */
 	public function index() {
 		$this->Course->recursive = 0;
-		$this->paginate = array(
-			'conditions' => array('Course.parent_id' => null)
-		);
+//		$this->paginate = array(
+//			'conditions' => array('Course.parent_id' => null)
+//		);
 		$this->set('courses', $this->paginate());
 	}
 
@@ -52,6 +52,9 @@ class CoursesController extends CoursesAppController {
 					'conditions' => array('Task.parent_id' => ''),
 					'ChildTask'
 				),
+				'Series' => array(
+					'fields' => array('Series.id', 'Series.name', 'Series.is_sequential')
+				)
 			)
 		));
 		$courseUsers = $this->Course->CourseUser->find('all', array(
@@ -81,8 +84,8 @@ class CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
 			}
 		}
-		$parentCourses = $this->Course->Lesson->find('list');
-		$this->set(compact('parentCourses'));
+		$series = $this->Course->Series->find('list');
+		$this->set(compact('series'));
 		$this->render('add');
 	}
 

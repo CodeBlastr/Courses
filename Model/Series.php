@@ -27,23 +27,23 @@ class Series extends CoursesAppModel {
  */
 	
 	public $hasMany = array(
-		'Media' => array(
-			'className' => 'Media.Media',
-			'foreignKey' => 'foreign_key',
-			'dependent' => false,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
-		'Form' => array(
-			'className' => 'Forms.Form',
-			'foreignKey' => 'foreign_key'
-		),
+//		'Media' => array(
+//			'className' => 'Media.Media',
+//			'foreignKey' => 'foreign_key',
+//			'dependent' => false,
+//			'conditions' => '',
+//			'fields' => '',
+//			'order' => '',
+//			'limit' => '',
+//			'offset' => '',
+//			'exclusive' => '',
+//			'finderQuery' => '',
+//			'counterQuery' => ''
+//		),
+//		'Form' => array(
+//			'className' => 'Forms.Form',
+//			'foreignKey' => 'foreign_key'
+//		),
 		'Course' => array(
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
@@ -52,5 +52,16 @@ class Series extends CoursesAppModel {
 			'order' => ''
 		)
 	);
+	
+
+	public function beforeFind(array $queryData) {
+		$queryData['conditions'][$this->alias.'.type'] = 'series';
+		return $queryData;
+	}
+	
+	public function beforeSave(array $options = array()) {
+		$this->data[$this->alias]['type'] = 'series';
+		return true;
+	}
 
 }

@@ -55,4 +55,14 @@ class Lesson extends CoursesAppModel {
 		),
 	);
 
+	public function beforeFind(array $queryData) {
+		$queryData['conditions'][$this->alias.'.type'] = 'lesson';
+		return $queryData;
+	}
+	
+	public function beforeSave(array $options = array()) {
+		$this->data[$this->alias]['type'] = 'lesson';
+		return true;
+	}
+	
 }

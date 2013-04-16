@@ -67,4 +67,22 @@ class Course extends CoursesAppModel {
 			'foreignKey' => 'course_id'
 		)
 	);
+	
+	public $belongsTo = array(
+		'Series' => array(
+			'className' => 'Courses.Series',
+			'foreignKey' => 'parent_id'
+		)
+	);
+	
+	public function beforeFind(array $queryData) {
+		$queryData['conditions'][$this->alias.'.type'] = 'course';
+		return $queryData;
+	}
+	
+	public function beforeSave(array $options = array()) {
+		$this->data[$this->alias]['type'] = 'course';
+		return true;
+	}
+	
 }
