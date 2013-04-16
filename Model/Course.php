@@ -37,7 +37,7 @@ class Course extends CoursesAppModel {
 			'counterQuery' => ''
 		),
 		'Student' => array(
-			'className' => 'Courses.CourseUsers',
+			'className' => 'User.Users',
 			'foreignKey' => 'student_id',
 			'conditions' => '',
 			'fields' => '',

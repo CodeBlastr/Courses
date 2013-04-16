@@ -36,7 +36,7 @@ class Grade extends CoursesAppModel {
 	);
 	public $hasAndBelongsToMany = array(
 		'Student' => array(
-			'className' => 'Courses.CourseUsers',
+			'className' => 'Users.User',
 			'foreignKey' => 'student_id',
 			'conditions' => '',
 			'fields' => '',
