@@ -4,7 +4,7 @@
 		<legend><?php echo __('Edit Lesson'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('parent_id');
+		echo $this->Form->input('parent_id', array('options' => $parentCourses, 'empty' => array('false' => 'None'), 'label' => 'Make Part of a Series?'));
 		echo $this->Form->input('Lesson.name', array('class' => 'required', 'placeholder' => 'Lesson Name', 'label' => false, 'class' => 'input-xxlarge'));
 		echo $this->Form->input('Lesson.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
 		echo $this->Form->input('Lesson.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));

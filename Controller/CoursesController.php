@@ -23,10 +23,36 @@ class CoursesController extends CoursesAppController {
 		$this->set('courses', $this->paginate());
 	}
 
-	
-	public function my() {
-//		$this->Course->recursive = 0;
-//		$this->set('courses', $this->paginate());
+	/**
+	 * @TODO : This student stuff is not working.. We want to find all courses that this user is a part of, using `CourseUsers` table.
+	 */
+	public function dashboard() {
+		if ( in_array($this->Auth->user('user_role_id'), array(1, 8)) ) {
+			// teachers
+			$this->set('courses', $this->Course->find('all', array(
+				'conditions' => array(
+					'Course.creator_id' => $this->Auth->user('id'),
+					'Course.type' => 'course'
+				),
+				'order' => array('Course.end' => 'ASC')
+			)));
+			$this->view = 'teacher_dashboard';
+		} else {
+			// students
+			$this->Course->bindModel(array('hasMany' => array('CourseUser' => array('className' => 'Courses.CourseUser'))));
+
+			$this->set('courses', $this->Course->find('all', array(
+				'fields' => array('Course.*'),
+				'conditions' => array('Course.type' => 'course', 'CourseUser.user_id' => $this->Auth->user('id')),
+				'order' => array('Course.end' => 'ASC'),
+				'contain' => array(
+					'CourseUser' => array(
+//						'conditions' => array('CourseUser.user_id' => $this->Auth->user('id'))
+					)
+				)
+			)));
+			$this->view = 'student_dashboard';
+		}
 	}
 	
 /**
@@ -77,6 +103,7 @@ class CoursesController extends CoursesAppController {
 	public function add() {
 		if ($this->request->is('post')) {
 			$this->Course->create();
+			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
 			if ($this->Course->save($this->request->data)) {
 				$this->Session->setFlash(__('The course has been created'));
 				$this->redirect(array('action' => 'index'));

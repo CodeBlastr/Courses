@@ -75,6 +75,13 @@ class Course extends CoursesAppModel {
 		)
 	);
 	
+//	public $hasAndBelongsToMany = array(
+//		'User' => array(
+//			'className' => 'Users.User',
+//			'join_table' => 'course_users'
+//		)
+//	);
+	
 	public function beforeFind(array $queryData) {
 		$queryData['conditions'][$this->alias.'.type'] = 'course';
 		return $queryData;

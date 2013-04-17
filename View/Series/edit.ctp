@@ -68,5 +68,5 @@
 </div>
 
 <?php
-debug( $this->request->data );
-debug( $courses );
+//debug( $this->request->data );
+//debug( $courses );
