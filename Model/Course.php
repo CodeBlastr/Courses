@@ -65,6 +65,10 @@ class Course extends CoursesAppModel {
 		'Grade' => array(
 			'className' => 'Courses.Grade',
 			'foreignKey' => 'course_id'
+		),
+		'Message' => array(
+			'className' => 'Messages.Message',
+			'foreignKey' => 'foreign_key'
 		)
 	);
 	

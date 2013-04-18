@@ -23,9 +23,7 @@ class CoursesController extends CoursesAppController {
 		$this->set('courses', $this->paginate());
 	}
 
-	/**
-	 * @TODO : This student stuff is not working.. We want to find all courses that this user is a part of, using `CourseUsers` table.
-	 */
+
 	public function dashboard() {
 		if ( in_array($this->Auth->user('user_role_id'), array(1, 8)) ) {
 			// teachers
@@ -39,18 +37,14 @@ class CoursesController extends CoursesAppController {
 			$this->view = 'teacher_dashboard';
 		} else {
 			// students
-			$this->Course->bindModel(array('hasMany' => array('CourseUser' => array('className' => 'Courses.CourseUser'))));
-
-			$this->set('courses', $this->Course->find('all', array(
-				'fields' => array('Course.*'),
-				'conditions' => array('Course.type' => 'course', 'CourseUser.user_id' => $this->Auth->user('id')),
-				'order' => array('Course.end' => 'ASC'),
+			$this->set('courses', $this->Course->CourseUser->find('all', array(
+				'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),
 				'contain' => array(
-					'CourseUser' => array(
-//						'conditions' => array('CourseUser.user_id' => $this->Auth->user('id'))
+					'Course' => array(
 					)
 				)
 			)));
+
 			$this->view = 'student_dashboard';
 		}
 	}
@@ -270,6 +264,51 @@ class CoursesController extends CoursesAppController {
 			$this->Session->setFlash(__('Assignment ID not specified.'));
 			$this->redirect($this->referer());
 		}
+	}
+	
+	/**
+	 * 
+	 * @param integer $courseId The ID of the Course that these messages belong to
+	 */
+	public function message($courseId) {
+		// find the current messages
+//		$this->paginate = array(
+//			'conditions' => array(
+//				'Message.model' => 'Course',
+//				'Message.foreign_key' => $courseId,
+//				),
+//			'fields' => array(
+//				'id',
+//				'title',
+//				'created',
+//				'body',
+//				),
+//			'contain' => array(
+//				'Sender' => array(
+//					'fields' => array(
+//						'full_name',
+//						),
+//					),
+//				),
+//			'order' => array(
+//				'Message.created' => 'desc',
+//				),
+//			);
+//		$this->set('messages', $this->paginate('Message'));
+		
+		// set the foreign_key
+		$this->request->data['Message']['foreign_key'] = !empty($courseId) ? $courseId : null;
+		
+		// setup the array of possible recipients
+		$users = $this->Course->CourseUser->find('all', array(
+			'conditions' => array('CourseUser.course_id' => $courseId),
+			'contain' => array('User' => array('fields' => array('id', 'last_name', 'first_name')))
+		));
+		$users = Set::combine($users, '{n}.User.id', '{n}');
+		foreach ( $users as &$user ) {
+			$user = $user['User']['last_name'] . ', ' . $user['User']['first_name'];
+		}
+		$this->set(compact('users'));
 	}
 	
 }
