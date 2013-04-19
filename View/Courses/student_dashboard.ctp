@@ -27,3 +27,14 @@
 	<li>two</li>
 	<li>three</li>
 </ul>
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('action' => 'dashboard')),
+			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
+			),
+		),
+	)));

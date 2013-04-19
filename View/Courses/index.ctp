@@ -1,6 +1,5 @@
 <div class="courses index">
-	<h2><?php echo __('Courses');?></h2>
-	
+	<h2><?php echo __('All Courses');?></h2>
 	
 	<?php
 	foreach ($courses as $course) {
@@ -86,9 +85,15 @@
 	?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?></li>
-	</ul>
-</div>
+
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
+			$this->Html->link(__('Create New Course'), array('action' => 'add'))
+			),
+		),
+	)));

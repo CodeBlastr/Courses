@@ -13,7 +13,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p><?php echo $course['Course']['description'] ?></p>
 	
 	<?php
-	if ( !empty($course['Series']) ) {
+	if ( !empty($course['Series']['name']) ) {
 		echo $this->Html->tag('p',
 			$this->Html->tag('i',
 				'This course is part of the series: ' . $this->Html->link($course['Series']['name'], array('controller' => 'series', 'action' => 'view', $course['Series']['id']))
@@ -148,18 +148,32 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<?php endforeach; ?>
 	</table>
 <?php endif; ?>
-	<div class="actions">
-		<h3><?php echo __('Actions'); ?></h3>
-		<ul>
-			<li><?php echo $this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])); ?> </li>
-			<li><?php echo $this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])); ?> </li>
-			<li><?php echo $this->Form->postLink(__('Delete Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete # %s?', $course['Course']['id'])); ?> </li>
-			<li><?php echo $this->Html->link(__('New Course'), array('action' => 'add')); ?> </li>
-			<li><?php echo $this->Html->link(__('New Lesson'), array('controller' => 'lessons', 'action' => 'add'));?> </li>
-			<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])); ?> </li>
-			<li><?php echo $this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')); ?> </li>
-			<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index')); ?> </li>
-		</ul>
-	</div>
 
 </div>
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => $course['Course']['name'],
+		'items' => array(
+			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
+			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
+			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name'])),
+			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
+			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
+			),
+		),
+	array(
+		'heading' => 'Lessons',
+		'items' => array(
+			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add')),
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('action' => 'dashboard')),
+			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
+			),
+		),
+	)));
