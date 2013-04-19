@@ -48,11 +48,23 @@
 	?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Series'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List All Series'), array('controller' => 'series', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Course'), array('controller' => 'courses', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Series',
+		'items' => array(
+			$this->Html->link(__('View All Series'), array('action' => 'index')),
+			$this->Html->link(__('Create New Series'), array('action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('controller' => 'courses', 'action' => 'index')),
+			$this->Html->link(__('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard')),
+			$this->Html->link(__('Create New Course'), array('controller' => 'courses', 'action' => 'add'))
+			),
+		),
+	)));
