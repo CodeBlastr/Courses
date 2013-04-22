@@ -55,20 +55,6 @@ echo $this->Form->end();
 	</fieldset>
 </div>
 
-
-
-
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('List Courses'), array('action' => 'index'));?></li>
-		<li><?php echo $this->Html->link(__('Add Series'), array('action' => 'add', 'series'));?></li>
-		<li><?php echo $this->Html->link(__('Add Lesson'), array('action' => 'add', 'lesson'));?></li>
-	</ul>
-</div>
-
-
-
 <script type="text/javascript">
 	$("#CourseParentId").change(function(){
 		if ( $(this).val() === 'true' ) {
@@ -84,3 +70,21 @@ echo $this->Form->end();
 	}
 
 </script>
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Series',
+		'items' => array(
+			$this->Html->link(__('View All Series'), array('controller' => 'series', 'action' => 'index')),
+			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('action' => 'index')),
+			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
+			),
+		),
+	)));

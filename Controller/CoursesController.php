@@ -9,6 +9,7 @@ class CoursesController extends CoursesAppController {
 
 	public $name = 'Courses';
 	public $uses = 'Courses.Course';
+	public $components = array('RequestHandler');
 
 /**
  * index method

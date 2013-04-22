@@ -12,3 +12,22 @@ echo $this->Html->tag('ol', $seriesCourses);
 
 
 //debug( $series );
+
+
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Series',
+		'items' => array(
+			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['Series']['id'])),
+			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('controller' => 'couses', 'action' => 'index')),
+			$this->Html->link(__('View Your Courses'), array('controller' => 'couses', 'action' => 'dashboard')),
+			$this->Html->link(__('Create New Course'), array('controller' => 'couses', 'action' => 'add'))
+			),
+		),
+	)));

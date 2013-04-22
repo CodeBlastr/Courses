@@ -57,16 +57,32 @@
 <?php echo $this->Form->end(__('Save'));?>
 </div>
 
-
-
-
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('List All Series'), array('action' => 'index'));?></li>
-	</ul>
-</div>
-
 <?php
 //debug( $this->request->data );
 //debug( $courses );
+
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Series',
+		'items' => array(
+			$this->Html->link(__('View All Series'), array('controller' => 'series', 'action' => 'index')),
+			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('controller' => 'courses', 'action' => 'index')),
+			$this->Html->link(__('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard')),
+			$this->Html->link(__('Create New Course'), array('controller' => 'courses', 'action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Lessons',
+		'items' => array(
+			$this->Html->link(__('View All Lessons'), array('controller' => 'lessons', 'action' => 'index')),
+			$this->Html->link(__('View Your Lessons'), array('controller' => 'lessons', 'action' => 'dashboard')),
+			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add'))
+			),
+		),
+	)));
