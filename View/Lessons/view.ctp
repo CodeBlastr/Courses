@@ -36,72 +36,36 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		}
 	}
 	?>
-	
-	
-	<dl>
-<!--		<dt><?php echo __('Parent Course'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($lessons['ParentCourse']['name'], array('controller' => 'courses', 'action' => 'view', $lessons['ParentCourse']['id'])); ?>
-			&nbsp;
-		</dd>-->
-	</dl>
-	
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('View Course'), array('controller' => 'courses', 'action' => 'view', $lessons['Lesson']['parent_id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Edit Lesson'), array('action' => 'edit', $lessons['Lesson']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Lesson'), array('action' => 'delete', $lessons['Lesson']['id']), null, __('Are you sure you want to delete # %s?', $lessons['Lesson']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('New Lesson'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $lessons['Lesson']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')); ?> </li>
-	</ul>
-</div>
-<!--<div class="related">
-	<h3><?php echo __('Related Lessons');?></h3>
-	<?php if (!empty($lessons['Lesson'])):?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Name'); ?></th>
-		<th><?php echo __('Description'); ?></th>
-		<th><?php echo __('Location'); ?></th>
-		<th><?php echo __('Language'); ?></th>
-		<th><?php echo __('Start'); ?></th>
-		<th><?php echo __('End'); ?></th>
-		<th><?php echo __('Is Published'); ?></th>
-		<th><?php echo __('Is Private'); ?></th>
-		<th><?php echo __('Is Persistant'); ?></th>
-		<th><?php echo __('Is Sequential'); ?></th>
-		<th class="actions"><?php echo __('Actions');?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($lessons['Lesson'] as $childCourse): ?>
-		<tr>
-			<td><?php echo $childCourse['name'];?></td>
-			<td><?php echo $childCourse['description'];?></td>
-			<td><?php echo $childCourse['location'];?></td>
-			<td><?php echo $childCourse['language'];?></td>
-			<td><?php echo $childCourse['start'];?></td>
-			<td><?php echo $childCourse['end'];?></td>
-			<td><?php echo $childCourse['is_published'];?></td>
-			<td><?php echo $childCourse['is_private'];?></td>
-			<td><?php echo $childCourse['is_persistant'];?></td>
-			<td><?php echo $childCourse['is_sequential'];?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'courses', 'action' => 'view', $childCourse['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'courses', 'action' => 'edit', $childCourse['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'courses', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
 
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Lesson'), array('controller' => 'lessons', 'action' => 'add'));?> </li>
-		</ul>
-	</div>
-</div>-->
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => $course['Course']['name'],
+		'items' => array(
+			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
+			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
+			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name'])),
+			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
+			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
+			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
+			),
+		),
+	array(
+		'heading' => 'Lessons',
+		'items' => array(
+			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add')),
+			$this->Html->link(__('Edit Lesson'), array('action' => 'edit', $lessons['Lesson']['id'])),
+			$this->Html->link(__('Add Lesson Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
+			$this->Form->postLink(__('Delete Lesson'), array('action' => 'delete', $lessons['Lesson']['id']), null, __('Are you sure you want to delete # %s?', $lessons['Lesson']['id'])),
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('controller' => 'courses')),
+			$this->Html->link(__('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard')),
+			),
+		),
+	)));
