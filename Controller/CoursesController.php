@@ -78,13 +78,21 @@ class CoursesController extends CoursesAppController {
 				)
 			)
 		));
+		
 		$courseUsers = $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $this->Course->id),
 			'contain' => array('User')
 		));
 		$courseUsers = Set::combine($courseUsers, '{n}.User.id', '{n}');
-//debug($courseUsers);break;
-//debug($course);break;
+		
+		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+			$this->layout = 'guest_view';
+		} elseif ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
+			$this->layout = 'teacher_view';
+		} else {
+			$this->layout = 'registered_view';
+		}
+
 		$this->set('courseUsers', $courseUsers);
 		$this->set('course', $course);
 		$this->set('title_for_layout', $course['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
