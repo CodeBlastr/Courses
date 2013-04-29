@@ -88,9 +88,9 @@ class CoursesController extends CoursesAppController {
 		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
 			$this->layout = 'guest_view';
 		} elseif ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
-			$this->layout = 'teacher_view';
+			$this->view = 'teacher_view';
 		} else {
-			$this->layout = 'registered_view';
+			$this->view = 'registered_view';
 		}
 
 		$this->set('courseUsers', $courseUsers);
