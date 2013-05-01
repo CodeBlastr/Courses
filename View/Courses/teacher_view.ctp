@@ -6,6 +6,32 @@
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
 $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
+
+
+//echo $this->Calendar->renderCalendar(array('data' => $json));
+
+// echo $this->Calendar->renderCalendar(array(
+	// 'eventSource' => array(
+		// array(
+			// 'model' => 'Course',
+			// 'foreign_key' => array(	'owner_id' => $this->Session->read('Auth.User.id') )
+		// ),
+		// array(
+			// 'model' => 'Task',
+			// 'foreign_key' => array(	'owner_id' => $this->Session->read('Auth.User.id') )
+		// )
+	// )
+// ));
+
+echo $this->Html->tag('div',
+	$this->Calendar->renderCalendar(array(
+		'sources' => array(
+			'/courses/courses/calendar/teacher/'.$course['Course']['id']
+		)
+	))
+	, array('class' => 'span5 pull-right')
+);
+
 ?>
 <div class="courses view">
 	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>

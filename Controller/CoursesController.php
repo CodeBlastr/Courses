@@ -10,6 +10,7 @@ class CoursesController extends CoursesAppController {
 	public $name = 'Courses';
 	public $uses = 'Courses.Course';
 	public $components = array('RequestHandler');
+	public $helpers = array('Calendar');
 
 /**
  * index method
@@ -85,10 +86,10 @@ class CoursesController extends CoursesAppController {
 		));
 		$courseUsers = Set::combine($courseUsers, '{n}.User.id', '{n}');
 		
-		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
-			$this->layout = 'guest_view';
-		} elseif ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
+		if ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
 			$this->view = 'teacher_view';
+		} elseif ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+			$this->view = 'guest_view';
 		} else {
 			$this->view = 'registered_view';
 		}
@@ -239,7 +240,7 @@ class CoursesController extends CoursesAppController {
 	}
 	
 	/**
-	 * View a "task
+	 * View a task
 	 * 
 	 * @param string $id The Task ID
 	 */
@@ -320,4 +321,39 @@ class CoursesController extends CoursesAppController {
 		$this->set(compact('users'));
 	}
 	
+	
+	/**
+	 * @todo I'd like to move the finding and combining to the Model.  Separate functions foreach event Model possibly.
+	 */
+	public function calendar($type = 'teacher', $courseId) {
+		
+		// get all Tasks for the requested course
+		$tasks = $this->Course->Task->find('all', array(
+			'conditions' => array(
+				'model' => 'Course',
+				'foreign_key' => $courseId
+			)
+		));
+
+		foreach ( $tasks as $task ) {
+			$events[] = array(
+				'id' => $task['Task']['id'],
+				'title' => $task['Task']['name'],
+				'allDay' => false,
+				'start' => date('c', strtotime($task['Task']['start_date'])),
+				'end' => date('c', strtotime($task['Task']['due_date'])),
+				'url' => '/tasks/tasks/view/'.$task['Task']['id'],
+				'className' => 'task',
+				'color' => '#afca30'
+			);
+		}
+
+		header("Content-type: application/json");
+	    if ( $events === null ) {
+	    	echo '{}';
+		} else {
+			echo json_encode($events);
+		}
+	    exit;
+	}
 }
