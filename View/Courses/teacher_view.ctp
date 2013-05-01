@@ -23,17 +23,27 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	// )
 // ));
 
+// echo $this->Html->tag('div',
+	// $this->Calendar->renderCalendar(array(
+		// 'sources' => array(
+			// '/courses/courses/calendar/teacher/'.$course['Course']['id']
+		// )
+	// ))
+	// , array('class' => 'span5 pull-right')
+// );
+
 echo $this->Html->tag('div',
 	$this->Calendar->renderCalendar(array(
 		'sources' => array(
 			'/courses/courses/calendar/teacher/'.$course['Course']['id']
 		)
 	))
+	. $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'))
 	, array('class' => 'span5 pull-right')
 );
 
 ?>
-<div class="courses view">
+<div class="courses view span7">
 	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>
 	<p><b><?php echo $course['Course']['school'] ?></b></p>
 	<p><?php echo $course['Course']['description'] ?></p>
@@ -64,7 +74,7 @@ echo $this->Html->tag('div',
 		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
 			echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
 		} else {
-			echo $this->Html->link('Unregister', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+			echo $this->Html->link('Unregister', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger btn-mini'));
 		}
 		?>
 	</p>
@@ -134,7 +144,7 @@ echo $this->Html->tag('div',
 	
 </div>
 
-<div class="related">
+<div class="related pull-left">
 	<h4><?php echo __('Lessons');?></h4>
 	<?php if (!empty($course['Lesson'])):?>
 	<table cellpadding = "0" cellspacing = "0">
