@@ -84,4 +84,23 @@ class Grade extends CoursesAppModel {
 		return true;
 	}
 	
+
+/**
+ * Callback from FormAnswer->record()
+ *
+ * saves an empty grade for the teacher to grade later
+ */
+	public function afterFormAnswerRecord ( $form, $data ) {
+			$grade['Grade']['form_id'] = $data['Form']['id'];
+			$grade['Grade']['student_id'] = CakeSession::read('Auth.User.id');
+			$grade['Grade']['course_id'] = $form['Form']['foreign_key'];
+
+			if ( $this->save($grade) ) {
+				return true;
+			} else {
+				//break('Grade did not initialize.');
+				throw new Exception('Grade did not initialize.');
+			}
+	}
+	
 }
