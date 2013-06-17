@@ -75,26 +75,15 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		}
 	}
 	
-	if ( !empty($course['Grade']) ) {
-		echo '<h4>Submitted Answers</h4>';
-		foreach ( $course['Grade'] as $grade ) {
-			$studentGradeCells[] = array(
-				$this->Html->link($courseUsers[$grade['student_id']]['User']['last_name'].', '.$courseUsers[$grade['student_id']]['User']['first_name'], array('plugin' => 'courses', 'controller' => 'grades', 'action' => 'grade', $grade['form_id'], $grade['student_id'])),
-				( $grade['grade'] === null ) ? '&mdash;' : $grade['grade']
-			);
-		}
-		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Grade')) . $this->Html->tableCells($studentGradeCells));
-	}
-	
-	if ( !empty($courseUsers) ) {
-		echo '<h4>Course Roster</h4>';
-		foreach ( $courseUsers as $user ) {
-			$userCells[] = array(
-				$this->Html->link($user['User']['last_name'].', '.$user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
-			);
-		}
-		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student Name')) . $this->Html->tableCells($userCells));
-	}
+//	if ( !empty($courseUsers) ) {
+//		echo '<h4>Course Roster</h4>';
+//		foreach ( $courseUsers as $user ) {
+//			$userCells[] = array(
+//				$this->Html->link($user['User']['last_name'].', '.$user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
+//			);
+//		}
+//		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student Name')) . $this->Html->tableCells($userCells));
+//	}
 	?>
 	
 	
