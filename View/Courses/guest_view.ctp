@@ -60,7 +60,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 					//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
 					$childTaskCells[] = array(
 						$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
-						$childTask['completed_date'],
+						$this->Time->niceShort($childTask['completed_date']),
 						$this->Html->link('view', array('action' => 'assignment', $childTask['id']))
 					);
 				}
@@ -108,31 +108,25 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		<th><?php echo __('Language'); ?></th>
 		<th><?php echo __('Start'); ?></th>
 		<th><?php echo __('End'); ?></th>
-		<th><?php echo __('Is Published'); ?></th>
+<!--		<th><?php echo __('Is Published'); ?></th>
 		<th><?php echo __('Is Private'); ?></th>
 		<th><?php echo __('Is Persistant'); ?></th>
-		<th><?php echo __('Is Sequential'); ?></th>
-		<th class="actions"><?php echo __('Actions');?></th>
+		<th><?php echo __('Is Sequential'); ?></th>-->
 	</tr>
 	<?php
 		$i = 0;
 		foreach ($course['Lesson'] as $childCourse): ?>
 		<tr>
-			<td><?php echo $childCourse['name'];?></td>
+			<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
 			<td><?php echo $childCourse['description'];?></td>
 			<td><?php echo $childCourse['location'];?></td>
 			<td><?php echo $childCourse['language'];?></td>
-			<td><?php echo $childCourse['start'];?></td>
-			<td><?php echo $childCourse['end'];?></td>
-			<td><?php echo $childCourse['is_published'];?></td>
+			<td><?php echo $this->Time->niceShort($childCourse['start']);?></td>
+			<td><?php echo $this->Time->niceShort($childCourse['end']);?></td>
+<!--			<td><?php echo $childCourse['is_published'];?></td>
 			<td><?php echo $childCourse['is_private'];?></td>
 			<td><?php echo $childCourse['is_persistant'];?></td>
-			<td><?php echo $childCourse['is_sequential'];?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'lessons', 'action' => 'view', $childCourse['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'lessons', 'action' => 'edit', $childCourse['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'lessons', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
-			</td>
+			<td><?php echo $childCourse['is_sequential'];?></td>-->
 		</tr>
 	<?php endforeach; ?>
 	</table>

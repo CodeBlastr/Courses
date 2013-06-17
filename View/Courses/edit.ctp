@@ -14,10 +14,19 @@
 			. $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => false, 'class' => 'input-small required', 'div' => array('class' => 'span5')))
 		);
 		echo $this->Form->input('Course.description', array('label' => 'Description', 'class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
-		echo $this->Form->input('Course.is_published', array('label' => 'Active / Inactive'));
-		echo $this->Form->input('Course.is_persistant', array('label' => 'Allow access when Inactive'));
-		echo $this->Form->input('Course.is_private', array('label' => 'Public / Private'));
-		echo $this->Form->input('Course.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
+		
+		echo '<span>Course Availability</span>';
+		echo $this->Form->input('Course.is_published', array('label' => false, 'class' => 'checkboxToggle', 'data-yes' => 'Active', 'data-no' => 'Inactive', 'data-width' => 105));
+		
+		echo '<span>Allow access after End Date?</span>';
+		echo $this->Form->input('Course.is_persistant', array('label' => false, 'class' => 'checkboxToggle'));
+		
+		echo '<span>Course Visibility</span>';
+		echo $this->Form->input('Course.is_private', array('label' => false, 'class' => 'checkboxToggle', 'data-yes' => 'Private', 'data-no' => 'Public', 'data-width' => 105));
+		
+		echo '<span>Require members to go only through the defined sequence?</span>';
+		echo $this->Form->input('Course.is_sequential', array('label' => false, 'class' => 'checkboxToggle'));
+		
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
 	?>
 	</fieldset>
@@ -33,3 +42,6 @@ echo $this->Form->end();
 		<li><?php echo $this->Html->link(__('Add Resources'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'));?></li>
 	</ul>
 </div>
+<script>
+	applyCheckboxToggles();
+</script>
