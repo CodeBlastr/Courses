@@ -55,17 +55,17 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		echo '<h4>Assignments</h4>';
 		foreach ( $course['Task'] as $task ) {
 			echo '<li>'. $this->Html->link($task['name'], array('action' => 'assignment', $task['id'])) . '</li>';
-			if ( !empty($task['ChildTask']) ) {
-				foreach ( $task['ChildTask'] as $childTask ) {
-					//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
-					$childTaskCells[] = array(
-						$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
-						$this->Time->niceShort($childTask['completed_date']),
-						$this->Html->link('view', array('action' => 'assignment', $childTask['id']))
-					);
-				}
-				echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date Completed', 'Actions')) . $this->Html->tableCells($childTaskCells));
-			}
+//			if ( !empty($task['ChildTask']) ) {
+//				foreach ( $task['ChildTask'] as $childTask ) {
+//					//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
+//					$childTaskCells[] = array(
+//						$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
+//						$this->Time->niceShort($childTask['completed_date']),
+//						$this->Html->link('view', array('action' => 'assignment', $childTask['id']))
+//					);
+//				}
+//				echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date Completed', 'Actions')) . $this->Html->tableCells($childTaskCells));
+//			}
 		}
 	}
 	if ( !empty($course['Form']) ) {
@@ -104,8 +104,8 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<tr>
 		<th><?php echo __('Name'); ?></th>
 		<th><?php echo __('Description'); ?></th>
-		<th><?php echo __('Location'); ?></th>
-		<th><?php echo __('Language'); ?></th>
+<!--		<th><?php echo __('Location'); ?></th>-->
+<!--		<th><?php echo __('Language'); ?></th>-->
 		<th><?php echo __('Start'); ?></th>
 		<th><?php echo __('End'); ?></th>
 <!--		<th><?php echo __('Is Published'); ?></th>
@@ -119,8 +119,8 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		<tr>
 			<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
 			<td><?php echo $childCourse['description'];?></td>
-			<td><?php echo $childCourse['location'];?></td>
-			<td><?php echo $childCourse['language'];?></td>
+<!--			<td><?php echo $childCourse['location'];?></td>-->
+<!--			<td><?php echo $childCourse['language'];?></td>-->
 			<td><?php echo $this->Time->niceShort($childCourse['start']);?></td>
 			<td><?php echo $this->Time->niceShort($childCourse['end']);?></td>
 <!--			<td><?php echo $childCourse['is_published'];?></td>
@@ -135,29 +135,37 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 </div>
 
 <?php
-$this->set('context_menu', array('menus' => array(
+$this->set('context_menu', array('sidebar' => array(
 	array(
-		'heading' => $course['Course']['name'],
+		'heading' => 'Take this Course!',
 		'items' => array(
-			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
-			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
-			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name'])),
-			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
-			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
-			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
-			),
-		),
-	array(
-		'heading' => 'Lessons',
-		'items' => array(
-			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add')),
-			),
-		),
-	array(
-		'heading' => 'Courses',
-		'items' => array(
-			$this->Html->link(__('View All Courses'), array('action' => 'dashboard')),
-			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
-			),
-		),
-	)));
+			$this->Html->link(__('Create Your Account'), array('plugin'=>'users', 'controller'=>'users', 'action'=>'register'))
+		)
+	)
+)));
+//$this->set('context_menu', array('menus' => array(
+//	array(
+//		'heading' => $course['Course']['name'],
+//		'items' => array(
+//			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
+//			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
+//			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name'])),
+//			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
+//			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
+//			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
+//			),
+//		),
+//	array(
+//		'heading' => 'Lessons',
+//		'items' => array(
+//			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add')),
+//			),
+//		),
+//	array(
+//		'heading' => 'Courses',
+//		'items' => array(
+//			$this->Html->link(__('View All Courses'), array('action' => 'dashboard')),
+//			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
+//			),
+//		),
+//	)));
