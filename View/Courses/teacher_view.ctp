@@ -36,7 +36,8 @@ echo $this->Html->tag('div',
 	$this->Calendar->renderCalendar(array(
 		'sources' => array(
 			'/courses/courses/calendar/teacher/'.$course['Course']['id']
-		)
+		),
+		'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
 	))
 	. $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'))
 	, array('class' => 'span5 pull-right')
