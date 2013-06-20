@@ -15,7 +15,6 @@ class CourseUser extends CoursesAppModel {
  */
 	public $primaryKey = 'user_id';
 
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
 /**
  * belongsTo associations
@@ -38,4 +37,21 @@ class CourseUser extends CoursesAppModel {
 			'order' => ''
 		)
 	);
+	
+	
+	/**
+	 * Returns a nice array of the participants in a Course
+	 * @param int $courseId
+	 * @return array
+	 */
+	public function getCourseUsers ( $courseId ) {
+		$courseUsers = $this->find('all', array(
+			'conditions' => array('CourseUser.course_id' => $courseId),
+			'contain' => array('User')
+		));
+		$courseUsers = Set::combine($courseUsers, '{n}.User.id', '{n}');
+		
+		return $courseUsers;
+	}
+	
 }
