@@ -21,6 +21,8 @@ class CoursesSchema extends CakeSchema {
 
 	public $course_grades = array(
 		'id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
+		'model' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
 		'student_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
 		'grade' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 3),
