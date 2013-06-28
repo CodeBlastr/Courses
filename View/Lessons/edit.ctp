@@ -3,8 +3,8 @@
 	<fieldset>
 		<legend><?php echo __('Edit Lesson'); ?></legend>
 	<?php
-		echo $this->Form->input('id');
-		echo $this->Form->input('parent_id', array('options' => $parentCourses, 'empty' => array('false' => 'None'), 'label' => 'Make Part of a Series?'));
+		echo $this->Form->input('Lesson.id');
+		echo $this->Form->input('parent_id', array('options' => $parentCourses, 'empty' => array('false' => 'None'), 'label' => 'Make Part of a Course?'));
 		echo $this->Form->input('Lesson.name', array('class' => 'required', 'placeholder' => 'Lesson Name', 'label' => false, 'class' => 'input-xxlarge'));
 		echo $this->Form->input('Lesson.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
 		echo $this->Form->input('Lesson.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
@@ -18,7 +18,7 @@
 		echo $this->Form->input('Lesson.is_persistant', array('label' => 'Allow access when Inactive'));
 		echo $this->Form->input('Lesson.is_private', array('label' => 'Public / Private'));
 		echo $this->Form->input('Lesson.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
-		echo $this->Form->input('Lesson.language', array('options' => array('English', 'Spanish')));
+		echo $this->Form->input('Lesson.language', array('options' => array('English' => 'English', 'Spanish' => 'Spanish')));
 	?>
 	</fieldset>
 <?php
@@ -26,10 +26,14 @@ echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
 echo $this->Form->end();
 ?>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Lesson.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Lesson.id'))); ?></li>
-		<li><?php echo $this->Html->link(__('Add Resources'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'));?></li>
-	</ul>
-</div>
+
+<?php
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => $this->Form->value('Lesson.name'),
+		'items' => array(
+			$this->Html->link('<i class="icon-folder-open"></i>'.__('Add Lesson Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
+			$this->Form->postLink('<i class="icon-remove-sign"></i>'.__('Delete this Lesson'), array('action' => 'delete', $this->Form->value('Lesson.id')), array('escape' => false), __('Are you sure you want to delete this lesson?')),
+		),
+	)
+)));

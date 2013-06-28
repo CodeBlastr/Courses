@@ -46,9 +46,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<?php
 	if ( !empty($course['Media']) ) {
 		echo '<h4>Course Materials</h4>';
-		foreach ( $course['Media'] as $media ) {
-			echo '<li>'. $this->Html->link($media['title'], array('plugin' => 'media', 'controller' => 'media', 'action' => 'view', $media['id'])) . '</li>';
-		}
+		echo $this->element('Courses.displayMaterialsThumbs', array('media' => $course['Media']));
 	}
 	
 	if ( !empty($course['Task']) ) {

@@ -6,12 +6,24 @@
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
 $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
+
+echo $this->Html->tag('div',
+	$this->Calendar->renderCalendar(array(
+		'sources' => array(
+			'/courses/courses/calendar/teacher/'.$course['Course']['id']
+		),
+		'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
+	))
+	. $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'))
+	, array('class' => 'span5 pull-right')
+);
+
 ?>
-<div class="courses view">
+<div class="courses view span7">
 	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>
 	<p><b><?php echo $course['Course']['school'] ?></b></p>
 	<p><?php echo $course['Course']['description'] ?></p>
-	
+
 	<?php
 	if ( !empty($course['Series']['name']) ) {
 		echo $this->Html->tag('p',
@@ -33,12 +45,10 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	</p>
 	<p>
 		<?php
-//		debug($this->Session->read('Auth.User.id'));
-//		debug($courseUsers);
 		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
 			echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
 		} else {
-			echo $this->Html->link('Unregister', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+			echo $this->Html->link('Unregister', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger btn-mini'));
 		}
 		?>
 	</p>
@@ -46,16 +56,14 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<?php
 	if ( !empty($course['Media']) ) {
 		echo '<h4>Course Materials</h4>';
-		foreach ( $course['Media'] as $media ) {
-			echo '<li>'. $this->Html->link($media['title'], array('plugin' => 'media', 'controller' => 'media', 'action' => 'view', $media['id'])) . '</li>';
-		}
+		echo $this->element('Courses.displayMaterialsThumbs', array('media' => $course['Media']));
 	}
-	
+
 	if ( !empty($course['Task']) ) {
 		echo '<h4>Assignments</h4>';
 		foreach ( $course['Task'] as $task ) {
 			echo '<li>'. $this->Html->link($task['name'], array('action' => 'assignment', $task['id'])) . '</li>';
-			if ( !empty($task['ChildTask']) ) {
+			if ( !empty($task['ChildTask']) && $isOwner ) {
 				foreach ( $task['ChildTask'] as $childTask ) {
 					//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
 					$childTaskCells[] = array(
@@ -74,8 +82,8 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			echo '<li>'. $this->Html->link($form['name'], array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'view', $form['id'])) . '</li>';
 		}
 	}
-	
-	if ( !empty($course['Grade']) ) {
+
+	if ( !empty($course['Grade']) && $isOwner ) {
 		echo '<h4>Submitted Answers</h4>';
 		foreach ( $course['Grade'] as $grade ) {
 			$studentGradeCells[] = array(
@@ -85,7 +93,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		}
 		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Grade')) . $this->Html->tableCells($studentGradeCells));
 	}
-	
+
 	if ( !empty($courseUsers) ) {
 		echo '<h4>Course Roster</h4>';
 		foreach ( $courseUsers as $user ) {
@@ -96,8 +104,8 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student Name')) . $this->Html->tableCells($userCells));
 	}
 	?>
-	
-	
+
+
 	<dl>
 <!--		<dt><?php echo __('Parent Course'); ?></dt>
 		<dd>
@@ -105,10 +113,10 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			&nbsp;
 		</dd>-->
 	</dl>
-	
+
 </div>
 
-<div class="related">
+<div class="related pull-left">
 	<h4><?php echo __('Lessons');?></h4>
 	<?php if (!empty($course['Lesson'])):?>
 	<table cellpadding = "0" cellspacing = "0">
@@ -119,10 +127,6 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		<th><?php echo __('Language'); ?></th>
 		<th><?php echo __('Start'); ?></th>
 		<th><?php echo __('End'); ?></th>
-		<th><?php echo __('Is Published'); ?></th>
-		<th><?php echo __('Is Private'); ?></th>
-		<th><?php echo __('Is Persistant'); ?></th>
-		<th><?php echo __('Is Sequential'); ?></th>
 		<th class="actions"><?php echo __('Actions');?></th>
 	</tr>
 	<?php
@@ -133,12 +137,8 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			<td><?php echo $childCourse['description'];?></td>
 			<td><?php echo $childCourse['location'];?></td>
 			<td><?php echo $childCourse['language'];?></td>
-			<td><?php echo $childCourse['start'];?></td>
-			<td><?php echo $childCourse['end'];?></td>
-			<td><?php echo $childCourse['is_published'];?></td>
-			<td><?php echo $childCourse['is_private'];?></td>
-			<td><?php echo $childCourse['is_persistant'];?></td>
-			<td><?php echo $childCourse['is_sequential'];?></td>
+			<td><?php echo $this->Time->niceShort($childCourse['start']);?></td>
+			<td><?php echo $this->Time->niceShort($childCourse['end']);?></td>
 			<td class="actions">
 				<?php echo $this->Html->link(__('View'), array('controller' => 'lessons', 'action' => 'view', $childCourse['id'])); ?>
 				<?php echo $this->Html->link(__('Edit'), array('controller' => 'lessons', 'action' => 'edit', $childCourse['id'])); ?>
@@ -156,12 +156,13 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => $course['Course']['name'],
 		'items' => array(
-			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
-			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
-			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name'])),
+			$this->Html->link(__('View Gradebook'), array('controller' => 'gradebooks', 'action' => 'view', $course['Course']['id'])),
 			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
 			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
 			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
+			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
+			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
+			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name']))
 			),
 		),
 	array(

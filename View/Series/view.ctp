@@ -6,15 +6,50 @@ echo $this->Html->tag('hr');
 echo $this->Html->tag('p', 'This series consists of the following courses:');
 $seriesCourses = '';
 foreach ( $series['Course'] as $course ) {
-	$seriesCourses .= $this->Html->tag('li', $this->Html->link($course['name'], array( 'controller' => 'course', 'action' => 'view', $course['id'] )));
+	$seriesCourses .= $this->Html->tag('li', $this->Html->link($course['name'], array( 'controller' => 'courses', 'action' => 'view', $course['id'] )));
 }
 echo $this->Html->tag('ol', $seriesCourses);
 
-
-//debug( $series );
-
-
+/**
+ * Menus !
+ */
 $this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Series',
+		'items' => array(
+			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['Series']['id'])),
+			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('controller' => 'courses', 'action' => 'index')),
+			$this->Html->link(__('View Your Courses'), array('controller' => 'cousres', 'action' => 'dashboard')),
+			$this->Html->link(__('Create New Course'), array('controller' => 'courses', 'action' => 'add'))
+			),
+		),
+	)));
+
+$this->set('guest_menu', array('menus' => array(
+	array(
+		'heading' => 'Series',
+		'items' => array(
+			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['Series']['id'])),
+			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			),
+		),
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link(__('View All Courses'), array('controller' => 'courses', 'action' => 'index')),
+			$this->Html->link(__('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard')),
+			$this->Html->link(__('Create New Course'), array('controller' => 'courses', 'action' => 'add'))
+			),
+		),
+	)));
+
+$this->set('owner_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
