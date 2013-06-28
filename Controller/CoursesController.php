@@ -27,28 +27,33 @@ class _CoursesController extends CoursesAppController {
 
 
 	public function dashboard() {
-		if ( in_array($this->Auth->user('user_role_id'), array(1, 8)) ) {
-			// teachers
-			$this->set('courses', $this->Course->find('all', array(
-				'conditions' => array(
-					'Course.creator_id' => $this->Auth->user('id'),
-					'Course.type' => 'course'
-				),
-				'order' => array('Course.end' => 'ASC')
-			)));
-			$this->view = 'teacher_dashboard';
-		} else {
-			// students
-			$this->set('courses', $this->Course->CourseUser->find('all', array(
-				'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),
-				'contain' => array(
-					'Course' => array(
-					)
+		// teachers
+		$this->set('seriesAsTeacher', $this->Course->Series->find('all', array(
+			'conditions' => array(
+				'Series.creator_id' => $this->Auth->user('id'),
+				'Series.type' => 'series',
+				'Series.is_published' => 1
+			),
+			'contain' => array('Course'),
+			'order' => array('Series.end' => 'ASC')
+		)));
+		$this->set('coursesAsTeacher', $this->Course->find('all', array(
+			'conditions' => array(
+				'Course.creator_id' => $this->Auth->user('id'),
+				'Course.type' => 'course',
+				'Course.parent_id' => null,
+				'Course.is_published' => 1
+			),
+			'order' => array('Course.end' => 'ASC')
+		)));
+		// students
+		$this->set('coursesAsStudent', $this->Course->CourseUser->find('all', array(
+			'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),
+			'contain' => array(
+				'Course' => array(
 				)
-			)));
-
-			$this->view = 'student_dashboard';
-		}
+			)
+		)));
 	}
 	
 /**
@@ -82,18 +87,23 @@ class _CoursesController extends CoursesAppController {
 		
 		$courseUsers = $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $this->Course->id),
-			'contain' => array('User')
+			'contain' => array('User'),
+			'order' => array('User.last_name ASC')
 		));
 		$courseUsers = Set::combine($courseUsers, '{n}.User.id', '{n}');
 		
 		if ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
 			$this->view = 'teacher_view';
+			$isOwner = true;
 		} elseif ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
 			$this->view = 'guest_view';
+			$isOwner = false;
 		} else {
 			$this->view = 'registered_view';
+			$isOwner = false;
 		}
 
+		$this->set('isOwner', $isOwner);
 		$this->set('courseUsers', $courseUsers);
 		$this->set('course', $course);
 		$this->set('title_for_layout', $course['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);

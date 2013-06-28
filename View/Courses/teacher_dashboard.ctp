@@ -70,3 +70,11 @@ $this->set('context_menu', array('menus' => array(
 			),
 		),
 	)));
+
+$this->append('sidebar');
+echo $this->Html->tag('li', 'Series', array('class' => 'nav-header'));
+echo $this->Html->tag('li', $this->Html->link(__('View All Series'), array('controller' => 'series', 'action' => 'index')));
+echo $this->Html->tag('li', $this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add')));
+echo $this->Html->tag('li', 'Courses', array('class' => 'nav-header'));
+echo $this->Html->tag('li', $this->Html->link(__('Create New Course'), array('action' => 'add')));
+$this->end();

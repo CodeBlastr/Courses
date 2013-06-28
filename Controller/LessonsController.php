@@ -36,12 +36,12 @@ class LessonsController extends CoursesAppController {
 		if (!$this->Lesson->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$lessons =  $this->Lesson->find('first', array(
-			'conditions' => array('id' => $id),
-			'contain' => array('Form', 'Media')
+		$lesson =  $this->Lesson->find('first', array(
+			'conditions' => array('Lesson.id' => $id),
+			'contain' => array('Form', 'Media', 'Course')
 		));
-		$this->set(compact('lessons'));
-		$this->set('title_for_layout', $lessons['Lesson']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+		$this->set(compact('lesson'));
+		$this->set('title_for_layout', $lesson['Lesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**
@@ -57,7 +57,7 @@ class LessonsController extends CoursesAppController {
 					return new CakeResponse(array('body' => $this->Lesson->id));
 				} else {
 					$this->Session->setFlash(__('The lesson has been created'));
-					$this->redirect(array('action' => 'index'));
+					$this->redirect(array('action' => 'view', $this->Lesson->id));
 				}
 			} else {
 				if ( $this->request->is('ajax') ) {
@@ -119,4 +119,18 @@ class LessonsController extends CoursesAppController {
 		$this->Session->setFlash(__('Lesson was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+
+	public function watch ($id = null) {
+		$this->Lesson->id = $id;
+		if ( !$this->Lesson->exists() ) {
+			throw new NotFoundException(__('Invalid lesson'));
+		}
+		$lesson =  $this->Lesson->find('first', array(
+			'conditions' => array('Lesson.id' => $id),
+			'contain' => array('Form', 'Media', 'Course')
+		));
+		$this->set(compact('lesson'));
+		$this->set('title_for_layout', $lesson['Lesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+	}
+
 }

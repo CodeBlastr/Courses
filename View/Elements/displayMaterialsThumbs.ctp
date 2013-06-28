@@ -1,6 +1,6 @@
 <?php
 
-echo '<ul class="courseMaterials thumbnails">';
+echo '<ul class="courseMaterialsThumbs thumbnails">';
 foreach ( $media as $medium ) {//debug($medium);
 	switch ($medium['type']) {
 		case ( 'images' ):
