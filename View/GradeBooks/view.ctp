@@ -1,6 +1,7 @@
 <?php
+
 // show a dropdown to flip between this user's courses
-echo $this->Form->select('Course.id', $courseSelectOptions);
+echo $this->Form->select('Course.id', $courseSelectOptions, array('empty' => '- Choose a course -'));
 
 // if we have course data, show the gradebook
 if ( !empty($course) ) {

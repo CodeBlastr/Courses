@@ -56,10 +56,10 @@ class GradeBooksController extends CoursesAppController {
 			'fields' => array('Course.id', 'Course.name')
 		));
 
-		foreach ( $coursesAsStudent as $course ) {
-			$cleanCourses[$course['Course']['id']] = $course['Course']['name'];
+		foreach ( $coursesAsStudent as $cas ) {
+			$cleanCourses[$cas['Course']['id']] = $cas['Course']['name'];
 		}
-		
+
 		$this->set('courseSelectOptions', array_unique( Set::merge($cleanCourses, $myCourses) ));
 
 		// pass the varz !
