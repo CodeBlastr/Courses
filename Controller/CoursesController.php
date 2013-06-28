@@ -5,10 +5,10 @@ App::uses('CoursesAppController', 'Courses.Controller');
  *
  * @property Course $Course
  */
-class CoursesController extends CoursesAppController {
+class _CoursesController extends CoursesAppController {
 
 	public $name = 'Courses';
-	public $uses = 'Courses.Course';
+	public $uses = array('Courses.Course');
 	public $components = array('RequestHandler');
 	public $helpers = array('Calendar');
 
@@ -356,4 +356,8 @@ class CoursesController extends CoursesAppController {
 		}
 	    exit;
 	}
+}
+
+if (!isset($refuseInit)) {
+	class CoursesController extends _CoursesController {}
 }
