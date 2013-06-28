@@ -1,35 +1,54 @@
 
 <ul class="nav nav-tabs" id="courseDashboards">
 	<li class="active"><a href="#dashboard">Dashboard</a></li>
-	<li><a href="#teaching">Teaching</a></li>
 	<li><a href="#learning">Learning</a></li>
+	<li><a href="#teaching">Teaching</a></li>
 </ul>
 <div class="tab-content">
 	<div class="tab-pane active " id="dashboard">
 
 		<div class="row-fluid">
-			<div class="span5">
+			<div class="span6">
 				<div>
 					<h4>Upcoming `Tasks`</h4>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
+					<?php
+					foreach ( $tasks as $task ) {
+						echo $this->Html->tag('li',
+								$this->Html->link($task['Task']['name'], array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'view', $task['Task']['id']))
+								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
+								);
+					}
+					?>
 				</div>
 				<div>
 					<h4>Upcoming Courses</h4>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
-					<li></li>
+					<?php
+					foreach ( $upcomingCourses as $upcomingCourse ) {
+						echo $this->tag('div',
+								$this->Html->link($upcomingCourse['Course']['name'], array('action' => 'view', $upcomingCourses['Course']['id']))
+								. '<p>'.$upcomingCourses['Course']['description'].'</p>'
+								);
+					}
+					echo $this->Html->link('View All Courses', array('action' => 'index'));
+					?>
 				</div>
 			</div>
-			<div class="span7">
-<!--				<div>
-					<?php echo $this->Html->image('http://placehold.it/300&text=300x250+callout+or+ad+spot') ?>
-				</div>-->
+			<div class="span6">
+				<div>
+					<?php
+					// calendar
+					if ( !empty($allCourseIds) ) {
+						foreach ( $allCourseIds as $courseId ) {
+							$sources[] = '/courses/courses/calendar/teacher/' . $courseId;
+						}
+					}
+	
+					echo $this->Calendar->renderCalendar(array(
+						'sources' => $sources,
+						'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
+					));
+					?>
+				</div>
 				<div>
 					<h4>Messages</h4>
 					<?php echo $this->element('Messages.inbox') ?>
@@ -43,28 +62,33 @@
 	<!-- TEACHING TAB -->
 	<div class="tab-pane " id="teaching">
 
-		<h3>Teaching</h3>
-
 		<div class="row-fluid">
-			<div class="span5">
+			<div class="span6">
 				<div>
 					<h4>Upcoming `Tasks`</h4>
-					<li></li>
-					<li></li>
-					<li></li>
+					<?php
+					foreach ( $tasks as $task ) {
+						if ( in_array($task['Task']['foreign_key'], $courseIdsAsTeacher) ) {
+							echo $this->Html->tag('li',
+								$this->Html->link($task['Task']['name'], array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'view', $task['Task']['id']))
+								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
+								);
+						}
+					}
+					?>
 				</div>
 				<div>
 					<h4>Gradebook</h4>
 					<?php
 					echo $this->Html->link(
-									$this->Html->image('/courses/img/1372452108_korganizer.png'),
-									array('controller' => 'gradebooks', 'action' => 'view'),
-									array('escape' => false, 'title' => 'View')
-								);
+							$this->Html->image('/courses/img/1372452108_korganizer.png'),
+							array('controller' => 'gradebooks', 'action' => 'view'),
+							array('escape' => false, 'title' => 'View')
+							);
 					?>
 				</div>
 			</div>
-			<div class="span7">
+			<div class="span6">
 				<?php
 				if ( empty($coursesAsTeacher) && empty($seriesAsTeacher) ) {
 					echo 'You haven\'t created any courses yet. <a href="/courses/courses/add">Start Teaching</a>';
@@ -136,19 +160,24 @@
 
 	<!-- LEARNING TAB -->
 	<div class="tab-pane " id="learning">
-		<h3>Learning</h3>
-
 
 		<div class="row-fluid">
-			<div class="span5">
+			<div class="span6">
 				<div>
 					<h4>Upcoming `Tasks`</h4>
-					<li></li>
-					<li></li>
-					<li></li>
+					<?php
+					foreach ( $tasks as $task ) {
+						if ( in_array($task['Task']['foreign_key'], $courseIdsAsStudent) ) {
+							echo $this->Html->tag('li',
+								$this->Html->link($task['Task']['name'], array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'view', $task['Task']['id']))
+								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
+								);
+						}
+					}
+					?>
 				</div>
 				<div>
-					<h4>Grades</h4>
+					<h4>Your Grades</h4>
 					<?php
 					echo $this->Html->link(
 									$this->Html->image('/courses/img/1372452108_korganizer.png'),
@@ -158,7 +187,7 @@
 					?>
 				</div>
 			</div>
-			<div class="span7">
+			<div class="span6">
 				<?php
 				if ( empty($coursesAsStudent) ) {
 					echo 'You haven\'t signed up for any courses yet. <a href="/courses/courses/">Start Learning</a>';

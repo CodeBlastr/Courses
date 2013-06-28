@@ -27,6 +27,18 @@ class _CoursesController extends CoursesAppController {
 
 
 	public function dashboard() {
+		$this->set('title_for_layout', 'Courses Dashboard' . ' | ' . __SYSTEM_SITE_NAME);
+
+		$this->set('upcomingCourses', $this->Course->find('all', array(
+			'conditions' => array(
+				'Course.start > NOW()',
+				'Course.type' => 'course',
+				'Course.parent_id' => null,
+				'Course.is_published' => 1
+			),
+			'order' => array('Course.start' => 'ASC')
+		)));
+
 		// teachers
 		$this->set('seriesAsTeacher', $this->Course->Series->find('all', array(
 			'conditions' => array(
@@ -49,10 +61,36 @@ class _CoursesController extends CoursesAppController {
 		// students
 		$this->set('coursesAsStudent', $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),
-			'contain' => array(
-				'Course' => array(
-				)
-			)
+			'contain' => array('Course')
+		)));
+
+		// get an array of all Course.id this user is related to
+		$courseIdsAsTeacher = array_unique(
+				Set::merge(
+						Set::extract('/Course/id', $this->viewVars['seriesAsTeacher']),
+						Set::extract('/Course/id', $this->viewVars['coursesAsTeacher'])
+						)
+				);
+		$courseIdsAsStudent = Set::merge(
+				Set::extract('/Course/id', $this->viewVars['coursesAsStudent'])
+				);
+		$allCourseIds = array_unique( Set::merge($courseIdsAsTeacher, $courseIdsAsStudent ) );
+		
+		$this->set(compact('courseIdsAsTeacher', 'courseIdsAsStudent', 'allCourseIds'));
+
+		// all tasks
+		$this->set('tasks', $this->Course->Task->find('all', array(
+			'conditions' => array(
+				'Task.model' => 'Course',
+				'Task.parent_id' => '',
+				'OR' => array(
+					'Task.start_date > NOW()',
+					'Task.due_date > NOW()',
+				),
+				'Task.foreign_key' => $allCourseIds,
+			),
+			'fields' => array('id', 'name', 'model', 'foreign_key', 'start_date', 'due_date'),
+			'limit' => 5
 		)));
 	}
 	
