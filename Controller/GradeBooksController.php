@@ -62,10 +62,6 @@ class GradeBooksController extends CoursesAppController {
 		
 		$this->set('courseSelectOptions', array_unique( Set::merge($cleanCourses, $myCourses) ));
 
-		debug($myCourses);
-		debug($coursesAsStudent);
-		debug($this->viewVars['courseSelectOptions']);
-
 		// pass the varz !
 		$this->set('course', $course);
 		$this->set('grades', $grades);
