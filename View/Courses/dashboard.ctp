@@ -10,18 +10,18 @@
 		<div class="row-fluid">
 			<div class="span6">
 				<div>
-					<h4>Upcoming `Tasks`</h4>
+					<h4>Upcoming Events</h4>
 					<?php
 					foreach ( $tasks as $task ) {
 						echo $this->Html->tag('li',
-								$this->Html->link($task['Task']['name'], array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'view', $task['Task']['id']))
+								$this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id']))
 								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
 								);
 					}
 					?>
 				</div>
 				<div>
-					<h4>Upcoming Courses</h4>
+					<h4>Courses Starting Soon</h4>
 					<?php
 					foreach ( $upcomingCourses as $upcomingCourse ) {
 						echo $this->tag('div',
