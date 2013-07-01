@@ -390,7 +390,7 @@ class _CoursesController extends CoursesAppController {
 				'allDay' => false,
 				'start' => date('c', strtotime($task['Task']['start_date'])),
 				'end' => date('c', strtotime($task['Task']['due_date'])),
-				'url' => '/tasks/tasks/view/'.$task['Task']['id'],
+				'url' => '/courses/courses/assignment/'.$task['Task']['id'],
 				'className' => 'task',
 				'color' => '#afca30'
 			);
@@ -398,9 +398,9 @@ class _CoursesController extends CoursesAppController {
 
 		header("Content-type: application/json");
 	    if ( $events === null ) {
-	    	echo '{}';
+	    	return '{}';
 		} else {
-			echo json_encode($events);
+			return json_encode($events);
 		}
 	    exit;
 	}

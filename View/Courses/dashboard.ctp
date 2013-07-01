@@ -38,15 +38,17 @@
 					<?php
 					// calendar
 					if ( !empty($allCourseIds) ) {
+						//debug($allCourseIds);
 						foreach ( $allCourseIds as $courseId ) {
 							$sources[] = '/courses/courses/calendar/teacher/' . $courseId;
 						}
 					}
-	
 					echo $this->Calendar->renderCalendar(array(
 						'sources' => $sources,
 						'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
 					));
+					// calendar action links
+					echo $this->Html->link('<i class="icon-plus"></i>', array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'add'), array('escape' => false, 'title' => 'Add a Task'));
 					?>
 				</div>
 				<div>
