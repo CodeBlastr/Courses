@@ -15,7 +15,7 @@
 						array('class' => 'span9')
 				)
 				. $this->Html->tag('div',
-						$this->Time->niceShort($course['Course']['start']). '<br />'
+						$this->Time->nice($course['Course']['start']). '<br />'
 						. $lengthOfCourse . ' weeks long',
 						array('class' => 'span3')
 				),

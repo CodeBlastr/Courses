@@ -22,6 +22,9 @@ class _CoursesController extends CoursesAppController {
 //		$this->paginate = array(
 //			'conditions' => array('Course.parent_id' => null)
 //		);
+		$this->paginate = array(
+			'order' => array('Course.start' => 'ASC')
+		);
 		$this->set('courses', $this->paginate());
 	}
 
@@ -82,14 +85,18 @@ class _CoursesController extends CoursesAppController {
 		$this->set('tasks', $this->Course->Task->find('all', array(
 			'conditions' => array(
 				'Task.model' => 'Course',
-				'Task.parent_id' => '',
+				'OR' => array(
+					'Task.parent_id' => '',
+					'Task.parent_id' => null
+				),
 				'OR' => array(
 					'Task.start_date > NOW()',
-					'Task.due_date > NOW()',
+					'Task.due_date > NOW()'
 				),
 				'Task.foreign_key' => $allCourseIds,
 			),
 			'fields' => array('id', 'name', 'model', 'foreign_key', 'start_date', 'due_date'),
+			'order' => array('Task.start_date' => 'ASC'),
 			'limit' => 5
 		)));
 	}

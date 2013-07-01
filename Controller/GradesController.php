@@ -105,7 +105,7 @@ class GradesController extends CoursesAppController {
  * 
  * @param int $id
  */
-	public function setup() {
+	public function setup($id = null) {
 		if ( !$this->Grade->Course->exists() ) {
 			//throw new NotFoundException(__('Invalid Course'));
 		}
@@ -117,15 +117,17 @@ class GradesController extends CoursesAppController {
 				$this->Session->setFlash(__('The Course\'s GradeBook could not be saved. Please, try again.'));
 			}
 		} else {
-			//$this->request->data = $this->Grade->Course->read(null, $id);
+			$this->request->data = $this->Grade->Course->read(null, $id);
 		}
-		$courses = $this->Grade->Course->find('list', array(
-			'conditions' => array(
-				'parent_id' => null,
-				'creator_id' => $this->Auth->user('id')
-			)
-		));
-		$this->set(compact('courses'));
+		if ( empty($id) ) {
+			$courses = $this->Grade->Course->find('list', array(
+				'conditions' => array(
+					'parent_id' => null,
+					'creator_id' => $this->Auth->user('id')
+				)
+			));
+			$this->set(compact('courses'));
+		}
 	}
 	
 	public function grade($formId, $userId) {

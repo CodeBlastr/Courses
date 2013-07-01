@@ -1,18 +1,23 @@
-<ol>FLOW:
+<!--<ol>FLOW:
 	<li><a href="/courses/courses/add">Create the course</a></li>
 	<li><a href="/courses/lessons/add">Add Classes &AMP; Resources</a></li>
 	<li>Setup Gradebook</li>
 	<li><a href="/forms/forms/add/formanswer">Add a Quiz</a></li>
 	<li><a href="/invites/invites/invitation">Invite people</a></li>
-</ol>
+</ol>-->
 
 <h2>Course Grading Options</h2>
 
 <?php
 echo $this->Form->create('Course');
-echo $this->Form->select('Course.id', $courses, array('empty' => '-- Select Course --'));
-echo $this->Form->input('Course.settings.is_percentage', array('type'=>'checkbox', 'label'=>'0 &mdash; 100 (Grade = Percentage)'));
 
+if ( !empty($courses) ) {
+	echo $this->Form->select('Course.id', $courses, array('empty' => '-- Select Course --'));
+} else {
+	echo $this->Form->hidden('Course.id');
+}
+
+echo $this->Form->input('Course.settings.is_percentage', array('type'=>'checkbox', 'label'=>'0 &mdash; 100 (Grade = Percentage)'));
 echo $this->Form->input('Course.settings.letter_grades', array('type' => 'checkbox', 'data-target' => '#letterTable', 'class' => 'toggling'));
 echo $this->Html->tag('table',
 		$this->Html->tableCells(array(

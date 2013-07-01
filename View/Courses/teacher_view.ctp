@@ -162,6 +162,7 @@ if ( !empty($course['Series']['name']) ) {
 						$this->Html->link('<i class="icon-list"></i>' . __('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id']), array('escape' => false)),
 						$this->Html->link('<i class="icon-folder-open"></i>' . __('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
 						$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id']), array('escape' => false)),
+						$this->Html->link('<i class="icon-envelope"></i>' . __('Invite Students'), array('plugin' => 'invites', 'controller' => 'invites', 'action' => 'invitation', $course['Course']['id']), array('escape' => false)),
 						$this->Html->link('<i class="icon-edit"></i>' . __('Edit Course'), array('action' => 'edit', $course['Course']['id']), array('escape' => false)),
 						$this->Html->link('<i class="icon-cog"></i>' . __('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id']), array('escape' => false)),
 						$this->Form->postLink('<i class="icon-remove-sign"></i>' . __('Delete this Course'), array('action' => 'delete', $course['Course']['id']), array('escape' => false), __('Are you sure you want to delete %s ?', $course['Course']['name']))
