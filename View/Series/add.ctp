@@ -7,13 +7,13 @@
 </ol>
 
 <div class="courses form">
-<?php echo $this->Form->create('Series');?>
+<?php echo $this->Form->create('CourseSeries');?>
 	<fieldset>
 		<legend><?php echo __('Create a  Series'); ?></legend>
 	<?php
-//		echo $this->Form->input('Series.parent_id', array('options' => $parentCourses, 'label' => 'Parent Course'));
-		echo $this->Form->input('Series.name');
-		echo $this->Form->input('Series.description', array('label' => 'Description'));
+//		echo $this->Form->input('CourseSeries.parent_id', array('options' => $parentCourses, 'label' => 'Parent Course'));
+		echo $this->Form->input('CourseSeries.name');
+		echo $this->Form->input('CourseSeries.description', array('label' => 'Description'));
 //		echo $this->Form->input('Lesson.location');
 //		echo $this->Form->input('Lesson.school');
 //		echo $this->Form->input('Lesson.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12')));
@@ -23,7 +23,7 @@
 //		echo $this->Form->input('Lesson.is_published', array('label' => 'Active / Inactive'));
 //		echo $this->Form->input('Lesson.is_persistant', array('label' => 'Allow access when Inactive'));
 //		echo $this->Form->input('Lesson.is_private', array('label' => 'Public / Private'));
-		echo $this->Form->input('Series.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
+		echo $this->Form->input('CourseSeries.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Save'));?>

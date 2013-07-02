@@ -16,19 +16,19 @@
 	<?php
 	foreach ($series as $aSeries): ?>
 	<tr>
-		<td><?php echo h($aSeries['Series']['name']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['description']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['location']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['language']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['start']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['end']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['is_published']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['is_private']); ?>&nbsp;</td>
-		<td><?php echo h($aSeries['Series']['is_sequential']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['name']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['description']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['location']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['language']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['start']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['end']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['is_published']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['is_private']); ?>&nbsp;</td>
+		<td><?php echo h($aSeries['CourseSeries']['is_sequential']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $aSeries['Series']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $aSeries['Series']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $aSeries['Series']['id']), null, __('Are you sure you want to delete # %s?', $aSeries['Series']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $aSeries['CourseSeries']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $aSeries['CourseSeries']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $aSeries['CourseSeries']['id']), null, __('Are you sure you want to delete # %s?', $aSeries['CourseSeries']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

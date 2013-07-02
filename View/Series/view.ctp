@@ -1,6 +1,6 @@
 <?php
-echo $this->Html->tag('h1', $series['Series']['name']);
-echo $this->Html->tag('p', $series['Series']['description']);
+echo $this->Html->tag('h1', $series['CourseSeries']['name']);
+echo $this->Html->tag('p', $series['CourseSeries']['description']);
 echo $this->Html->tag('hr');
 
 echo $this->Html->tag('p', 'This series consists of the following courses:');
@@ -17,7 +17,7 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['Series']['id'])),
+			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['CourseSeries']['id'])),
 			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
 			),
 		),
@@ -35,7 +35,7 @@ $this->set('guest_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['Series']['id'])),
+			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['CourseSeries']['id'])),
 			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
 			),
 		),
@@ -53,7 +53,7 @@ $this->set('owner_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['Series']['id'])),
+			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['CourseSeries']['id'])),
 			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
 			),
 		),

@@ -8,7 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class SeriesController extends CoursesAppController {
 
 	public $name = 'Series';
-	public $uses = 'Courses.Series';
+	public $uses = 'Courses.CourseSeries';
 
 /**
  * index method
@@ -32,11 +32,11 @@ class SeriesController extends CoursesAppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->Series->id = $id;
-		if (!$this->Series->exists()) {
+		$this->CourseSeries->id = $id;
+		if (!$this->CourseSeries->exists()) {
 			throw new NotFoundException(__('Invalid series'));
 		}
-		$series =  $this->Series->find('first', array(
+		$series =  $this->CourseSeries->find('first', array(
 			'conditions' => array('id' => $id),
 			'contain' => array(
 				'Course' => array(
@@ -45,7 +45,7 @@ class SeriesController extends CoursesAppController {
 			)
 		));
 		$this->set(compact('series'));
-		$this->set('title_for_layout', $series['Series']['name'] . ' < Series | ' . __SYSTEM_SITE_NAME);
+		$this->set('title_for_layout', $series['CourseSeries']['name'] . ' < Series | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**
@@ -55,10 +55,10 @@ class SeriesController extends CoursesAppController {
  */
 	public function add() {
 		if ( !empty($this->request->data) ) {
-			$this->Series->create();
-			if ($this->Series->saveAll($this->request->data)) {
+			$this->CourseSeries->create();
+			if ($this->CourseSeries->saveAll($this->request->data)) {
 				if ( $this->request->is('ajax') ) {
-					return new CakeResponse(array('body' => $this->Series->id));
+					return new CakeResponse(array('body' => $this->CourseSeries->id));
 				} else {
 					$this->Session->setFlash(__('The series has been created'));
 					$this->redirect(array('action' => 'index'));
@@ -71,7 +71,7 @@ class SeriesController extends CoursesAppController {
 				}
 			}
 		}
-		$courses = $this->Series->Course->find('list', array( 'conditions' => array('creator_id' => $this->userId) ));
+		$courses = $this->CourseSeries->Course->find('list', array( 'conditions' => array('creator_id' => $this->userId) ));
 		$this->set(compact('courses'));
 	}
 
@@ -82,21 +82,21 @@ class SeriesController extends CoursesAppController {
  * @return void
  */
 	public function edit($id = null) {
-		$this->Series->id = $id;
-		if (!$this->Series->exists()) {
+		$this->CourseSeries->id = $id;
+		if (!$this->CourseSeries->exists()) {
 			throw new NotFoundException(__('Invalid series'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Series->saveAll($this->request->data)) {
+			if ($this->CourseSeries->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The series has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The series could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->request->data = $this->Series->read(null, $id);
+			$this->request->data = $this->CourseSeries->read(null, $id);
 		}
-		$courses = $this->Series->Course->find('all', array(
+		$courses = $this->CourseSeries->Course->find('all', array(
 			'conditions' => array('creator_id' => $this->userId),
 			'fields' => array('Course.id', 'Course.parent_id', 'Course.name'),
 			'group' => 'Course.parent_id'
@@ -114,11 +114,11 @@ class SeriesController extends CoursesAppController {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
-		$this->Series->id = $id;
-		if (!$this->Series->exists()) {
+		$this->CourseSeries->id = $id;
+		if (!$this->CourseSeries->exists()) {
 			throw new NotFoundException(__('Invalid series'));
 		}
-		if ($this->Series->delete()) {
+		if ($this->CourseSeries->delete()) {
 			$this->Session->setFlash(__('Series deleted'));
 			$this->redirect(array('action' => 'index'));
 		}

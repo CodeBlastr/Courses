@@ -7,14 +7,14 @@
 </ol>
 
 <div class="courses form">
-<?php echo $this->Form->create('Series');?>
+<?php echo $this->Form->create('CourseSeries');?>
 	<fieldset>
 		<legend><?php echo __('Editing Series'); ?></legend>
 	<?php
 	
 	$i = 0;
 	foreach ( $courses as $course ) {
-		$checked = ( $course['Course']['parent_id'] == $this->request->data['Series']['id'] ) ? true : false;
+		$checked = ( $course['Course']['parent_id'] == $this->request->data['CourseSeries']['id'] ) ? true : false;
 //		$potentialChildren = $this->Form->input("Course.$i.id", array( 'type' => 'checkbox', 'label' => $course['Course']['name'], 'value' => $course['Course']['id'], 'checked' => $checked ));
 //		$potentialChildren .= $this->Form->input("Course.$i.order", array( 'value' => $course['Course']['order'] ));
 		$potentialChildren[] = array(
@@ -28,8 +28,8 @@
 	echo $this->Html->tag('div',
 			
 		$this->Html->tag('div',
-			$this->Form->input('Series.name', array('class' => 'input-xlarge'))
-			. $this->Form->input('Series.description', array('label' => 'Description', 'class' => 'input-xlarge'))
+			$this->Form->input('CourseSeries.name', array('class' => 'input-xlarge'))
+			. $this->Form->input('CourseSeries.description', array('label' => 'Description', 'class' => 'input-xlarge'))
 			, array('class' => 'span6')
 		)
 		. $this->Html->tag('label', 'Courses in this series')
@@ -51,7 +51,7 @@
 //		echo $this->Form->input('Lesson.is_published', array('label' => 'Active / Inactive'));
 //		echo $this->Form->input('Lesson.is_persistant', array('label' => 'Allow access when Inactive'));
 //		echo $this->Form->input('Lesson.is_private', array('label' => 'Public / Private'));
-		echo $this->Form->input('Series.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
+		echo $this->Form->input('CourseSeries.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Save'));?>
