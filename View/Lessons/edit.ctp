@@ -13,7 +13,7 @@
 //			. $this->Form->input('Lesson.school', array('div' => array('class' => 'span4'), 'class' => 'required span12', 'placeholder' => 'School', 'label' => false))
 //			. $this->Form->input('Lesson.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => false, 'class' => 'input-small required', 'div' => array('class' => 'span5')))
 //		);
-		echo $this->Form->input('CourseLesson.description', array('label' => 'Description', 'class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
+		echo $this->Form->input('CourseLesson.description', array('class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
 		echo $this->Form->input('CourseLesson.is_published', array('label' => 'Active / Inactive'));
 		echo $this->Form->input('CourseLesson.is_persistant', array('label' => 'Allow access when Inactive'));
 		echo $this->Form->input('CourseLesson.is_private', array('label' => 'Public / Private'));

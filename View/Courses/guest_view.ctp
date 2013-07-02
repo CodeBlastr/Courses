@@ -48,8 +48,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		<div class="span4">
 			<h3>Instructed by:</h3>
 			<?php
-			echo $this->element('snpsht', array('useGallery' => true, 'userId' => $course['Teacher']['id'], 'thumbSize' => 'medium', 'thumbLink' => 'default'));
-			//echo $this->Html->link($course['Teacher']['full_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $course['Teacher']['id']));
+			echo $this->element('Users.snpsht', array('useGallery' => true, 'userId' => $course['Teacher']['id'], 'thumbSize' => 'medium', 'thumbLink' => 'default', 'showFirstName' => true, 'showLastName' => true));
 			?>
 		</div>
 	</div>
@@ -60,37 +59,23 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<div class="related" style="display:none;">
 		<h4><?php echo __('Lessons');?></h4>
 		<?php if (!empty($course['Lesson'])):?>
-		<table cellpadding = "0" cellspacing = "0">
-		<tr>
-			<th><?php echo __('Name'); ?></th>
-			<th><?php echo __('Description'); ?></th>
-	<!--		<th><?php echo __('Location'); ?></th>-->
-	<!--		<th><?php echo __('Language'); ?></th>-->
-			<th><?php echo __('Start'); ?></th>
-			<th><?php echo __('End'); ?></th>
-	<!--		<th><?php echo __('Is Published'); ?></th>
-			<th><?php echo __('Is Private'); ?></th>
-			<th><?php echo __('Is Persistant'); ?></th>
-			<th><?php echo __('Is Sequential'); ?></th>-->
-		</tr>
-		<?php
-			$i = 0;
-			foreach ($course['Lesson'] as $childCourse): ?>
+			<table cellpadding = "0" cellspacing = "0">
 			<tr>
-				<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
-				<td><?php echo $childCourse['description'];?></td>
-	<!--			<td><?php echo $childCourse['location'];?></td>-->
-	<!--			<td><?php echo $childCourse['language'];?></td>-->
-				<td><?php echo $this->Time->niceShort($childCourse['start']);?></td>
-				<td><?php echo $this->Time->niceShort($childCourse['end']);?></td>
-	<!--			<td><?php echo $childCourse['is_published'];?></td>
-				<td><?php echo $childCourse['is_private'];?></td>
-				<td><?php echo $childCourse['is_persistant'];?></td>
-				<td><?php echo $childCourse['is_sequential'];?></td>-->
+				<th></th>
+				<th><?php echo __('Name'); ?></th>
+				<th><?php echo __('Description'); ?></th>
 			</tr>
-		<?php endforeach; ?>
-		</table>
-	<?php endif; ?>
+			<?php
+				$i = 0;
+				foreach ($course['Lesson'] as $childCourse): ?>
+				<tr>
+					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
+					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
+					<td><?php echo strip_tags($childCourse['description']);?></td>
+				</tr>
+			<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
 
 	</div>
 

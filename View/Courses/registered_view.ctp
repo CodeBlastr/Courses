@@ -1,3 +1,4 @@
+<div class="row-fluid">
 <?php
 
 //debug($course);
@@ -7,19 +8,8 @@ $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
 $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 
-echo $this->Html->tag('div',
-	$this->Calendar->renderCalendar(array(
-		'sources' => array(
-			'/courses/courses/calendar/teacher/'.$course['Course']['id']
-		),
-		'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
-	))
-	. $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'))
-	, array('class' => 'span5 pull-right')
-);
-
 ?>
-<div class="courses view span7">
+<div class="courses view span8">
 	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>
 	<p><b><?php echo $course['Course']['school'] ?></b></p>
 	<p><?php echo $course['Course']['description'] ?></p>
@@ -33,16 +23,17 @@ echo $this->Html->tag('div',
 		);
 	}
 	?>
-	<hr />
-	<p>
-		<b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)
-	</p>
-	<p>
-		<b>Location: </b><?php echo $course['Course']['location'] ?>
-	</p>
-	<p>
-		<b>Language: </b><?php echo $course['Course']['language'] ?>
-	</p>
+
+	<table>
+		<tr>
+			<td><b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)</td>
+			<td><b>Language: </b><?php echo $course['Course']['language'] ?></td>
+		</tr>
+		<tr>
+			<td><b>Location: </b><?php echo $course['Course']['location'] ?></td>
+			<td><b>Grade Level: </b><?php echo $course['Course']['grade'] ?></td>
+		</tr>
+	</table>
 	<p>
 		<?php
 		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
@@ -92,61 +83,60 @@ echo $this->Html->tag('div',
 		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Grade')) . $this->Html->tableCells($studentGradeCells));
 	}
 
-	if ( !empty($courseUsers) ) {
-		echo '<h4>Course Roster</h4>';
-		foreach ( $courseUsers as $user ) {
-			$userCells[] = array(
-				$this->Html->link($user['User']['last_name'].', '.$user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
-			);
-		}
-		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student Name')) . $this->Html->tableCells($userCells));
-	}
+
 	?>
 
 
-	<dl>
-<!--		<dt><?php echo __('Parent Course'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($course['ParentCourse']['name'], array('controller' => 'courses', 'action' => 'view', $course['ParentCourse']['id'])); ?>
-			&nbsp;
-		</dd>-->
-	</dl>
-
 </div>
+	<div class="span4 pull-right">
+		<?php
+		// calendar
+		echo $this->Calendar->renderCalendar(array(
+			'sources' => array(
+				'/courses/courses/calendar/teacher/' . $course['Course']['id']
+			),
+			'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
+		));
 
-<div class="related pull-left">
-	<h4><?php echo __('Lessons');?></h4>
-	<?php if (!empty($course['Lesson'])):?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Name'); ?></th>
-		<th><?php echo __('Description'); ?></th>
-		<th><?php echo __('Location'); ?></th>
-		<th><?php echo __('Language'); ?></th>
-		<th><?php echo __('Start'); ?></th>
-		<th><?php echo __('End'); ?></th>
-		<th class="actions"><?php echo __('Actions');?></th>
-	</tr>
-	<?php
-		$i = 0;
-		foreach ($course['Lesson'] as $childCourse): ?>
-		<tr>
-			<td><?php echo $childCourse['name'];?></td>
-			<td><?php echo $childCourse['description'];?></td>
-			<td><?php echo $childCourse['location'];?></td>
-			<td><?php echo $childCourse['language'];?></td>
-			<td><?php echo $this->Time->niceShort($childCourse['start']);?></td>
-			<td><?php echo $this->Time->niceShort($childCourse['end']);?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'lessons', 'action' => 'view', $childCourse['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'lessons', 'action' => 'edit', $childCourse['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'lessons', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
+		// messages
+		echo '<h5>Course Messages</h5>';
+		echo $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'));
 
+		// roster
+		if ( !empty($courseUsers) ) {
+			echo '<h5>Roster</h5>';
+			foreach ( $courseUsers as $user ) {
+				$userCells[] = array(
+					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
+				);
+			}
+			echo $this->Html->tag('table', $this->Html->tableCells($userCells));
+		}
+		?>
+	</div>
+
+	<div class="related row span12">
+		<h4><?php echo __('Lessons');?></h4>
+		<?php if (!empty($course['Lesson'])):?>
+			<table cellpadding = "0" cellspacing = "0">
+			<tr>
+				<th></th>
+				<th><?php echo __('Name'); ?></th>
+				<th><?php echo __('Description'); ?></th>
+			</tr>
+			<?php
+				$i = 0;
+				foreach ($course['Lesson'] as $childCourse): ?>
+				<tr>
+					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
+					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
+					<td><?php echo strip_tags($childCourse['description']);?></td>
+				</tr>
+			<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
+
+	</div>
 </div>
 
 <?php

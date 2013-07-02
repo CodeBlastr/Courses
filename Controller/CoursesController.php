@@ -300,6 +300,29 @@ class _CoursesController extends CoursesAppController {
 	protected function _assign_quiz() {
 		
 	}
+
+	public function editAssignment($id) {
+		if ( $id ) {
+			$this->request->data = $this->Course->Task->find('first', array(
+				'conditions' => array('Task.id' => $id),
+				'contain' => array('ChildTask')
+			));
+
+			$courseUsers = $this->Course->CourseUser->find('all', array(
+				'conditions' => array('CourseUser.course_id' => $this->request->data['Task']['foreign_key']),
+				'contain' => array('User'),
+				'order' => array('User.last_name ASC')
+			));
+			$this->set('courseUsers', Set::combine($courseUsers, '{n}.User.id', '{n}'));
+
+			// get my Courses to attach to
+			$this->set('parentCourses', $this->Course->find('list', array(
+				'conditions' => array('creator_id' => $this->userId)
+			)));
+
+			$this->view = 'teacher_assignment';
+		}
+	}
 	
 	/**
 	 * View a task
@@ -323,7 +346,7 @@ class _CoursesController extends CoursesAppController {
 				$completedAssignment['Task']['is_completed'] = '1';
 				$completedAssignment['Task']['assignee_id'] = $this->Auth->user('id');
 				$completedAssignment['Task']['completed_date'] = date("Y-m-d");
-//				debug($completedAssignment); break;
+				// save & redirect
 				if ( $this->Course->Task->save($completedAssignment) ) {
 					$this->Session->setFlash(__('The assignment has been saved.'));
 					$this->redirect(array('action' => 'view', $task['Task']['foreign_key']));

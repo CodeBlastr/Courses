@@ -1,7 +1,7 @@
 <div class="tasks form">
 <?php echo $this->Form->create('Task', array('type' => 'file'));?>
 	<fieldset>
- 		<legend><?php echo __('Create Task');?></legend>
+ 		<legend><?php echo __('Create Assignment');?></legend>
 	<?php
 		echo $this->Form->input('Task.parent_id', array('empty' => true, 'label' => 'Which task list should this be on?'));
 		echo $this->Form->input('Task.name');
@@ -21,18 +21,3 @@
 	</fieldset>
 <?php echo $this->Form->end('Submit');?>
 </div>
-
-
-<?php 
-// set the contextual menu items
-$this->set('context_menu', array('menus' => array(
-	array(
-		'heading' => 'Tasks',
-		'items' => array(
-			  $this->Html->link(__('My Tasks', true), array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'my')),
-			  $this->Html->link(__('List Tasks', true), array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'index')),
-			  ),
-		),
-	)));
-?>
-

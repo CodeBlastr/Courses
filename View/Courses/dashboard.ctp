@@ -74,13 +74,17 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 					<h4>Upcoming Events</h4>
 					<table>
 						<?php
+						$teachingEvents = '';
 						foreach ( $tasks as $task ) {
 							if ( in_array($task['Task']['foreign_key'], $courseIdsAsTeacher) ) {
-								echo $this->Html->tag('tr',
+								$teachingEvents .= $this->Html->tag('tr',
 										'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
 										'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
 										);
 							}
+						}
+						if ( empty($teachingEvents) ) {
+							echo '<tr><td><i class="muted">no upcoming events</i></td></tr>';
 						}
 						?>
 					</table>
@@ -99,7 +103,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 			<div class="span6">
 				<?php
 				if ( empty($coursesAsTeacher) && empty($seriesAsTeacher) ) {
-					echo 'You haven\'t created any courses yet. <a href="/courses/courses/add">Start Teaching</a>';
+					echo 'You haven\'t created any courses yet.  <a href="/courses/courses/add">Start Teaching</a>';
 				}
 
 				if ( !empty($seriesAsTeacher) ) {
