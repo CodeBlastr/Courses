@@ -63,7 +63,7 @@ class Course extends CoursesAppModel {
 			'foreignKey' => 'foreign_key'
 		),
 		'Grade' => array(
-			'className' => 'Courses.Grade',
+			'className' => 'Courses.CourseGrade',
 			'foreignKey' => 'course_id'
 		),
 		'Message' => array(
@@ -74,8 +74,12 @@ class Course extends CoursesAppModel {
 	
 	public $belongsTo = array(
 		'Series' => array(
-			'className' => 'Courses.Series',
+			'className' => 'Courses.CourseSeries',
 			'foreignKey' => 'parent_id'
+		),
+		'Teacher' => array(
+			'className' => 'Users.User',
+			'foreignKey' => 'creator_id'
 		)
 	);
 	

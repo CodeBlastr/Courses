@@ -5,7 +5,7 @@ App::uses('CoursesAppModel', 'Courses.Model');
  *
  * @property Course $ParentCourse
  */
-class Grade extends CoursesAppModel {
+class CourseGrade extends CoursesAppModel {
 	
 	public $name = 'Grade';
 	
