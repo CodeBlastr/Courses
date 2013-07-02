@@ -59,7 +59,7 @@ if ( !empty($course['Series']['name']) ) {
 				echo '<h4>Submitted Answers</h4>';
 				foreach ( $course['Grade'] as $grade ) {
 					$studentGradeCells[] = array(
-						$this->Html->link($courseUsers[$grade['student_id']]['User']['last_name'] . ', ' . $courseUsers[$grade['student_id']]['User']['first_name'], array('plugin' => 'courses', 'controller' => 'grades', 'action' => 'grade', $grade['form_id'], $grade['student_id'])),
+						$this->Html->link($courseUsers[$grade['student_id']]['User']['last_name'] . ', ' . $courseUsers[$grade['student_id']]['User']['first_name'], array('plugin' => 'courses', 'controller' => 'grades', 'action' => 'grade', $grade['foreign_key'], $grade['student_id'])),
 						( $grade['grade'] === null ) ? '&mdash;' : $grade['grade']
 					);
 				}

@@ -8,7 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class GradesController extends CoursesAppController {
 
 	public $name = 'Grades';
-	public $uses = array('Courses.Grade');
+	public $uses = array('Courses.CourseGrade');
 
 /**
  * index method
@@ -16,7 +16,7 @@ class GradesController extends CoursesAppController {
  * @return void
  */
 	public function index() {
-		$this->Grade->recursive = 0;
+		$this->CourseGrade->recursive = 0;
 		$this->set('grades', $this->paginate());
 	}
 
@@ -27,11 +27,11 @@ class GradesController extends CoursesAppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->Grade->id = $id;
-		if (!$this->Grade->exists()) {
+		$this->CourseGrade->id = $id;
+		if (!$this->CourseGrade->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$this->set('grades', $this->Grade->read(null, $id));
+		$this->set('grades', $this->CourseGrade->read(null, $id));
 	}
 
 /**
@@ -41,15 +41,15 @@ class GradesController extends CoursesAppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Grade->create();
-			if ($this->Grade->save($this->request->data)) {
+			$this->CourseGrade->create();
+			if ($this->CourseGrade->save($this->request->data)) {
 				$this->Session->setFlash(__('The Grade has been created'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The Grade could not be created. Please, try again.'));
 			}
 		}
-		$parentCourses = $this->Grade->Course->find('list');
+		$parentCourses = $this->CourseGrade->Course->find('list');
 		$this->set(compact('parentCourses'));
 	}
 
@@ -60,21 +60,21 @@ class GradesController extends CoursesAppController {
  * @return void
  */
 	public function edit($id = null) {
-		$this->Grade->id = $id;
-		if (!$this->Grade->exists()) {
+		$this->CourseGrade->id = $id;
+		if (!$this->CourseGrade->exists()) {
 			throw new NotFoundException(__('Invalid Grade'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Grade->save($this->request->data)) {
+			if ($this->CourseGrade->save($this->request->data)) {
 				$this->Session->setFlash(__('The Grade has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The Grade could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->request->data = $this->Grade->read(null, $id);
+			$this->request->data = $this->CourseGrade->read(null, $id);
 		}
-		$parentCourses = $this->Grade->Course->find('list');
+		$parentCourses = $this->CourseGrade->Course->find('list');
 		$this->set(compact('parentCourses'));
 	}
 
@@ -88,11 +88,11 @@ class GradesController extends CoursesAppController {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
-		$this->Grade->id = $id;
-		if (!$this->Grade->exists()) {
+		$this->CourseGrade->id = $id;
+		if (!$this->CourseGrade->exists()) {
 			throw new NotFoundException(__('Invalid Grade'));
 		}
-		if ($this->Grade->delete()) {
+		if ($this->CourseGrade->delete()) {
 			$this->Session->setFlash(__('Grade deleted'));
 			$this->redirect(array('action' => 'index'));
 		}
@@ -106,21 +106,21 @@ class GradesController extends CoursesAppController {
  * @param int $id
  */
 	public function setup($id = null) {
-		if ( !$this->Grade->Course->exists() ) {
+		if ( !$this->CourseGrade->Course->exists() ) {
 			//throw new NotFoundException(__('Invalid Course'));
 		}
 		if ( $this->request->is('post') || $this->request->is('put') ) {
-			if ($this->Grade->Course->save($this->request->data)) {
+			if ($this->CourseGrade->Course->save($this->request->data)) {
 				$this->Session->setFlash(__('The Course\'s Gradebook has been saved'));
 				$this->redirect(array('controller' => 'courses', 'action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The Course\'s GradeBook could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->request->data = $this->Grade->Course->read(null, $id);
+			$this->request->data = $this->CourseGrade->Course->read(null, $id);
 		}
 		if ( empty($id) ) {
-			$courses = $this->Grade->Course->find('list', array(
+			$courses = $this->CourseGrade->Course->find('list', array(
 				'conditions' => array(
 					'parent_id' => null,
 					'creator_id' => $this->Auth->user('id')
@@ -132,15 +132,15 @@ class GradesController extends CoursesAppController {
 	
 	public function grade($formId, $userId) {
 		if ( $this->request->is('post') || $this->request->is('put') ) {
-			if ($this->Grade->save($this->request->data)) {
+			if ($this->CourseGrade->save($this->request->data)) {
 				$this->Session->setFlash(__('Grade Saved.'));
-				$this->redirect(array('controller' => 'courses', 'action' => 'view', $this->request->data['Grade']['course_id']));
+				$this->redirect(array('controller' => 'courses', 'action' => 'view', $this->request->data['CourseGrade']['course_id']));
 			} else {
 				$this->Session->setFlash(__('Grade could not be saved.'));
 			}
 		}
-		$this->request->data = $this->Grade->find('first', array(
-			'conditions' => array( 'Grade.form_id' => $formId ),
+		$this->request->data = $this->CourseGrade->find('first', array(
+			'conditions' => array( 'CourseGrade.foreign_key' => $formId ),
 			'contain' => array(
 				'Form' => array(
 					'FormInput' => array(

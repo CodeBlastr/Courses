@@ -17,7 +17,7 @@ foreach ( $this->request->data['Form']['FormInput'] as $question ) { ?>
 	</tbody>
 </table>
 <?php
-echo $this->Form->create('Grade');
+echo $this->Form->create('CourseGrade');
 echo $this->Form->input('id');
 echo $this->Form->hidden('course_id');
 echo $this->Form->input('grade', array('placeholder' => '100', 'min' => 0, 'max' => '100'));

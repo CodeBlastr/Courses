@@ -42,7 +42,7 @@ class CourseGrade extends CoursesAppModel {
 		),
 		'Form' => array(
 			'className' => 'Forms.Form',
-			'foreignKey' => 'form_id',
+			'foreignKey' => 'foreign_key',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
