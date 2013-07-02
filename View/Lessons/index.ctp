@@ -21,20 +21,20 @@
 		<td>
 			<?php echo $this->Html->link($lesson['Course']['name'], array('controller' => 'courses', 'action' => 'view', $lesson['Course']['id'])); ?>
 		</td>
-		<td><?php echo h($lesson['Lesson']['name']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['description']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['location']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['language']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['start']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['end']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['is_published']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['is_private']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['is_persistant']); ?>&nbsp;</td>
-		<td><?php echo h($lesson['Lesson']['is_sequential']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['name']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['description']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['location']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['language']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['start']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['end']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['is_published']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['is_private']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['is_persistant']); ?>&nbsp;</td>
+		<td><?php echo h($lesson['CourseLesson']['is_sequential']); ?>&nbsp;</td>
 		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $lesson['Lesson']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $lesson['Lesson']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $lesson['Lesson']['id']), null, __('Are you sure you want to delete # %s?', $lesson['Lesson']['id'])); ?>
+			<?php echo $this->Html->link(__('View'), array('action' => 'view', $lesson['CourseLesson']['id'])); ?>
+			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $lesson['CourseLesson']['id'])); ?>
+			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $lesson['CourseLesson']['id']), null, __('Are you sure you want to delete # %s?', $lesson['CourseLesson']['id'])); ?>
 		</td>
 	</tr>
 <?php endforeach; ?>

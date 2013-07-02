@@ -8,7 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class LessonsController extends CoursesAppController {
 
 	public $name = 'Lessons';
-	public $uses = 'Courses.Lesson';
+	public $uses = 'Courses.CourseLesson';
 
 /**
  * index method
@@ -16,9 +16,9 @@ class LessonsController extends CoursesAppController {
  * @return void
  */
 	public function index() {
-		$this->Lesson->recursive = 0;
+		$this->CourseLesson->recursive = 0;
 		$this->paginate = array(
-			'conditions' => array('Lesson.parent_id !=' => null)
+			'conditions' => array('CourseLesson.parent_id !=' => null)
 		);
 		$this->set('lessons', $this->paginate());
 	}
@@ -32,16 +32,17 @@ class LessonsController extends CoursesAppController {
  * @return void
  */
 	public function view($id = null) {
-		$this->Lesson->id = $id;
-		if (!$this->Lesson->exists()) {
+		$this->CourseLesson->id = $id;
+		if (!$this->CourseLesson->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$lesson =  $this->Lesson->find('first', array(
-			'conditions' => array('Lesson.id' => $id),
+		$lesson =  $this->CourseLesson->find('first', array(
+			'conditions' => array('CourseLesson.id' => $id),
 			'contain' => array('Form', 'Media', 'Course')
 		));
+
 		$this->set(compact('lesson'));
-		$this->set('title_for_layout', $lesson['Lesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+		$this->set('title_for_layout', $lesson['CourseLesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**
@@ -51,13 +52,13 @@ class LessonsController extends CoursesAppController {
  */
 	public function add() {
 		if ( !empty($this->request->data) ) {
-			$this->Lesson->create();
-			if ($this->Lesson->saveAll($this->request->data)) {
+			$this->CourseLesson->create();
+			if ($this->CourseLesson->saveAll($this->request->data)) {
 				if ( $this->request->is('ajax') ) {
-					return new CakeResponse(array('body' => $this->Lesson->id));
+					return new CakeResponse(array('body' => $this->CourseLesson->id));
 				} else {
 					$this->Session->setFlash(__('The lesson has been created'));
-					$this->redirect(array('action' => 'view', $this->Lesson->id));
+					$this->redirect(array('action' => 'view', $this->CourseLesson->id));
 				}
 			} else {
 				if ( $this->request->is('ajax') ) {
@@ -67,7 +68,7 @@ class LessonsController extends CoursesAppController {
 				}
 			}
 		}
-		$parentCourses = $this->Lesson->Course->find('list', array(
+		$parentCourses = $this->CourseLesson->Course->find('list', array(
 			'conditions' => array('creator_id' => $this->userId)
 			));
 		$this->set(compact('parentCourses'));
@@ -80,21 +81,21 @@ class LessonsController extends CoursesAppController {
  * @return void
  */
 	public function edit($id = null) {
-		$this->Lesson->id = $id;
-		if (!$this->Lesson->exists()) {
+		$this->CourseLesson->id = $id;
+		if (!$this->CourseLesson->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Lesson->saveAll($this->request->data)) {
+			if ($this->CourseLesson->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The lesson has been saved'));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The lesson could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->request->data = $this->Lesson->read(null, $id);
+			$this->request->data = $this->CourseLesson->read(null, $id);
 		}
-		$parentCourses = $this->Lesson->Course->find('list');
+		$parentCourses = $this->CourseLesson->Course->find('list');
 		$this->set(compact('parentCourses'));
 	}
 
@@ -108,11 +109,11 @@ class LessonsController extends CoursesAppController {
 		if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
-		$this->Lesson->id = $id;
-		if (!$this->Lesson->exists()) {
+		$this->CourseLesson->id = $id;
+		if (!$this->CourseLesson->exists()) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		if ($this->Lesson->delete()) {
+		if ($this->CourseLesson->delete()) {
 			$this->Session->setFlash(__('Lesson deleted'));
 			$this->redirect(array('action' => 'index'));
 		}
@@ -121,16 +122,16 @@ class LessonsController extends CoursesAppController {
 	}
 
 	public function watch ($id = null) {
-		$this->Lesson->id = $id;
-		if ( !$this->Lesson->exists() ) {
+		$this->CourseLesson->id = $id;
+		if ( !$this->CourseLesson->exists() ) {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
-		$lesson =  $this->Lesson->find('first', array(
-			'conditions' => array('Lesson.id' => $id),
+		$lesson =  $this->CourseLesson->find('first', array(
+			'conditions' => array('CourseLesson.id' => $id),
 			'contain' => array('Form', 'Media', 'Course')
 		));
 		$this->set(compact('lesson'));
-		$this->set('title_for_layout', $lesson['Lesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+		$this->set('title_for_layout', $lesson['CourseLesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
 
 }

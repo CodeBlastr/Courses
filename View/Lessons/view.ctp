@@ -1,22 +1,22 @@
 <?php
 $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 
-$start = strtotime($lesson['Lesson']['start']);
-$end = strtotime($lesson['Lesson']['end']);
+$start = strtotime($lesson['CourseLesson']['start']);
+$end = strtotime($lesson['CourseLesson']['end']);
 $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 ?>
 <div class="lessons view">
-	<h2><?php echo $lesson['Lesson']['name'] ?></h2>
-	<p><?php echo $lesson['Lesson']['description'] ?></p>
+	<h2><?php echo $lesson['CourseLesson']['name'] ?></h2>
+	<p><?php echo $lesson['CourseLesson']['description'] ?></p>
 	<hr />
 	<p>
-		<b>Starts: </b><?php echo $this->Time->niceShort($lesson['Lesson']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)
+		<b>Starts: </b><?php echo $this->Time->niceShort($lesson['CourseLesson']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)
 	</p>
 	<p>
-		<b>Location: </b><?php echo $lesson['Lesson']['location'] ?>
+		<b>Location: </b><?php echo $lesson['CourseLesson']['location'] ?>
 	</p>
 	<p>
-		<b>Language: </b><?php echo $lesson['Lesson']['language'] ?>
+		<b>Language: </b><?php echo $lesson['CourseLesson']['language'] ?>
 	</p>
 	<p><a href="#" class="btn btn-primary">Join</a></p>
 	<hr />
@@ -50,11 +50,11 @@ $this->set('context_menu', array('menus' => array(
 //			),
 		),
 	array(
-		'heading' => $lesson['Lesson']['name'],
+		'heading' => $lesson['CourseLesson']['name'],
 		'items' => array(
 			$this->Html->link('<i class="icon-folder-open"></i>'.__('Add Lesson Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
-			$this->Html->link('<i class="icon-edit"></i>'.__('Edit this Lesson'), array('action' => 'edit', $lesson['Lesson']['id']), array('escape' => false)),
-			$this->Form->postLink('<i class="icon-remove-sign"></i>'.__('Delete this Lesson'), array('action' => 'delete', $lesson['Lesson']['id']), array('escape' => false), __('Are you sure you want to delete this lesson?')),
+			$this->Html->link('<i class="icon-edit"></i>'.__('Edit this Lesson'), array('action' => 'edit', $lesson['CourseLesson']['id']), array('escape' => false)),
+			$this->Form->postLink('<i class="icon-remove-sign"></i>'.__('Delete this Lesson'), array('action' => 'delete', $lesson['CourseLesson']['id']), array('escape' => false), __('Are you sure you want to delete this lesson?')),
 			),
 		),
 	array(
