@@ -29,10 +29,7 @@ if ( !empty($course['Series']['name']) ) {
 
 		<hr />
 			<?php
-			if ( !empty($course['Media']) ) {
-				echo '<h4>Course Materials</h4>';
-				echo $this->element('Courses.displayMaterialsThumbs', array('media' => $course['Media']));
-			}
+
 
 			if ( !empty($course['Task']) ) {
 				echo '<h4>Assignments</h4>';

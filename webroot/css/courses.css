@@ -30,3 +30,7 @@
   max-height: 125px;
 /*  max-width: 250px;*/
 }
+
+.noBulletsInMe li {
+  list-style-type: none;
+}

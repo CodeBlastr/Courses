@@ -126,6 +126,9 @@ class _CoursesController extends CoursesAppController {
 				),
 				'Series' => array(
 					'fields' => array('Series.id', 'Series.name', 'Series.is_sequential')
+				),
+				'Teacher' => array(
+					'fields' => array('Teacher.id', 'Teacher.full_name')
 				)
 			)
 		));

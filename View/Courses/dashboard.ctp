@@ -1,4 +1,6 @@
-
+<?php
+$this->Html->css('/courses/css/courses', null, array('inline'=>false));
+?>
 <ul class="nav nav-tabs" id="courseDashboards">
 	<li class="active"><a href="#dashboard">Dashboard</a></li>
 	<li><a href="#learning">Learning</a></li>
@@ -9,16 +11,18 @@
 
 		<div class="row-fluid">
 			<div class="span6">
-				<div>
+				<div class="noBulletsInMe">
 					<h4>Upcoming Events</h4>
-					<?php
-					foreach ( $tasks as $task ) {
-						echo $this->Html->tag('li',
-								$this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id']))
-								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
-								);
-					}
-					?>
+					<table>
+						<?php
+						foreach ( $tasks as $task ) {
+							echo $this->Html->tag('tr',
+									'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
+									'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
+									);
+						}
+						?>
+					</table>
 				</div>
 				<div>
 					<h4>Courses Starting Soon</h4>
@@ -66,18 +70,20 @@
 
 		<div class="row-fluid">
 			<div class="span6">
-				<div>
-					<h4>Upcoming `Tasks`</h4>
-					<?php
-					foreach ( $tasks as $task ) {
-						if ( in_array($task['Task']['foreign_key'], $courseIdsAsTeacher) ) {
-							echo $this->Html->tag('li',
-								$this->Html->link($task['Task']['name'], array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'view', $task['Task']['id']))
-								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
-								);
+				<div class="noBulletsInMe">
+					<h4>Upcoming Events</h4>
+					<table>
+						<?php
+						foreach ( $tasks as $task ) {
+							if ( in_array($task['Task']['foreign_key'], $courseIdsAsTeacher) ) {
+								echo $this->Html->tag('tr',
+										'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
+										'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
+										);
+							}
 						}
-					}
-					?>
+						?>
+					</table>
 				</div>
 				<div>
 					<h4>Gradebook</h4>
@@ -165,27 +171,29 @@
 
 		<div class="row-fluid">
 			<div class="span6">
-				<div>
-					<h4>Upcoming `Tasks`</h4>
-					<?php
-					foreach ( $tasks as $task ) {
-						if ( in_array($task['Task']['foreign_key'], $courseIdsAsStudent) ) {
-							echo $this->Html->tag('li',
-								$this->Html->link($task['Task']['name'], array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'view', $task['Task']['id']))
-								. ' - ' . $this->Time->niceShort($task['Task']['due_date'])
-								);
+				<div class="noBulletsInMe">
+					<h4>Upcoming Events</h4>
+					<table>
+						<?php
+						foreach ( $tasks as $task ) {
+							if ( in_array($task['Task']['foreign_key'], $courseIdsAsStudent) ) {
+								echo $this->Html->tag('tr',
+										'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
+										'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
+										);
+							}
 						}
-					}
-					?>
+						?>
+					</table>
 				</div>
 				<div>
-					<h4>Your Grades</h4>
+<!--					<h4>Your Grades</h4>-->
 					<?php
-					echo $this->Html->link(
-									$this->Html->image('/courses/img/1372452108_korganizer.png'),
-									array('controller' => 'gradebooks', 'action' => 'view'),
-									array('escape' => false, 'title' => 'View')
-								);
+//					echo $this->Html->link(
+//									$this->Html->image('/courses/img/1372452108_korganizer.png'),
+//									array('controller' => 'gradebooks', 'action' => 'view'),
+//									array('escape' => false, 'title' => 'View')
+//								);
 					?>
 				</div>
 			</div>
