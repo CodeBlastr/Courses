@@ -33,8 +33,8 @@
 		<hr />
 
 			<div class="related">
-				<h4><?php echo __('Lessons'); ?></h4>
 				<?php if (!empty($course['Lesson'])):?>
+					<h4><?php echo __('Lessons'); ?></h4>
 					<table cellpadding = "0" cellspacing = "0">
 					<tr>
 						<th></th>

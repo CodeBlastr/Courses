@@ -1,10 +1,3 @@
-<ol>FLOW:
-	<li><a href="/courses/courses/add">Create the course</a></li>
-	<li>Add Classes &AMP; Resources</li>
-	<li><a href="/courses/grades/setup">Setup Gradebook</a></li>
-	<li><a href="/forms/form_inputs/create">Add a Quiz</a></li>
-	<li><a href="/invites/invites/invitation">Invite people</a></li>
-</ol>
 
 <div class="courses form">
 <?php echo $this->Form->create('CourseSeries');?>
@@ -65,24 +58,16 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('View All Series'), array('controller' => 'series', 'action' => 'index')),
-			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			$this->Html->link('<i class="icon-th-list"></i>' .__('View All Series'), array('controller' => 'series', 'action' => 'index'), array('escape' => false)),
+			$this->Html->link('<i class="icon-plus"></i>' .__('Create New Series'), array('controller' => 'series', 'action' => 'add'), array('escape' => false))
 			),
 		),
 	array(
 		'heading' => 'Courses',
 		'items' => array(
-			$this->Html->link(__('View All Courses'), array('controller' => 'courses', 'action' => 'index')),
-			$this->Html->link(__('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard')),
-			$this->Html->link(__('Create New Course'), array('controller' => 'courses', 'action' => 'add'))
-			),
-		),
-	array(
-		'heading' => 'Lessons',
-		'items' => array(
-			$this->Html->link(__('View All Lessons'), array('controller' => 'lessons', 'action' => 'index')),
-			$this->Html->link(__('View Your Lessons'), array('controller' => 'lessons', 'action' => 'dashboard')),
-			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add'))
+			$this->Html->link('<i class="icon-th-list"></i>' .__('View All Courses'), array('controller' => 'courses', 'action' => 'index'), array('escape' => false)),
+			$this->Html->link('<i class="icon-briefcase"></i>' .__('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard'), array('escape' => false)),
+			$this->Html->link('<i class="icon-plus"></i>' .__('Create New Course'), array('controller' => 'courses', 'action' => 'add'), array('escape' => false))
 			),
 		),
 	)));

@@ -92,11 +92,15 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				<div>
 					<h4>Gradebook</h4>
 					<?php
-					echo $this->Html->link(
-							$this->Html->image('/courses/img/1372452108_korganizer.png'),
-							array('controller' => 'gradebooks', 'action' => 'view'),
-							array('escape' => false, 'title' => 'View')
-							);
+					if ( !empty($coursesAsTeacher) || !empty($seriesAsTeacher) ) {
+						echo $this->Html->link(
+								$this->Html->image('/courses/img/1372452108_korganizer.png'),
+								array('controller' => 'gradebooks', 'action' => 'view'),
+								array('escape' => false, 'title' => 'View')
+								);
+					} else {
+						echo '<i class="muted">no gradebooks found</i>';
+					}
 					?>
 				</div>
 			</div>

@@ -18,7 +18,7 @@ class SeriesController extends CoursesAppController {
 	public function index() {
 		$this->Series->recursive = 0;
 		$this->paginate = array(
-			'conditions' => array('Series.parent_id' => null)
+			'conditions' => array('CourseSeries.parent_id' => null)
 		);
 		$this->set('series', $this->paginate());
 	}

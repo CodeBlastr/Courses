@@ -42,12 +42,33 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		?>
 	</p>
 	<hr />
-	<?php
-	if ( !empty($course['Media']) ) {
-		echo '<h4>Course Materials</h4>';
-		echo $this->element('Courses.displayMaterialsThumbs', array('media' => $course['Media']));
-	}
 
+	<div class="related row span12">
+		<h4><?php echo __('Lessons');?></h4>
+		<?php if (!empty($course['Lesson'])):?>
+			<table cellpadding = "0" cellspacing = "0">
+			<tr>
+				<th></th>
+				<th><?php echo __('Name'); ?></th>
+				<th><?php echo __('Description'); ?></th>
+			</tr>
+			<?php
+				$i = 0;
+				foreach ($course['Lesson'] as $childCourse): ?>
+				<tr>
+					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
+					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
+					<td><?php echo strip_tags($childCourse['description']);?></td>
+				</tr>
+			<?php endforeach; ?>
+			</table>
+		<?php endif; ?>
+
+	</div>
+
+	<?php
+
+	// Assignments
 	if ( !empty($course['Task']) ) {
 		echo '<h4>Assignments</h4>';
 		foreach ( $course['Task'] as $task ) {
@@ -83,6 +104,10 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		echo $this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Grade')) . $this->Html->tableCells($studentGradeCells));
 	}
 
+	if ( !empty($course['Media']) ) {
+		echo '<h4>Course Materials</h4>';
+		echo $this->element('Courses.displayMaterialsThumbs', array('media' => $course['Media']));
+	}
 
 	?>
 
@@ -115,28 +140,6 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		?>
 	</div>
 
-	<div class="related row span12">
-		<h4><?php echo __('Lessons');?></h4>
-		<?php if (!empty($course['Lesson'])):?>
-			<table cellpadding = "0" cellspacing = "0">
-			<tr>
-				<th></th>
-				<th><?php echo __('Name'); ?></th>
-				<th><?php echo __('Description'); ?></th>
-			</tr>
-			<?php
-				$i = 0;
-				foreach ($course['Lesson'] as $childCourse): ?>
-				<tr>
-					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
-					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
-					<td><?php echo strip_tags($childCourse['description']);?></td>
-				</tr>
-			<?php endforeach; ?>
-			</table>
-		<?php endif; ?>
-
-	</div>
 </div>
 
 <?php
