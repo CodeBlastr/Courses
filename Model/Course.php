@@ -14,10 +14,6 @@ class Course extends CoursesAppModel {
  * @var string
  */
 	public $displayField = 'name';
-	
-	public $actsAs = array(
-        'Galleries.Mediable' => array('modelAlias' => 'Course'),
-		);
 
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 

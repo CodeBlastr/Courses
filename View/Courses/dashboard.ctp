@@ -119,24 +119,24 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 						echo $this->Html->tag('h4', $series['Series']['name']);
 						foreach ( $series['Course'] as $seriesCourse ) {
 							echo $this->Html->tag('div',
+								// $this->Html->link(
+									// $this->Html->image('/courses/img/1372387287_tutorials.png'),
+									// array('action' => 'view', $seriesCourse['id']),
+									// array('escape' => false, 'title' => 'View')
+								// )
 								$this->Html->link(
-									$this->Html->image('/courses/img/1372387287_tutorials.png'),
-									array('action' => 'view', $seriesCourse['id']),
-									array('escape' => false, 'title' => 'View')
-								)
-								. $this->Html->link(
 									'<i class="icon-edit"></i>',
 									array('action' => 'edit', $seriesCourse['id']),
 									array('escape' => false, 'title' => 'Edit')
 								)
-								. $this->Html->tag('p',
+								. $this->Html->tag('div',
 									$this->Html->link(
 										$seriesCourse['name'],
 										array('action' => 'view', $seriesCourse['id']),
 										array('escape' => false, 'title' => 'View')
-									)
+									), array('class' => 'course-title')
 								)
-								, array('class' => 'course-item')
+								, array('class' => 'course-item', 'style' => 'background-image:url("/courses/img/book-ed2.jpg")')
 							);
 						}
 						
@@ -154,31 +154,38 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				if ( !empty($coursesAsTeacher) ) {
 					#debug($coursesAsTeacher);
 					echo '<div class="row-fluid">';
-					echo '<div class="course-row">';
+					echo '<div class="course-row span12">';
+					echo $this->Html->tag('h4', 'Single Courses');
 					foreach ( $coursesAsTeacher as $course ) {
 
-							echo $this->Html->tag('h4', 'Courses');
 							echo $this->Html->tag('div',
+								// $this->Html->link(
+									// $this->Html->image('/courses/img/book-ed2.jpg'),
+									// array('action' => 'view', $course['Course']['id']),
+									// array('escape' => false, 'title' => 'View')
+								// )
 								$this->Html->link(
-									$this->Html->image('/courses/img/1372387287_tutorials.png'),
-									array('action' => 'view', $course['Course']['id']),
-									array('escape' => false, 'title' => 'View')
-								)
-								. $this->Html->link(
 									'<i class="icon-edit"></i>',
 									array('action' => 'edit', $course['Course']['id']),
 									array('escape' => false, 'title' => 'Edit')
 								)
-								. $this->Html->tag('p',
+								. $this->Html->tag('div',
 									$this->Html->link(
 										$course['Course']['name'],
 										array('action' => 'view', $course['Course']['id']),
 										array('escape' => false, 'title' => 'View')
-									)
+									), array('class' => 'course-title')
 								)
-								, array('class' => 'span3')
+								, array('class' => 'course-item', 'style' => 'background-image:url("/courses/img/book-ed2.jpg")')
 							);
 					}
+					echo '</div>';
+					echo '<div class="clearfix"></div>';
+					echo '<div class="shelf">';
+					echo '<div class="shelf-middle">';
+					echo '<div class="shelf-left"></div>';
+					echo '<div class="shelf-right"></div>';
+					echo '</div>';
 					echo '</div>';
 					echo '</div>';
 				}
@@ -224,24 +231,41 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				if ( empty($coursesAsStudent) ) {
 					echo 'You haven\'t signed up for any courses yet. <a href="/courses/courses/">Start Learning</a>';
 				} else {
+					echo '<div class="row-fluid">';
+					echo '<div class="active-course-row span12">';
 					echo $this->Html->tag('h4', 'Active Courses');
 					foreach ( $coursesAsStudent as $course ) {
-						echo $this->Html->tag('div',
+
+							echo $this->Html->tag('div',
+								// $this->Html->link(
+									// $this->Html->image('/courses/img/book-ed2.jpg'),
+									// array('action' => 'view', $course['Course']['id']),
+									// array('escape' => false, 'title' => 'View')
+								// )
 								$this->Html->link(
-									$this->Html->image('/courses/img/1372387287_tutorials.png'),
-									array('action' => 'view', $course['Course']['id']),
-									array('escape' => false, 'title' => 'View')
+									'<i class="icon-edit"></i>',
+									array('action' => 'edit', $course['Course']['id']),
+									array('escape' => false, 'title' => 'Edit')
 								)
-								. $this->Html->tag('p',
+								. $this->Html->tag('div',
 									$this->Html->link(
 										$course['Course']['name'],
 										array('action' => 'view', $course['Course']['id']),
 										array('escape' => false, 'title' => 'View')
-									)
+									), array('class' => 'course-title')
 								)
-								, array('class' => 'span3')
+								, array('class' => 'course-item', 'style' => 'background-image:url("/courses/img/book-ed2.jpg")')
 							);
 					}
+					echo '</div>';
+					echo '<div class="clearfix"></div>';
+					echo '<div class="shelf">';
+					echo '<div class="shelf-middle">';
+					echo '<div class="shelf-left"></div>';
+					echo '<div class="shelf-right"></div>';
+					echo '</div>';
+					echo '</div>';
+					echo '</div>';
 				}
 				?>
 			</div>
@@ -271,21 +295,58 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 		background: url('/upload/1/img/shelf_right.png') transparent no-repeat bottom;
 	}
 	
-	.series-row {
+	.series-row,
+	.course-row,
+	.active-course-row {
 	   overflow-y: hidden;
-	   overflow-x: auto;	
+	   overflow-x: auto;
+	   padding: 0 20px;
+	   margin-bottom: -8px;
+	   position: relative;
+       z-index: 2;
+	}
+	
+	.course-row {
+		margin-top:-20px;
 	}
 	
 	.course-item {
-		float:left;
-		width: 128px;
-		height: 128px;
-		overflow: hidden;
+		float: left;
+    	height: 120px;
+    	margin: 0 5px;
+    	overflow: hidden;
+    	width: 100px;
+    	background-size: cover;
+	}
+	
+	.course-item [class^="icon-"], [class*=" icon-"] {
+    	background-image: url("/img/twitter-bootstrap/glyphicons-halflings-white.png");
 	}
 	
 	.course-item .view {
 		float: left;
     	margin-right: -100%;
+	}
+	
+	.course-item .edit {
+		display: none;
+	}
+	
+	.course-item .course-title {
+		width: 100%;
+		background-color:rgba(0,0,0,0.5);
+		height: 100%;
+		position: relative;
+		top: 120px;
+	}
+	
+	.course-item .course-title a {
+		color: #fff;
+		position: relative;
+		top:5px;
+		width: 100%;
+		text-align: center;
+		font-size: 1.0em;
 	}
 </style>
 
@@ -314,6 +375,14 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 		} else {
 	    	$('#courseDashboards > li > a:first').tab('show');
 		}
+	});
+	
+	$('.course-item').hover(function(e) {
+		$(this).find('.course-title').animate({top: '25px'});
+		$(this).find('.edit').show('fast');
+	}, function (e) {
+		$(this).find('.course-title').animate({top: '120px'});
+		$(this).find('.edit').hide('fast');
 	});
 	
 </script>
