@@ -104,7 +104,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 					?>
 				</div>
 			</div>
-			<div class="span6">
+			<div class="span6 course-listing">
 				<?php
 				if ( empty($coursesAsTeacher) && empty($seriesAsTeacher) ) {
 					echo 'You haven\'t created any courses yet.  <a href="/courses/courses/add">Start Teaching</a>';
@@ -115,6 +115,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 					foreach ( $seriesAsTeacher as $series ) {
 						//debug($series);
 						echo '<div class="row-fluid">';
+						echo '<div class="series-row span12">';
 						echo $this->Html->tag('h4', $series['Series']['name']);
 						foreach ( $series['Course'] as $seriesCourse ) {
 							echo $this->Html->tag('div',
@@ -135,14 +136,25 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 										array('escape' => false, 'title' => 'View')
 									)
 								)
-								, array('class' => 'span3')
+								, array('class' => 'course-item')
 							);
 						}
+						
+						echo '</div>';
+						echo '<div class="clearfix"></div>';
+						echo '<div class="shelf">';
+						echo '<div class="shelf-middle">';
+						echo '<div class="shelf-left"></div>';
+						echo '<div class="shelf-right"></div>';
+						echo '</div>';
+						echo '</div>';
 						echo '</div>';
 					}
 				}
 				if ( !empty($coursesAsTeacher) ) {
 					#debug($coursesAsTeacher);
+					echo '<div class="row-fluid">';
+					echo '<div class="course-row">';
 					foreach ( $coursesAsTeacher as $course ) {
 
 							echo $this->Html->tag('h4', 'Courses');
@@ -167,6 +179,8 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 								, array('class' => 'span3')
 							);
 					}
+					echo '</div>';
+					echo '</div>';
 				}
 				?>
 			</div>
@@ -236,6 +250,44 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 	</div>
 </div>
 
+<style>
+	.shelf {
+		height: 102px;
+	}
+	.shelf-middle {
+		height: 102px;
+		background: url('/upload/1/img/shelf_middle.png') transparent repeat-x bottom;
+	}
+	.shelf-left {
+		float: left;
+		width: 90px;
+		height: 102px;
+		background: url('/upload/1/img/shelf_left.png') transparent no-repeat bottom;
+	}
+	.shelf-right {
+		float: right;
+		width: 90px;
+		height: 102px;
+		background: url('/upload/1/img/shelf_right.png') transparent no-repeat bottom;
+	}
+	
+	.series-row {
+	   overflow-y: hidden;
+	   overflow-x: auto;	
+	}
+	
+	.course-item {
+		float:left;
+		width: 128px;
+		height: 128px;
+		overflow: hidden;
+	}
+	
+	.course-item .view {
+		float: left;
+    	margin-right: -100%;
+	}
+</style>
 
 
 
@@ -244,8 +296,26 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 <script>
 	$( '#courseDashboards a' ).click( function( e ) {
 		e.preventDefault();
+		var hashtag = $(this).attr('href');
+		console.log(hashtag);
+		window.location.hash = hashtag;
 		$( this ).tab( 'show' );
 	} )
+	
+	if (window.location.hash.length > 0) {
+    	$('#courseDashboards > li > a[href="' + window.location.hash + '"]').tab('show');
+	} else {
+    	$('#courseDashboards > li > a:first').tab('show');
+	}
+	
+	window.addEventListener('popstate', function(event) {
+		if (window.location.hash.length > 0) {
+	    	$('#courseDashboards > li > a[href="' + window.location.hash + '"]').tab('show');
+		} else {
+	    	$('#courseDashboards > li > a:first').tab('show');
+		}
+	});
+	
 </script>
 
 
