@@ -120,7 +120,7 @@ class _CoursesController extends CoursesAppController {
 		$course = $this->Course->find('first', array(
 			'conditions' => array('Course.id' => $this->Course->id),
 			'contain' => array(
-				'Form',
+				'Answer',
 				'Lesson',
 				'Media',
 				'Grade',

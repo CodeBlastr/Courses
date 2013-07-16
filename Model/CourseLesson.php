@@ -49,8 +49,8 @@ class CourseLesson extends CoursesAppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Form' => array(
-			'className' => 'Forms.Form',
+		'Answer' => array(
+			'className' => 'Answers.Answer',
 			'foreignKey' => 'foreign_key'
 		),
 	);

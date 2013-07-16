@@ -40,8 +40,8 @@ class CourseGrade extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Form' => array(
-			'className' => 'Forms.Form',
+		'Answer' => array(
+			'className' => 'Answers.Answer',
 			'foreignKey' => 'foreign_key',
 			'conditions' => '',
 			'fields' => '',
@@ -86,19 +86,20 @@ class CourseGrade extends CoursesAppModel {
 	
 
 /**
- * Callback from FormAnswer->record()
+ * Callback from Answer->process()
  *
  * saves an empty grade for the teacher to grade later
  */
-	public function afterFormAnswerRecord ( $form, $data ) {
-			$grade['Grade']['form_id'] = $data['Form']['id'];
-			$grade['Grade']['student_id'] = CakeSession::read('Auth.User.id');
-			$grade['Grade']['course_id'] = $form['Form']['foreign_key'];
+	public function afterAnswerProcess ( $form ) {
+			$grade['Grade'] = array(
+				'form_id' => $form['Answer']['id'],
+				'student_id' => CakeSession::read('Auth.User.id'),
+				'course_id' => $form['Answer']['foreign_key']
+			);
 
 			if ( $this->save($grade) ) {
 				return true;
 			} else {
-				//break('Grade did not initialize.');
 				throw new Exception('Grade did not initialize.');
 			}
 	}
