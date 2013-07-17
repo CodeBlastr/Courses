@@ -1,10 +1,3 @@
-<ol>FLOW:
-	<li><a href="/courses/courses/add">Create the course</a></li>
-	<li>Add Classes &AMP; Resources</li>
-	<li><a href="/courses/grades/setup">Setup Gradebook</a></li>
-	<li><a href="/forms/form_inputs/create">Add a Quiz</a></li>
-	<li><a href="/invites/invites/invitation">Invite people</a></li>
-</ol>
 
 <div class="courses form">
 <?php echo $this->Form->create('CourseLesson');?>
@@ -29,12 +22,14 @@
 <?php echo $this->Form->end(__('Save'));?>
 </div>
 
+<?php
+$this->set('context_menu', array('menus' => array(
 
-
-
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('List Lessons'), array('action' => 'index'));?></li>
-	</ul>
-</div>
+	array(
+		'heading' => 'Courses',
+		'items' => array(
+			$this->Html->link('<i class="icon-th-list"></i>' . __('View All Courses'), array('controller' => 'courses', 'action' => 'index'), array('escape' => false)),
+			$this->Html->link('<i class="icon-briefcase"></i>' . __('View Your Courses'), array('controller' => 'courses', 'action' => 'dashboard'), array('escape' => false)),
+		),
+	),
+	)));
