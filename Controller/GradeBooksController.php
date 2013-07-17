@@ -22,13 +22,16 @@ class GradeBooksController extends CoursesAppController {
 	 * @param int $courseId
 	 */
 	public function view ( $courseId = null ) {
+		if ( $this->request->is('post') && !empty($this->request->data['Course']['id']) ) {
+			$courseId = $this->request->data['Course']['id'];
+		}
 		if ( $courseId ) {
 			$course = $this->CourseUser->Course->find('first', array(
 				'condtions' => array(
 					'Course.id' => $courseId
 					),
 				'contain' => array(
-					'Form',
+					'Answer',
 					'Grade',
 					'Task' => array(
 						'conditions' => array('Task.parent_id' => ''),
