@@ -89,7 +89,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 						?>
 					</table>
 				</div>
-				<div>
+				<div id="gradeBook">
 					<h4>Gradebook</h4>
 					<?php
 					if ( !empty($coursesAsTeacher) || !empty($seriesAsTeacher) ) {

@@ -125,7 +125,7 @@ class _CoursesController extends CoursesAppController {
 				'Media',
 				'Grade',
 				'Task' => array(
-					'conditions' => array('Task.parent_id' => ''),
+					'conditions' => array('Task.parent_id' => null),
 					'ChildTask'
 				),
 				'Series' => array(

@@ -24,6 +24,7 @@ class CoursesSchema extends CakeSchema {
 		'model' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'lesson_id' => array('type' => 'integer', 'null' => true, 'default' => NULL),
 		'student_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
 		'grade' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 3),
 		'notes' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
@@ -31,6 +32,7 @@ class CoursesSchema extends CakeSchema {
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
+	
 	public $course_users = array(
 		'user_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
 		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
