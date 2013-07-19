@@ -198,10 +198,14 @@ class _CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
 			}
 		} else {
+			$this->Course->contain(array('Category'));
 			$this->request->data = $this->Course->read(null, $id);
 		}
 		$parentCourses = $this->Course->Lesson->find('list');
 		$this->set(compact('parentCourses'));
+		if (in_array('Categories', CakePlugin::loaded())) {
+			$this->set('categories', $this->Course->Category->find('list'));
+		}
 	}
 
 /**

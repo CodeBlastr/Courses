@@ -11,7 +11,7 @@
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
 		echo $this->Html->tag('div',
-			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Make Part of a Series?'))
+			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Part of a Series?'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
 			);			
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
