@@ -17,13 +17,32 @@ class _CoursesController extends CoursesAppController {
  *
  * @return void
  */
-	public function index() {
+	public function index($categoryId = null) {
+		$this->set('page_title_for_layout', 'Courses');
+		if (!empty($categoryId)) {
+			$this->paginate['conditions']['Course.id'] = $this->_categoryIndex($categoryId);
+		}
 		$this->Course->recursive = 0;
 		$this->paginate['contain'][] = 'Category';
 		$this->paginate['contain'][] = 'Series';
 		$this->paginate['contain'][] = 'Teacher';
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
+		$this->set('categories', $this->Course->Category->find('list'));
+	}
+	
+	public function _categoryIndex($categoryId = null) {
+		$ids = Set::extract('/Categorized/foreign_key', $this->Course->Category->Categorized->find('all', array(
+			'conditions' => array(
+				'Categorized.category_id' => $categoryId,
+				'Categorized.model' => 'Course'
+				),
+			'fields' => array(
+				'Categorized.foreign_key',
+				),
+			)));
+		$this->set('page_title_for_layout', __('%s Courses', $this->Course->Category->field('Category.name', array('Category.id' => $categoryId))));
+		return $ids;
 	}
 
 
@@ -97,6 +116,8 @@ class _CoursesController extends CoursesAppController {
 			'order' => array('Task.start_date' => 'ASC'),
 			'limit' => 5
 		)));
+		
+		$this->set('categories', $this->Course->Category->find('list'));
 	}
 	
 /**

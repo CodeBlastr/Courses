@@ -1,6 +1,14 @@
 <div class="courses index">
-	<h2><?php echo __('Upcoming Courses');?></h2>
-	
+	<h2><?php echo $page_title_for_layout;?></h2>
+	<ul class="nav nav-pills">
+		<?php 
+		$active = empty($this->params->pass[0]) ? 'active' : 'inactive';
+		echo __('<li class="%s">%s</li>', $active, $this->Html->link('All', array('action' => 'index')));
+		foreach ($categories as $id => $category) {
+			$active = $this->params->pass[0] == $id ? 'active' : 'inactive';
+			echo __('<li class="%s">%s</li>', $active, $this->Html->link($category, array('action' => 'index', $id)));
+		} ?>
+	</ul>
 	<?php
 	foreach ($courses as $course) {
 		$start = strtotime($course['Course']['start']);

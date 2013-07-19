@@ -14,14 +14,22 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 		<div class="row-fluid">
 			<div class="span6">
 				<?php
-				if ( empty($coursesAsStudent) ) {
-					echo 'You haven\'t signed up for any courses yet. <a href="/courses/courses/">Start Learning</a>';
-				} else {
+				echo $this->Html->tag('h4', 'Browse Courses');
+				echo '<ul class="nav nav-pills">';
+					$active = empty($this->params->pass[0]) ? 'active' : 'inactive';
+					echo __('<li>%s</li>', $this->Html->link('All', array('action' => 'index')));
+					foreach ($categories as $id => $category) {
+						echo __('<li>%s</li>', $this->Html->link($category, array('action' => 'index', $id)));
+					}
+				echo '</ul>';
+				
+				if ( !empty($coursesAsStudent) ) {
+					echo '<hr />';
 					echo '<div class="row-fluid">';
 					echo '<div class="active-course-row span12">';
 					echo $this->Html->tag('h4', 'Active Courses');
 					foreach ( $coursesAsStudent as $course ) {
-
+	
 							echo $this->Html->tag('div',
 								// $this->Html->link(
 									// $this->Html->image('/courses/img/book-ed2.jpg'),
@@ -52,8 +60,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 					echo '</div>';
 					echo '</div>';
 					echo '</div>';
-				}
-				?>
+				}	?>
 			</div>
 			
 			<div class="span6">
