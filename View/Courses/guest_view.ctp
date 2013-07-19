@@ -113,11 +113,14 @@ $this->set('context_menu', array('sidebar' => array(
 		)
 	)
 )));
-//$this->set('context_menu', array('menus' => array(
-//	array(
-//		'heading' => $course['Course']['name'],
-//		'items' => array(
-//			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => $course['Course']['name'],
+		'items' => array(
+			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
+			)
+		)
+	)));
 //			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
 //			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name'])),
 //			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
@@ -139,3 +142,8 @@ $this->set('context_menu', array('sidebar' => array(
 //			),
 //		),
 //	)));
+
+
+
+
+

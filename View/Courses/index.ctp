@@ -3,7 +3,6 @@
 	
 	<?php
 	foreach ($courses as $course) {
-				
 		$start = strtotime($course['Course']['start']);
 		$end = strtotime($course['Course']['end']);
 		$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
@@ -13,7 +12,7 @@
 				__('<b>%s</b> from %s<br /><p class="truncate">%s</p>', $this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])), $course['Course']['school'], $course['Course']['description']),
 				array('class' => 'span9')
 				) .
-			$this->Html->tag('div', __('Starts : %s<br /> %s weeks long', ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse), array('class' => 'span3')),
+			$this->Html->tag('div', __('<b>%s</b><br />Starts : %s<br /> %s weeks long', $course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse), array('class' => 'span3')),
 			array( 'class' => 'row-fluid' )
 		);
 	} ?>

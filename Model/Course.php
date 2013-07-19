@@ -7,7 +7,9 @@ App::uses('CoursesAppModel', 'Courses.Model');
  * @property Course $ChildCourse
  */
 class Course extends CoursesAppModel {
+	
 	public $name = 'Course';
+	
 /**
  * Display field
  *
@@ -103,6 +105,7 @@ class Course extends CoursesAppModel {
 	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
 		}
+		parent::__construct($id, $table, $ds); // this order is imortant
 	}
 	
 /**

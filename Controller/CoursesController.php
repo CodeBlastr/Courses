@@ -19,9 +19,10 @@ class _CoursesController extends CoursesAppController {
  */
 	public function index() {
 		$this->Course->recursive = 0;
-		$this->paginate = array(
-			'order' => array('Course.start' => 'ASC'),
-			);
+		$this->paginate['contain'][] = 'Category';
+		$this->paginate['contain'][] = 'Series';
+		$this->paginate['contain'][] = 'Teacher';
+		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
 	}
 
@@ -170,8 +171,11 @@ class _CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
 			}
 		}
-		$series = $this->Course->Series->find('list');
-		$this->set(compact('series'));
+		$this->set('series', $this->Course->Series->find('list'));
+		
+		if (in_array('Categories', CakePlugin::loaded())) {
+			$this->set('categories', $this->Course->Category->find('list'));
+		}
 		$this->render('add');
 	}
 
@@ -222,6 +226,11 @@ class _CoursesController extends CoursesAppController {
 		$this->redirect(array('action' => 'index'));
 	}
 	
+/**
+ * register method
+ * 
+ * @param string $id
+ */
 	public function register($id = null) {
 		$this->Course->id = $id;
 		if (!$this->Course->exists()) {

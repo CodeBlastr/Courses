@@ -35,13 +35,23 @@ echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
 echo $this->Form->end();
 ?>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Course.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Course.id'))); ?></li>
-		<li><?php echo $this->Html->link(__('Add Resources'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'));?></li>
-	</ul>
-</div>
-<script>
+
+<script type="text/javascript">
 	applyCheckboxToggles();
 </script>
+
+
+
+<?php
+//the context menu version doesn't work (not sure what to do with this delete link yet)
+//echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Course.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Course.id')));
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => $this->request->data['Course']['name'],
+		'items' => array(
+			// this delete thing doesn't work because it shows twice on the page in the current admin theme
+			$this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Course.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Course.id'))),
+			$this->Html->link(__('Add Resources'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
+			),
+		),
+	)));
