@@ -12,6 +12,7 @@
 	<?php
 		//echo $this->Form->input('Course.parent_id');
 		echo $this->Form->input('Course.parent_id', array('options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Make Part of a Series?'));
+		echo $this->Element('Media.media_selector', array('selected' => 1));
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
 		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
 		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
