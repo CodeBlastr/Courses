@@ -13,6 +13,10 @@
 		//echo $this->Form->input('Course.parent_id');
 		echo $this->Form->input('Course.parent_id', array('options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Make Part of a Series?'));
 		echo $this->Element('Media.media_selector', array('selected' => 1));
+		echo $this->Html->tag('div',
+			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Part of a Series?'))
+			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
+			);			
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
 		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
 		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));

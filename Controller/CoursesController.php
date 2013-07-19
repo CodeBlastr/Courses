@@ -17,19 +17,32 @@ class _CoursesController extends CoursesAppController {
  *
  * @return void
  */
-	public function index() {
+	public function index($categoryId = null) {
+		$this->set('page_title_for_layout', 'Courses');
+		if (!empty($categoryId)) {
+			$this->paginate['conditions']['Course.id'] = $this->_categoryIndex($categoryId);
+		}
 		$this->Course->recursive = 0;
-//		$this->paginate = array(
-//			'conditions' => array('Course.parent_id' => null)
-//		);
-		$this->paginate = array(
-			'order' => array('Course.start' => 'ASC'),
-			'fields' => array(
-				'Course.id', 'Course.name', 'Course.start', 'Course.end', 'Course.school',
-				//'Teacher.id', 'Teacher.full_name',
-			)
-		);
+		$this->paginate['contain'][] = 'Category';
+		$this->paginate['contain'][] = 'Series';
+		$this->paginate['contain'][] = 'Teacher';
+		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
+		$this->set('categories', $this->Course->Category->find('list'));
+	}
+	
+	public function _categoryIndex($categoryId = null) {
+		$ids = Set::extract('/Categorized/foreign_key', $this->Course->Category->Categorized->find('all', array(
+			'conditions' => array(
+				'Categorized.category_id' => $categoryId,
+				'Categorized.model' => 'Course'
+				),
+			'fields' => array(
+				'Categorized.foreign_key',
+				),
+			)));
+		$this->set('page_title_for_layout', __('%s Courses', $this->Course->Category->field('Category.name', array('Category.id' => $categoryId))));
+		return $ids;
 	}
 
 
@@ -103,6 +116,8 @@ class _CoursesController extends CoursesAppController {
 			'order' => array('Task.start_date' => 'ASC'),
 			'limit' => 5
 		)));
+		
+		$this->set('categories', $this->Course->Category->find('list'));
 	}
 	
 /**
@@ -177,8 +192,11 @@ class _CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
 			}
 		}
-		$series = $this->Course->Series->find('list');
-		$this->set(compact('series'));
+		$this->set('series', $this->Course->Series->find('list'));
+		
+		if (in_array('Categories', CakePlugin::loaded())) {
+			$this->set('categories', $this->Course->Category->find('list'));
+		}
 		$this->render('add');
 	}
 
@@ -201,10 +219,14 @@ class _CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
 			}
 		} else {
+			$this->Course->contain(array('Category'));
 			$this->request->data = $this->Course->read(null, $id);
 		}
 		$parentCourses = $this->Course->Lesson->find('list');
 		$this->set(compact('parentCourses'));
+		if (in_array('Categories', CakePlugin::loaded())) {
+			$this->set('categories', $this->Course->Category->find('list'));
+		}
 	}
 
 /**
@@ -229,6 +251,11 @@ class _CoursesController extends CoursesAppController {
 		$this->redirect(array('action' => 'index'));
 	}
 	
+/**
+ * register method
+ * 
+ * @param string $id
+ */
 	public function register($id = null) {
 		$this->Course->id = $id;
 		if (!$this->Course->exists()) {

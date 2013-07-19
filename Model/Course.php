@@ -7,7 +7,9 @@ App::uses('CoursesAppModel', 'Courses.Model');
  * @property Course $ChildCourse
  */
 class Course extends CoursesAppModel {
+	
 	public $name = 'Course';
+	
 /**
  * Display field
  *
@@ -79,18 +81,46 @@ class Course extends CoursesAppModel {
 		)
 	);
 	
-//	public $hasAndBelongsToMany = array(
+//	Please stop leaving these comment blocks around with no direction on why or when it will be dealt with. 
+// public $hasAndBelongsToMany = array(
 //		'User' => array(
 //			'className' => 'Users.User',
 //			'join_table' => 'course_users'
 //		)
 //	);
+    
+	public function __construct($id = null, $table = null, $ds = null) {
+		if (in_array('Categories', CakePlugin::loaded())) {
+			$this->hasAndBelongsToMany['Category'] = array(
+	            'className' => 'Categories.Category',
+	       		'joinTable' => 'categorized',
+	            'foreignKey' => 'foreign_key',
+	            'associationForeignKey' => 'category_id',
+	    		'conditions' => 'Categorized.model = "Course"',
+	    		// 'unique' => true,
+	            );
+			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
+		}
+		parent::__construct($id, $table, $ds); // this order is imortant
+	}
 	
+/**
+ * before find method
+ * 
+ * @param array $queryData
+ * @return array
+ */
 	public function beforeFind(array $queryData) {
 		$queryData['conditions'][$this->alias.'.type'] = 'course';
 		return $queryData;
 	}
 	
+/**
+ * before save method
+ * 
+ * @param array $options
+ * @return true
+ */
 	public function beforeSave(array $options = array()) {
 		$this->data[$this->alias]['type'] = 'course';
 		return true;

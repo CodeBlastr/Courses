@@ -1,28 +1,29 @@
 <div class="courses index">
-	<h2><?php echo __('Upcoming Courses');?></h2>
-	
+	<h2><?php echo $page_title_for_layout;?></h2>
+	<ul class="nav nav-pills">
+		<?php 
+		$active = empty($this->params->pass[0]) ? 'active' : 'inactive';
+		echo __('<li class="%s">%s</li>', $active, $this->Html->link('All', array('action' => 'index')));
+		foreach ($categories as $id => $category) {
+			$active = $this->params->pass[0] == $id ? 'active' : 'inactive';
+			echo __('<li class="%s">%s</li>', $active, $this->Html->link($category, array('action' => 'index', $id)));
+		} ?>
+	</ul>
 	<?php
 	foreach ($courses as $course) {
-		
 		$start = strtotime($course['Course']['start']);
 		$end = strtotime($course['Course']['end']);
 		$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		
 		echo $this->Html->tag('div',
-				$this->Html->tag('div',
-						$course['Course']['school'] . '<br />'
-						. '<b>'.$this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])).'</b>',
-						array('class' => 'span9')
-				)
-				. $this->Html->tag('div',
-						$this->Time->nice($course['Course']['start']). '<br />'
-						. $lengthOfCourse . ' weeks long',
-						array('class' => 'span3')
-				),
-				array( 'class' => 'row-fluid' )
+			$this->Html->tag('div',
+				__('<b>%s</b> from %s<br /><p class="truncate">%s</p>', $this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])), $course['Course']['school'], $course['Course']['description']),
+				array('class' => 'span9')
+				) .
+			$this->Html->tag('div', __('<b>%s</b><br />Starts : %s<br /> %s weeks long', $course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse), array('class' => 'span3')),
+			array( 'class' => 'row-fluid' )
 		);
-	}
-	?>
+	} ?>
 	
 	
 <!--	<table cellpadding="0" cellspacing="0">

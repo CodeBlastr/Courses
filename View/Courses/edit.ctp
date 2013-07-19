@@ -4,7 +4,10 @@
 		<legend><?php echo __('Edit Course'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Form->input('parent_id');
+		echo $this->Html->tag('div',
+			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Part of a Series?'))
+			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
+			);	
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
 		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
 		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
@@ -35,13 +38,23 @@ echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
 echo $this->Form->end();
 ?>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Course.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Course.id'))); ?></li>
-		<li><?php echo $this->Html->link(__('Add Resources'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'));?></li>
-	</ul>
-</div>
-<script>
+
+<script type="text/javascript">
 	applyCheckboxToggles();
 </script>
+
+
+
+<?php
+//the context menu version doesn't work (not sure what to do with this delete link yet)
+//echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Course.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Course.id')));
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => $this->request->data['Course']['name'],
+		'items' => array(
+			// this delete thing doesn't work because it shows twice on the page in the current admin theme
+			$this->Form->postLink(__('Delete'), array('action' => 'delete', $this->Form->value('Course.id')), null, __('Are you sure you want to delete # %s?', $this->Form->value('Course.id'))),
+			$this->Html->link(__('Add Resources'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
+			),
+		),
+	)));
