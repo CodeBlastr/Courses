@@ -19,16 +19,9 @@ class _CoursesController extends CoursesAppController {
  */
 	public function index() {
 		$this->Course->recursive = 0;
-//		$this->paginate = array(
-//			'conditions' => array('Course.parent_id' => null)
-//		);
 		$this->paginate = array(
 			'order' => array('Course.start' => 'ASC'),
-			'fields' => array(
-				'Course.id', 'Course.name', 'Course.start', 'Course.end', 'Course.school',
-				//'Teacher.id', 'Teacher.full_name',
-			)
-		);
+			);
 		$this->set('courses', $this->paginate());
 	}
 

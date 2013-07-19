@@ -3,26 +3,20 @@
 	
 	<?php
 	foreach ($courses as $course) {
-		
+				
 		$start = strtotime($course['Course']['start']);
 		$end = strtotime($course['Course']['end']);
 		$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		
 		echo $this->Html->tag('div',
-				$this->Html->tag('div',
-						$course['Course']['school'] . '<br />'
-						. '<b>'.$this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])).'</b>',
-						array('class' => 'span9')
-				)
-				. $this->Html->tag('div',
-						$this->Time->nice($course['Course']['start']). '<br />'
-						. $lengthOfCourse . ' weeks long',
-						array('class' => 'span3')
-				),
-				array( 'class' => 'row-fluid' )
+			$this->Html->tag('div',
+				__('<b>%s</b> from %s<br /><p class="truncate">%s</p>', $this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])), $course['Course']['school'], $course['Course']['description']),
+				array('class' => 'span9')
+				) .
+			$this->Html->tag('div', __('Starts : %s<br /> %s weeks long', ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse), array('class' => 'span3')),
+			array( 'class' => 'row-fluid' )
 		);
-	}
-	?>
+	} ?>
 	
 	
 <!--	<table cellpadding="0" cellspacing="0">
