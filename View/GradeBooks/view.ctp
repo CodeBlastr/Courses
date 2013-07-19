@@ -1,7 +1,10 @@
 <?php
 
 // show a dropdown to flip between this user's courses
+echo $this->Form->create();
 echo $this->Form->select('Course.id', $courseSelectOptions, array('empty' => '- Choose a course -'));
+echo $this->Form->submit('View Gradebook');
+echo $this->Form->end();
 
 // if we have course data, show the gradebook
 if ( !empty($course) ) {
@@ -22,8 +25,8 @@ if ( !empty($course) ) {
 	}
 
 	$i = 1;
-	foreach ( $course['Form'] as $form ) {
-		$tableHeaders[] = $this->Html->tag('abbr', $i, array('title' => $form['name'])); // column title foreach quiz/test
+	foreach ( $course['Answer'] as $form ) {
+		$tableHeaders[] = $this->Html->tag('abbr', $i, array('title' => $form['title'])); // column title foreach quiz/test
 		$gradeables[] = $form['id']; // an array of id's so we can easily display their grades later
 		++$i;
 	}
@@ -36,7 +39,7 @@ if ( !empty($course) ) {
 		foreach ( $grades[ $student['User']['id'] ] as $grade ) {
 			$studentAverage += $grade;
 		}
-		$studentAverage = $studentAverage / ( count($course['Task']) + count($course['Form']) );
+		$studentAverage = $studentAverage / ( count($course['Task']) + count($course['Answer']) );
 		$studentRow = array(
 			$this->Html->link($student['User']['full_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $student['User']['id'])),
 			$this->Number->toPercentage($studentAverage)

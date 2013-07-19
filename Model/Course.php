@@ -52,8 +52,8 @@ class Course extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Form' => array(
-			'className' => 'Forms.Form',
+		'Answer' => array(
+			'className' => 'Answers.Answer',
 			'foreignKey' => 'foreign_key'
 		),
 		'Media' => array(
