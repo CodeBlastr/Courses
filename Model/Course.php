@@ -103,7 +103,7 @@ class Course extends CoursesAppModel {
 	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
 		}
-		parent::__construct($id, $table, $ds); // this order is imortant
+		parent::__construct($id, $table, $ds);
 	}
 	
 /**
