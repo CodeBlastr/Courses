@@ -23,10 +23,10 @@
 			. $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => false, 'class' => 'input-small required', 'div' => array('class' => 'span5')))
 		);
 		echo $this->Form->input('Course.description', array('label' => 'Description', 'class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
-		echo $this->Form->input('Course.is_published', array('label' => 'Active / Inactive'));
-		echo $this->Form->input('Course.is_persistant', array('label' => 'Allow access when Inactive'));
-		echo $this->Form->input('Course.is_private', array('label' => 'Public / Private'));
-		echo $this->Form->input('Course.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
+		echo $this->Form->input('Course.is_published', array('label' => 'Publish?'));
+		echo $this->Form->input('Course.is_persistant', array('label' => 'Access when Inactive?'));
+		echo $this->Form->input('Course.is_private', array('label' => 'Private'));
+		echo $this->Form->input('Course.is_sequential', array('label' => __('Require Sequence <i class="icon-question-sign">%s</i>', $this->Html->link('', '#', array('data-toggle' => 'tooltip', 'title' => 'first tooltip')))));
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
 	?>
 	</fieldset>

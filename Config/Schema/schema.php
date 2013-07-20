@@ -41,9 +41,9 @@ class CoursesSchema extends CakeSchema {
 	);
 	public $courses = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'parent_id' => array('type' => 'integer', 'null' => true, 'default' => NULL),
-		'lft' => array('type' => 'integer', 'null' => false, 'default' => NULL),
-		'rght' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'parent_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'lft' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
+		'rght' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
 		'name' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'description' => array('type' => 'text', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'location' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),

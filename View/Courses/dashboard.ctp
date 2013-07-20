@@ -2,19 +2,42 @@
 $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 ?>
 <ul class="nav nav-tabs" id="courseDashboards">
-	<li <?php echo empty($coursesAsTeacher) ? 'class="active"' : null; ?>><a href="#learning">Learning</a></li>
-	<li <?php echo !empty($coursesAsTeacher) ? 'class="active"' : null; ?>><a href="#teaching">Teaching</a></li>
+	<?php debug($teaches); ?>
+	<?php /*<li <?php echo !$teaches ? 'class="active"' : null; ?>><a href="#learning">Learning</a></li>
+	<li <?php echo $teaches ? 'class="active"' : null; ?>><a href="#teaching">Teaching</a></li> */ ?>
+	<li><a href="#learning">activeLearning</a></li>
+	<li class="active"><a href="#teaching">activeTeaching</a></li>
 	<li><a href="#messages">Messages (<?php echo $this->requestAction('/messages/messages/count'); ?>)</a></li>
 </ul>
 <div class="tab-content">
 
 	<!-- LEARNING TAB -->
-	<div class="tab-pane <?php echo empty($coursesAsTeacher) ? 'active' : null; ?>" id="learning">
+	<div class="tab-pane <?php //echo !$teaches ? 'active' : null; ?>" id="learning">
+		
+		<?php if (empty($coursesAsStudent)) { ?>
+		<div class="row-fluid">
+			<div class="alert alert-success span12">
+				<h1>Get started by joining a class.</h1>
+				<?php
+				echo '<hr />';
+				echo '<ul class="nav nav-pills">';
+					$active = empty($this->params->pass[0]) ? 'active' : 'inactive';
+					echo __('<li>%s</li>', $this->Html->link('All', array('action' => 'index')));
+					foreach ($categories as $id => $category) {
+						echo __('<li>%s</li>', $this->Html->link($category, array('action' => 'index', $id)));
+					}
+				echo '</ul>'; ?>
+			</div>
+		</div>
+		<?php } else { ?>
+		
 		
 		<div class="row-fluid">
+			
 			<div class="span6">
 				<?php
 				echo $this->Html->tag('h4', 'Browse Courses');
+				echo '<hr />';
 				echo '<ul class="nav nav-pills">';
 					$active = empty($this->params->pass[0]) ? 'active' : 'inactive';
 					echo __('<li>%s</li>', $this->Html->link('All', array('action' => 'index')));
@@ -24,10 +47,10 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				echo '</ul>';
 				
 				if ( !empty($coursesAsStudent) ) {
+					echo $this->Html->tag('h4', 'Active Courses');
 					echo '<hr />';
 					echo '<div class="row-fluid">';
 					echo '<div class="active-course-row span12">';
-					echo $this->Html->tag('h4', 'Active Courses');
 					foreach ( $coursesAsStudent as $course ) {
 	
 							echo $this->Html->tag('div',
@@ -61,29 +84,9 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 					echo '</div>';
 					echo '</div>';
 				}	?>
-			</div>
 			
-			<div class="span6">
-				<div class="noBulletsInMe">
-					<h4>Upcoming Events</h4>
-					<table>
-						<?php
-						foreach ( $tasks as $task ) {
-							echo $this->Html->tag('tr',
-									'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
-									'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
-									);
-						}
-						?>
-					</table>
-				</div>
-			</div>
-		</div>
-		
-		<div class="row-fluid">
-			
-			<div class="span6">
 				<h4>Courses Starting Soon</h4>
+				<hr />
 				<?php
 				foreach ( $upcomingCourses as $upcomingCourse ) {
 					echo $this->tag('div',
@@ -94,25 +97,11 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				echo $this->Html->link('View All Courses', array('action' => 'index')); ?>
 			</div>
 			
+			
 			<div class="span6">
 				<div class="noBulletsInMe">
 					<h4>Upcoming Events</h4>
 					<hr />
-					<?php
-					if (!empty($tasks)) {
-					 	echo '<table>';
-						foreach ( $tasks as $task ) {
-							if ( in_array($task['Task']['foreign_key'], $courseIdsAsStudent) ) {
-								echo $this->Html->tag('tr',
-										'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
-										'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
-										);
-							}
-						}
-						echo '</table>';
-					} else {
-						echo '<p class="muted">no upcoming events</p>';
-					} ?>
 				</div>
 				<div>
 <!--					<h4>Your Grades</h4>-->
@@ -124,33 +113,64 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 //								);
 					?>
 				</div>
+				
+				<?php
+				// calendar
+				if ( !empty($allCourseIds) ) {
+					//debug($allCourseIds);
+					foreach ( $allCourseIds as $courseId ) {
+						$sources[] = '/courses/courses/calendar/teacher/' . $courseId;
+					}
+				}
+				echo $this->Calendar->renderCalendar(array(
+					'sources' => $sources,
+					'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
+				));
+				// calendar action links
+				echo $this->Html->link('<i class="icon-plus"></i>', array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'add'), array('escape' => false, 'title' => 'Add a Task'));
+				
+				if (!empty($tasks)) {
+				 	echo '<table>';
+					foreach ( $tasks as $task ) {
+						if ( in_array($task['Task']['foreign_key'], $courseIdsAsStudent) ) {
+							echo $this->Html->tag('tr',
+									'<td class="muted">' . $this->Time->niceShort($task['Task']['due_date']) . '</td>' .
+									'<td>' . $this->Html->link($task['Task']['name'], array('action' => 'assignment', $task['Task']['id'])) . '</td></tr>'
+									);
+						}
+					}
+					echo '</table>';
+				} else {
+					echo '<p class="muted">no upcoming events</p>';
+				} ?>
 			</div>
+			
 			
 		</div>
 		
-		<div class="span6">
-			<?php
-			// calendar
-			if ( !empty($allCourseIds) ) {
-				//debug($allCourseIds);
-				foreach ( $allCourseIds as $courseId ) {
-					$sources[] = '/courses/courses/calendar/teacher/' . $courseId;
-				}
-			}
-			echo $this->Calendar->renderCalendar(array(
-				'sources' => $sources,
-				'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
-			));
-			// calendar action links
-			echo $this->Html->link('<i class="icon-plus"></i>', array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'add'), array('escape' => false, 'title' => 'Add a Task'));
-			?>
-		</div>
+			
+		<?php } // end no courses check ?>
 
 	</div>
 	
 	
 	<!-- TEACHING TAB -->
-	<div class="tab-pane <?php echo !empty($coursesAsTeacher) ? 'active' : null; ?>" id="teaching">
+	<div class="tab-pane <?php echo $teaches ? 'active' : null; ?>" id="teaching">
+		
+		<?php if (empty($coursesAsTeacher) && empty($seriesAsTeacher)) { ?>
+		<div class="row-fluid">
+			<div class="alert alert-success span12">
+				<h1>Get started by creating a class.</h1>
+				<?php
+				echo '<hr />';
+				echo '<ul class="nav nav-pills">';
+					foreach ($categories as $id => $category) {
+						echo __('<li>%s</li>', $this->Html->link($category, array('action' => 'add', $id)));
+					}
+				echo '</ul>'; ?>
+			</div>
+		</div>
+		<?php } else { ?>
 		<div class="row-fluid">
 			<div class="span12 course-listing">
 				<?php
@@ -159,9 +179,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				}
 
 				if ( !empty($seriesAsTeacher) ) {
-					//debug($seriesAsTeacher);
 					foreach ( $seriesAsTeacher as $series ) {
-						//debug($series);
 						echo '<div class="row-fluid">';
 						echo '<div class="series-row span12">';
 						echo $this->Html->tag('h4', $series['Series']['name']);
@@ -282,6 +300,7 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 				</div>
 			</div>
 		</div>
+		<?php } // end classes started check ?>
 
 	</div>
 	
@@ -375,27 +394,23 @@ $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 
 
 
-<script>
-	$( '#courseDashboards a' ).click( function( e ) {
+<script type="text/javascript">
+	$('#courseDashboards a').click(function(e) {
 		e.preventDefault();
 		var hashtag = $(this).attr('href');
 		console.log(hashtag);
 		window.location.hash = hashtag;
-		$( this ).tab( 'show' );
+		$(this).tab('show');
 	} )
 	
 	if (window.location.hash.length > 0) {
     	$('#courseDashboards > li > a[href="' + window.location.hash + '"]').tab('show');
-	} else {
-    	$('#courseDashboards > li > a:first').tab('show');
-	}
+	} 
 	
 	window.addEventListener('popstate', function(event) {
 		if (window.location.hash.length > 0) {
 	    	$('#courseDashboards > li > a[href="' + window.location.hash + '"]').tab('show');
-		} else {
-	    	$('#courseDashboards > li > a:first').tab('show');
-		}
+		} 
 	});
 	
 	$('.course-item').hover(function(e) {

@@ -10,6 +10,8 @@ class Course extends CoursesAppModel {
 	
 	public $name = 'Course';
 	
+	public $actsAs = array('Tree');
+	
 /**
  * Display field
  *
