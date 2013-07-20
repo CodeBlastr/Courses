@@ -58,10 +58,6 @@ class Course extends CoursesAppModel {
 			'className' => 'Answers.Answer',
 			'foreignKey' => 'foreign_key'
 		),
-		'Media' => array(
-			'className' => 'Media.Media',
-			'foreignKey' => 'foreign_key'
-		),
 		'Task' => array(
 			'className' => 'Tasks.Task',
 			'foreignKey' => 'foreign_key'
