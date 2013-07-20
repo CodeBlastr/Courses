@@ -12,6 +12,20 @@ class CoursesAppModel extends AppModel {
 	public function __construct($id = false, $table = null, $ds = null) {
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs = array('Media.MediaAttachable');
+			
+			$this->hasMany['Media'] = array(
+				'className' => 'Media.Media',
+				'foreignKey' => 'foreign_key',
+				'dependent' => false, // hmm... maybe should be true?
+				'conditions' => '',
+				'fields' => '',
+				'order' => '',
+				'limit' => '',
+				'offset' => '',
+				'exclusive' => '',
+				'finderQuery' => '',
+				'counterQuery' => ''
+			);
 		}
 		parent::__construct($id, $table, $ds); 
 	}

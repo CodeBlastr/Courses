@@ -5,10 +5,10 @@ App::uses('CoursesAppController', 'Courses.Controller');
 /**
  * GradeBooks Controller
  */
-class GradeBooksController extends CoursesAppController {
+class CourseGradeBooksController extends CoursesAppController {
 
 	
-	public $name = 'GradeBooks';
+	public $name = 'CourseGradeBooks';
 	public $uses = 'Courses.CourseUser';
 
 	public function __construct($request = null, $response = null) {

@@ -83,7 +83,7 @@ class Course extends CoursesAppModel {
 		)
 	);
 	
-//	Please stop leaving these comment blocks around with no direction on why or when it will be dealt with. 
+// Please stop leaving these comment blocks around with no direction on why or when it will be dealt with. 
 // public $hasAndBelongsToMany = array(
 //		'User' => array(
 //			'className' => 'Users.User',

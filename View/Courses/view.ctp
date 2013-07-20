@@ -161,14 +161,14 @@ $this->set('context_menu', array('menus' => array(
 			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
 			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
 			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
-			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
+			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'course_grades', 'action' => 'setup', $course['Course']['id'])),
 			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name']))
 			),
 		),
 	array(
 		'heading' => 'Lessons',
 		'items' => array(
-			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add')),
+			$this->Html->link(__('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add')),
 			),
 		),
 	array(

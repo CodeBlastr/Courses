@@ -174,10 +174,11 @@
 				}
 
 				if ( !empty($seriesAsTeacher) ) {
+					echo __('<h4>%s</h4><hr />', __('My Series'));
 					foreach ( $seriesAsTeacher as $series ) {
 						echo '<div class="row-fluid">';
 						echo '<div class="series-row span12">';
-						echo $this->Html->tag('h4', $series['Series']['name']);
+						echo $this->Html->tag('h5', $series['Series']['name']);
 						foreach ( $series['Course'] as $seriesCourse ) {
 							echo $this->Html->tag('div',
 								// $this->Html->link(
@@ -216,7 +217,7 @@
 					// debug($coursesAsTeacher);
 					echo '<div class="row-fluid">';
 					echo '<div class="course-row span12">';
-					echo $this->Html->tag('h4', 'Single Courses');
+					echo $this->Html->tag('h4', 'My Courses');
 					foreach ( $coursesAsTeacher as $course ) {
 						echo $this->Html->tag('div',
 							// $this->Html->link(
