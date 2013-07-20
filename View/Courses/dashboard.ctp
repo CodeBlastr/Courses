@@ -1,6 +1,4 @@
-<?php
-$this->Html->css('/courses/css/courses', null, array('inline'=>false));
-?>
+<?php $this->Html->css('/courses/css/courses', null, array('inline'=>false)); ?>
 <ul class="nav nav-tabs" id="courseDashboards">
 	<li <?php echo !$teaches ? 'class="active"' : null; ?>><a href="#learning">Learning</a></li>
 	<li <?php echo $teaches ? 'class="active"' : null; ?>><a href="#teaching">Teaching</a></li>
