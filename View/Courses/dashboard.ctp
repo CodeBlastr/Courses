@@ -2,17 +2,14 @@
 $this->Html->css('/courses/css/courses', null, array('inline'=>false));
 ?>
 <ul class="nav nav-tabs" id="courseDashboards">
-	<?php debug($teaches); ?>
-	<?php /*<li <?php echo !$teaches ? 'class="active"' : null; ?>><a href="#learning">Learning</a></li>
-	<li <?php echo $teaches ? 'class="active"' : null; ?>><a href="#teaching">Teaching</a></li> */ ?>
-	<li><a href="#learning">activeLearning</a></li>
-	<li class="active"><a href="#teaching">activeTeaching</a></li>
+	<li <?php echo !$teaches ? 'class="active"' : null; ?>><a href="#learning">Learning</a></li>
+	<li <?php echo $teaches ? 'class="active"' : null; ?>><a href="#teaching">Teaching</a></li>
 	<li><a href="#messages">Messages (<?php echo $this->requestAction('/messages/messages/count'); ?>)</a></li>
 </ul>
 <div class="tab-content">
 
 	<!-- LEARNING TAB -->
-	<div class="tab-pane <?php //echo !$teaches ? 'active' : null; ?>" id="learning">
+	<div class="tab-pane <?php echo !$teaches ? 'active' : null; ?>" id="learning">
 		
 		<?php if (empty($coursesAsStudent)) { ?>
 		<div class="row-fluid">
