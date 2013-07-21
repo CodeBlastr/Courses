@@ -142,7 +142,7 @@ $this->set('context_menu', array('menus' => array(
 		array(
 			'heading' => $course['Course']['name'],
 			'items' => array(
-				$this->Html->link('<i class="icon-book"></i>' . __('View Gradebook'), array('controller' => 'gradebooks', 'action' => 'view', $course['Course']['id']), array('escape' => false)),
+				$this->Html->link('<i class="icon-book"></i>' . __('View Gradebook'), array('controller' => 'course_gradebooks', 'action' => 'view', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-list"></i>' . __('Create Quiz'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add', 'Course', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-folder-open"></i>' . __('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
 				//$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id']), array('escape' => false)),
