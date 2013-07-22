@@ -1,5 +1,8 @@
 <div class="row-fluid">
 	<?php
+	debug($this->Session->read('Auth.User.id'));
+	debug($this->Session->read('Auth.User.user_role_id'));
+	debug($course);
 	$start = strtotime($course['Course']['start']);
 	$end = strtotime($course['Course']['end']);
 	$lengthOfCourse = round(abs($end - $start) / 60 / 60 / 24 / 7);
@@ -7,7 +10,7 @@
 	<div class="courses view span8">
 		<h2><?php echo $course['Course']['name'] ?></h2>
 		<p><b><?php echo $course['Course']['school'] ?></b></p>
-<!--		<p><?php echo $course['Course']['description'] ?></p>-->
+		<!-- <p><?php echo $course['Course']['description'] ?></p> -->
 
 		<?php
 		if ( !empty($course['Series']['name']) ) {
