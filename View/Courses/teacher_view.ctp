@@ -1,8 +1,5 @@
 <div class="row-fluid">
 	<?php
-	debug($this->Session->read('Auth.User.id'));
-	debug($this->Session->read('Auth.User.user_role_id'));
-	debug($course);
 	$start = strtotime($course['Course']['start']);
 	$end = strtotime($course['Course']['end']);
 	$lengthOfCourse = round(abs($end - $start) / 60 / 60 / 24 / 7);

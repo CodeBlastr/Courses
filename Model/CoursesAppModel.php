@@ -11,7 +11,7 @@ class CoursesAppModel extends AppModel {
  */ 
 	public function __construct($id = false, $table = null, $ds = null) {
 		if(CakePlugin::loaded('Media')) {
-			$this->actsAs = array('Media.MediaAttachable');
+			$this->actsAs[] = 'Media.MediaAttachable';
 			
 			$this->hasMany['Media'] = array(
 				'className' => 'Media.Media',
