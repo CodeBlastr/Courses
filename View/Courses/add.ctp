@@ -11,7 +11,6 @@
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
 		//echo $this->Form->input('Course.parent_id');
-		echo $this->Form->input('Course.parent_id', array('options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Make Part of a Series?'));
 		echo $this->Element('Media.media_selector', array('selected' => 1));
 		echo $this->Html->tag('div',
 			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Part of a Series?'))

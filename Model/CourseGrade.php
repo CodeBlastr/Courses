@@ -1,7 +1,7 @@
 <?php
 App::uses('CoursesAppModel', 'Courses.Model');
 /**
- * Grade Model
+ * Grade Model Stores over all Grades given Details provided by Course Grade Detail
  *
  * @property Course $ParentCourse
  */
@@ -28,7 +28,7 @@ class CourseGrade extends CoursesAppModel {
 	public $belongsTo = array(
 		'Course' => array(
 			'className' => 'Courses.Course',
-			'foreignKey' => 'parent_id',
+			'foreignKey' => 'course_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
@@ -40,13 +40,30 @@ class CourseGrade extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Answer' => array(
-			'className' => 'Answers.Answer',
-			'foreignKey' => 'foreign_key',
+		'GradeDetail' => array(
+			'className' => 'Courses.CourseGradeDetail',
+			'foreignKey' => 'course_grade_detail_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+		'Creator' => array(
+			'className' => 'Users.User',
+			'foreignKey' => 'creator_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+	);
+	
+	public $hasMany = array(
+		'GradeAnswers' => array(
+			'className' => 'Courses.CourseGradeAnswer',
+			'foreignKey' => 'course_grade_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 	);
 
 /**
@@ -102,6 +119,28 @@ class CourseGrade extends CoursesAppModel {
 			} else {
 				throw new Exception('Grade did not initialize.');
 			}
+	}
+
+	/**
+	 * create a grade function, this creates a grade from the grade details
+	 * @param $details can be $id or CourseGradeDetail array
+	 */
+
+	public function createGradeFromDetails($details, $student_id = null) {
+		
+		if(!isset($details['CourseGradeDetail']) && !is_array($details)) {
+			$details = $this->findById($details);
+		}
+		
+		$grade = array();
+		
+		$grade['course_grade_detail_id'] = $details['CourseGradeDetail']['id'];
+		$grade['model'] = $details['CourseGradeDetail']['model'];
+		$grade['foreign_key'] = $details['CourseGradeDetail']['foreign_key'];
+		$grade['course_id'] = $details['CourseGradeDetail']['course_id'];
+		$grade['student_id'] = !empty($student_id) ? $student_id : CakeSession::read('Auth.User.id');
+		$grade['total'] = $details['CourseGradeDetail']['total'];
+		
 	}
 	
 }

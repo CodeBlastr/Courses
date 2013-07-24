@@ -28,7 +28,10 @@ class _CoursesController extends CoursesAppController {
 		$this->paginate['contain'][] = 'Teacher';
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
-		$this->set('categories', $this->Course->Category->find('list'));
+		if(CakePlugin::loaded('Categories')) {
+			$this->set('categories', $this->Course->Category->find('list'));
+		}
+		
 	}
 	
 	public function _categoryIndex($categoryId = null) {
@@ -117,7 +120,10 @@ class _CoursesController extends CoursesAppController {
 			'limit' => 5
 		)));
 		
-		$this->set('categories', $this->Course->Category->find('list'));
+		if(CakePlugin::loaded('Categories')) {
+			$this->set('categories', $this->Course->Category->find('list'));
+		}
+		
 	}
 	
 /**
@@ -137,7 +143,6 @@ class _CoursesController extends CoursesAppController {
 			'contain' => array(
 				'Answer',
 				'Lesson',
-				'Media',
 				'Grade',
 				'Task' => array(
 					'conditions' => array('Task.parent_id' => null),

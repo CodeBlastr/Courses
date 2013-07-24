@@ -154,4 +154,45 @@ class GradesController extends CoursesAppController {
 
 	}
 	
+	/**
+	 * Custom Function for Answers Plugin.
+	 * Allows inserting Grading Options into form
+	 */
+	 
+	public function answerkey($answerid = null) {
+		if(!CakePlugin::loaded('Answers')) {
+			throw new MethodNotAllowedException('Answers Plugin is not installed');
+		}
+		
+		$this->loadModel('Answers.Answer');
+		
+		if($this->request->isPost() && !empty($this->request->data)) {
+			$data = array();	
+			$data['Answer']['id'] = $this->request->data['Answer']['id'];
+			unset($this->request->data['Answer']['id']);
+			foreach ($this->request->data['Answer'] as $inputid => $correct) {
+				$data['Answer']['data'][$inputid] = $correct;
+			}
+			$data['Answer']['data'] = json_encode($data['Answer']['data']);
+			$this->Answer->save($data, true, array('data'));
+			$this->Session->setFlash('Answer Key Saved');
+			$this->redirect('/answers/answers/index');
+		}
+		
+		if(!empty($answerid)) {
+			$answer = $this->Answer->findById($answerid);
+			if(!empty($answer['Answer']['data'])) {
+				$answers = $answer['Answer']['data'];
+			}
+			
+		}else{
+			$this->Session->setFlash('No Form Id');
+			$this->redirect($this->referer());
+		}
+		
+		$this->set('answers_json', $answers);
+	 	$this->set('answer', $answer);
+	}
+		
+	
 }
