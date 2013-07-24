@@ -5,9 +5,9 @@ App::uses('CoursesAppController', 'Courses.Controller');
  *
  * @property Grade $Grade
  */
-class GradesController extends CoursesAppController {
+class CourseGradesController extends CoursesAppController {
 
-	public $name = 'Grades';
+	public $name = 'CourseGrades';
 	public $uses = array('Courses.CourseGrade');
 
 /**

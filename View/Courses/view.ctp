@@ -140,9 +140,9 @@ echo $this->Html->tag('div',
 			<td><?php echo $this->Time->niceShort($childCourse['start']);?></td>
 			<td><?php echo $this->Time->niceShort($childCourse['end']);?></td>
 			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'lessons', 'action' => 'view', $childCourse['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'lessons', 'action' => 'edit', $childCourse['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'lessons', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
+				<?php echo $this->Html->link(__('View'), array('controller' => 'course_lessons', 'action' => 'view', $childCourse['id'])); ?>
+				<?php echo $this->Html->link(__('Edit'), array('controller' => 'course_lessons', 'action' => 'edit', $childCourse['id'])); ?>
+				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'course_lessons', 'action' => 'delete', $childCourse['id']), null, __('Are you sure you want to delete # %s?', $childCourse['id'])); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -156,19 +156,19 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => $course['Course']['name'],
 		'items' => array(
-			$this->Html->link(__('View Gradebook'), array('controller' => 'gradebooks', 'action' => 'view', $course['Course']['id'])),
+			$this->Html->link(__('View Gradebook'), array('controller' => 'course_gradebooks', 'action' => 'view', $course['Course']['id'])),
 			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
 			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
 			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
 			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
-			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id'])),
+			$this->Html->link(__('Edit Course Grading Options'), array('controller' => 'course_grades', 'action' => 'setup', $course['Course']['id'])),
 			$this->Form->postLink(__('Delete this Course'), array('action' => 'delete', $course['Course']['id']), null, __('Are you sure you want to delete %s ?', $course['Course']['name']))
 			),
 		),
 	array(
 		'heading' => 'Lessons',
 		'items' => array(
-			$this->Html->link(__('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add')),
+			$this->Html->link(__('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add')),
 			),
 		),
 	array(

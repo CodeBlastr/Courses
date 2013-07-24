@@ -10,6 +10,8 @@ class Course extends CoursesAppModel {
 	
 	public $name = 'Course';
 	
+	public $actsAs = array('Tree', 'Themeable');
+	
 /**
  * Display field
  *
@@ -74,7 +76,7 @@ class Course extends CoursesAppModel {
 		)
 	);
 	
-//	Please stop leaving these comment blocks around with no direction on why or when it will be dealt with. 
+// Please stop leaving these comment blocks around with no direction on why or when it will be dealt with. 
 // public $hasAndBelongsToMany = array(
 //		'User' => array(
 //			'className' => 'Users.User',
@@ -94,7 +96,7 @@ class Course extends CoursesAppModel {
 	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
 		}
-		parent::__construct($id, $table, $ds); // this order is imortant
+		parent::__construct($id, $table, $ds);
 	}
 	
 /**

@@ -7,7 +7,7 @@
 	<div class="courses view span8">
 		<h2><?php echo $course['Course']['name'] ?></h2>
 		<p><b><?php echo $course['Course']['school'] ?></b></p>
-<!--		<p><?php echo $course['Course']['description'] ?></p>-->
+		<!-- <p><?php echo $course['Course']['description'] ?></p> -->
 
 		<?php
 		if ( !empty($course['Series']['name']) ) {
@@ -142,7 +142,7 @@ $this->set('context_menu', array('menus' => array(
 		array(
 			'heading' => $course['Course']['name'],
 			'items' => array(
-				$this->Html->link('<i class="icon-book"></i>' . __('View Gradebook'), array('controller' => 'gradebooks', 'action' => 'view', $course['Course']['id']), array('escape' => false)),
+				$this->Html->link('<i class="icon-book"></i>' . __('View Gradebook'), array('controller' => 'course_gradebooks', 'action' => 'view', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-list"></i>' . __('Create Quiz'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add', 'Course', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-folder-open"></i>' . __('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
 				//$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id']), array('escape' => false)),
@@ -150,14 +150,14 @@ $this->set('context_menu', array('menus' => array(
 				$this->Html->link('<i class="icon-pencil"></i>' . __('Send Message to Students'), array('action' => 'message', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-envelope"></i>' . __('Invite Students'), array('plugin' => 'invites', 'controller' => 'invites', 'action' => 'invitation', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-edit"></i>' . __('Edit Course'), array('action' => 'edit', $course['Course']['id']), array('escape' => false)),
-				$this->Html->link('<i class="icon-cog"></i>' . __('Edit Course Grading Options'), array('controller' => 'grades', 'action' => 'setup', $course['Course']['id']), array('escape' => false)),
+				$this->Html->link('<i class="icon-cog"></i>' . __('Edit Course Grading Options'), array('controller' => 'course_grades', 'action' => 'setup', $course['Course']['id']), array('escape' => false)),
 				$this->Form->postLink('<i class="icon-remove-sign"></i>' . __('Delete this Course'), array('action' => 'delete', $course['Course']['id']), array('escape' => false), __('Are you sure you want to delete %s ?', $course['Course']['name']))
 			),
 		),
 		array(
 			'heading' => 'Lessons',
 			'items' => array(
-				$this->Html->link('<i class="icon-facetime-video"></i>' . __('Create New Lesson'), array('controller' => 'lessons', 'action' => 'add'), array('escape' => false)),
+				$this->Html->link('<i class="icon-facetime-video"></i>' . __('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add'), array('escape' => false)),
 			),
 		),
 		array(

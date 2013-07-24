@@ -63,7 +63,7 @@ class _CoursesController extends CoursesAppController {
 		)));
 
 		// teachers
-		$this->set('seriesAsTeacher', $this->Course->Series->find('all', array(
+		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->Series->find('all', array(
 			'conditions' => array(
 				'Series.creator_id' => $this->Auth->user('id'),
 				'Series.type' => 'series',
@@ -72,7 +72,8 @@ class _CoursesController extends CoursesAppController {
 			'contain' => array('Course'),
 			'order' => array('Series.end' => 'ASC')
 		)));
-		$this->set('coursesAsTeacher', $this->Course->find('all', array(
+		
+		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
 				'Course.type' => 'course',
@@ -81,6 +82,9 @@ class _CoursesController extends CoursesAppController {
 			),
 			'order' => array('Course.end' => 'ASC')
 		)));
+		
+		$this->set('teaches', $teaches = !empty($seriesAsTeacher) || !empty($coursesAsTeacher) ? true : false);
+		
 		// students
 		$this->set('coursesAsStudent', $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),

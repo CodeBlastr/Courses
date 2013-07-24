@@ -7,7 +7,7 @@ App::uses('CoursesAppModel', 'Courses.Model');
  */
 class CourseLesson extends CoursesAppModel {
 	
-	public $name = 'Lesson';
+	public $name = 'CourseLesson';
 	
 	public $useTable = 'courses';
 	
