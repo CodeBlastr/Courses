@@ -436,6 +436,13 @@ $this->set('context_menu', array('menus' => array(
 				$this->Html->link('<i class="icon-plus"></i>' . __('Create New Course'), array('action' => 'add'), array('escape' => false))
 			),
 		),
+		array(
+			'heading' => 'Quizzes/Tests',
+			'items' => array(
+				$this->Html->link('<i class="icon-th-list"></i>' . __('View All'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'index'), array('escape' => false)),
+				$this->Html->link('<i class="icon-plus"></i>' . __('Create New Course'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add'), array('escape' => false))
+			),
+		),
 )));
 
 //$this->append('sidebar');

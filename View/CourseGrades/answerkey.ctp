@@ -2,7 +2,7 @@
 	<h3><?php echo $answer['Answer']['title']; ?></h3>
 	<h6>Answer Key</h6>
 	<?php
-		echo $this->Form->create('Answers.Answer', array('url' => array('plugin' => 'courses', 'controller' => 'grades', 'action' => 'answerkey')));
+		echo $this->Form->create('Answers.Answer', array('url' => array('plugin' => 'courses', 'controller' => 'courseGrades', 'action' => 'answerkey')));
 		echo $this->Form->hidden('Answer.id', array('value' => $answer['Answer']['id']));
 		echo $answer['Answer']['content'];
 		echo $this->Form->submit('Submit');

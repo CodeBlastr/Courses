@@ -157,7 +157,6 @@ $this->set('context_menu', array('menus' => array(
 		'heading' => $course['Course']['name'],
 		'items' => array(
 			$this->Html->link(__('View Gradebook'), array('controller' => 'course_gradebooks', 'action' => 'view', $course['Course']['id'])),
-			$this->Html->link(__('Create Quiz'), array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'add', 'formanswer', 'Course', $course['Course']['id'])),
 			$this->Html->link(__('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource')),
 			$this->Html->link(__('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id'])),
 			$this->Html->link(__('Edit Course'), array('action' => 'edit', $course['Course']['id'])),
@@ -177,5 +176,5 @@ $this->set('context_menu', array('menus' => array(
 			$this->Html->link(__('View All Courses'), array('action' => 'dashboard')),
 			$this->Html->link(__('View Your Courses'), array('action' => 'dashboard')),
 			),
-		),
+		),	
 	)));

@@ -143,7 +143,7 @@ $this->set('context_menu', array('menus' => array(
 			'heading' => $course['Course']['name'],
 			'items' => array(
 				$this->Html->link('<i class="icon-book"></i>' . __('View Gradebook'), array('controller' => 'course_gradebooks', 'action' => 'view', $course['Course']['id']), array('escape' => false)),
-				$this->Html->link('<i class="icon-list"></i>' . __('Create Quiz'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add', 'Course', $course['Course']['id']), array('escape' => false)),
+				//$this->Html->link('<i class="icon-list"></i>' . __('Create Quiz'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add', 'Course', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-folder-open"></i>' . __('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
 				//$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('plugin' => 'tasks', 'controller' => 'tasks', 'action' => 'add'), array('escape' => false)),
@@ -165,6 +165,13 @@ $this->set('context_menu', array('menus' => array(
 			'items' => array(
 				$this->Html->link('<i class="icon-th-list"></i>' . __('View All Courses'), array('action' => 'index'), array('escape' => false)),
 				$this->Html->link('<i class="icon-briefcase"></i>' . __('View Your Courses'), array('action' => 'dashboard'), array('escape' => false)),
+			),
+		),
+		array(
+			'heading' => 'Quizzes/Tests',
+			'items' => array(
+				$this->Html->link('<i class="icon-th-list"></i>' . __('View All'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'index'), array('escape' => false)),
+				$this->Html->link('<i class="icon-plus"></i>' . __('Create New Quiz'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add'), array('escape' => false))
 			),
 		),
 )));
