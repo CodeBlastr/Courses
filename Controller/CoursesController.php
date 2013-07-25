@@ -24,7 +24,7 @@ class _CoursesController extends CoursesAppController {
 		}
 		$this->Course->recursive = 0;
 		$this->paginate['contain'][] = 'Category';
-		$this->paginate['contain'][] = 'Series';
+		$this->paginate['contain'][] = 'CourseSeries';
 		$this->paginate['contain'][] = 'Teacher';
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
@@ -65,9 +65,9 @@ class _CoursesController extends CoursesAppController {
 		// teachers
 		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->Series->find('all', array(
 			'conditions' => array(
-				'Series.creator_id' => $this->Auth->user('id'),
-				'Series.type' => 'series',
-				'Series.is_published' => 1
+				'CourseSeries.creator_id' => $this->Auth->user('id'),
+				'CourseSeries.type' => 'series',
+				'CourseSeries.is_published' => 1
 			),
 			'contain' => array('Course'),
 			'order' => array('Series.end' => 'ASC')
@@ -145,15 +145,14 @@ class _CoursesController extends CoursesAppController {
 		$course = $this->Course->find('first', array(
 			'conditions' => array('Course.id' => $this->Course->id),
 			'contain' => array(
-				'Answer',
-				'Lesson',
-				'Grade',
+				'CourseLesson',
+				'CourseGrade',
 				'Task' => array(
 					'conditions' => array('Task.parent_id' => null),
 					'ChildTask'
 				),
-				'Series' => array(
-					'fields' => array('Series.id', 'Series.name', 'Series.is_sequential')
+				'CourseSeries' => array(
+					'fields' => array('CourseSeries.id', 'CourseSeries.name', 'CourseSeries.is_sequential')
 				),
 				'Teacher' => array(
 					'fields' => array('Teacher.id', 'Teacher.full_name')
@@ -192,8 +191,9 @@ class _CoursesController extends CoursesAppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Course->create();
+			//$this->Course->create();
 			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
+			
 			if ($this->Course->save($this->request->data)) {
 				$this->Session->setFlash(__('The course has been created'));
 				$this->redirect(array('action' => 'index'));

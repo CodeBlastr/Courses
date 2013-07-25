@@ -76,12 +76,7 @@ echo $this->Html->tag('div',
 			}
 		}
 	}
-	if ( !empty($course['Form']) ) {
-		echo '<h4>Quizzes / Tests</h4>';
-		foreach ( $course['Form'] as $form ) {
-			echo '<li>'. $this->Html->link($form['name'], array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'view', $form['id'])) . '</li>';
-		}
-	}
+	
 
 	if ( !empty($course['Grade']) && $isOwner ) {
 		echo '<h4>Submitted Answers</h4>';

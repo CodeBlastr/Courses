@@ -49,10 +49,6 @@ class CourseLesson extends CoursesAppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Answer' => array(
-			'className' => 'Answers.Answer',
-			'foreignKey' => 'foreign_key'
-		),
 	);
 
 	public function beforeFind(array $queryData) {
@@ -61,6 +57,7 @@ class CourseLesson extends CoursesAppModel {
 	}
 	
 	public function beforeSave(array $options = array()) {
+		parent::beforeSave($options);
 		$this->data[$this->alias]['type'] = 'lesson';
 		return true;
 	}

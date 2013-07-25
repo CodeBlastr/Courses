@@ -16,7 +16,7 @@ class CoursesAppModel extends AppModel {
 			$this->hasMany['Media'] = array(
 				'className' => 'Media.Media',
 				'foreignKey' => 'foreign_key',
-				'dependent' => false, // hmm... maybe should be true?
+				'dependent' => false, // Incase Media is attached to more that one model
 				'conditions' => '',
 				'fields' => '',
 				'order' => '',

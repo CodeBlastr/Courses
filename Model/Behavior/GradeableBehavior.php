@@ -61,7 +61,7 @@ class GradeableBehavior extends ModelBehavior {
 	 */
 	
 	public function beforeSave(Model $Model) {
-		
+		parent::beforeSave($options);
 		if(isset($Model->data[$Model->alias]) && isset($Model->data['CourseGradeDetail'])) {
 			$this->detailId = $Model->data['CourseGradeDetail']['foreign_key'];
 			$this->detailModel = isset($Model->data['CourseGradeDetail']['model']) ? $Model->data['CourseGradeDetail']['model'] : $Model->alias;
