@@ -30,6 +30,7 @@
 		echo $this->Form->input('Course.is_private', array('label' => 'Private'));
 		echo $this->Form->input('Course.is_sequential', array('label' => __('Require Sequence <i class="icon-question-sign">%s</i>', $this->Html->link('', '#', array('data-toggle' => 'tooltip', 'title' => 'first tooltip')))));
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
+		echo !empty($templates) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Theme.template_id', array('type' => 'radio'))) : null;
 	?>
 	</fieldset>
 <?php

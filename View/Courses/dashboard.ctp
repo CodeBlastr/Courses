@@ -167,6 +167,11 @@
 		</div>
 		<?php } else { ?>
 		<div class="row-fluid">
+			<ul class="nav nav-pills">
+			  <li><?php echo $this->Html->link('Add a Course', array('action' => 'add')); ?></li>
+			</ul>
+		</div>
+		<div class="row-fluid">
 			<div class="span12 course-listing">
 				<?php
 				if ( empty($coursesAsTeacher) && empty($seriesAsTeacher) ) {

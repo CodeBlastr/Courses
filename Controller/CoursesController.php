@@ -9,7 +9,7 @@ class _CoursesController extends CoursesAppController {
 
 	public $name = 'Courses';
 	public $uses = array('Courses.Course');
-	public $components = array('RequestHandler');
+	public $components = array('RequestHandler', 'Template');
 	public $helpers = array('Calendar');
 
 /**
