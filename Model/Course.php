@@ -71,6 +71,13 @@ class Course extends CoursesAppModel {
 		)
 	);
 
+	public $hasOne = array(
+		'UserGroup' => array(
+			'className' => 'Users.UserGroup',
+			'foreignKey' => 'foreign_key'
+		)
+	);
+
     
 	public function __construct($id = null, $table = null, $ds = null) {
 		if (in_array('Categories', CakePlugin::loaded())) {
@@ -100,5 +107,23 @@ class Course extends CoursesAppModel {
 		return true;
 	}
 
+	
+/**
+ * 
+ * @param boolean $created
+ */
+	public function afterSave(boolean $created) {
+		parent::afterSave($created);
+		if ( $created ) {
+			// create a UserGroup for this Course
+			$data = $this->UserGroup->create(array(
+				'title' => $this->data['Course']['name'],
+				'model' => 'Course',
+				'foreign_key' => $this->id,
+				'owner_id' => CakeSession::read('Auth.User.id')
+			));
+			$this->UserGroup->save($data);
+		}
+	}
 	
 }
