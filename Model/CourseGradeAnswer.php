@@ -7,7 +7,7 @@ App::uses('CoursesAppModel', 'Courses.Model');
  */
 class CourseGradeAnswer extends CoursesAppModel {
 	
-	public $name = 'GradeAnswer';
+	public $name = 'CourseGradeAnswer';
 	
 	public $useTable = 'course_grade_answers';
 
@@ -32,5 +32,28 @@ class CourseGradeAnswer extends CoursesAppModel {
 			'order' => ''
 		),
 	);
+	
+	public function beforeSave($options = array()) {
+		parent::beforeSave($options);
+		
+		$this->data['CourseGradeAnswer']['value'] = serialize($this->data['CourseGradeAnswer']['value']);
+		
+		return true;
+	}
+	
+	public function afterFind($results, $primary = false) {
+		
+		if(is_array($results['CourseGradeAnswer'])) {
+			foreach ($results['CourseGradeAnswer'] as $key => $value) {
+				if($key == 'value') {
+					$results['CourseGradeAnswer'][$key] = unserialize($value);
+				}
+			}
+		}else {
+			$results['CourseGradeAnswer']['value'] = unserialize($results['CourseGradeAnswer']['value']);
+		}
+		
+		return $results;
+	}
 	
 }

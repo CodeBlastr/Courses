@@ -10,8 +10,6 @@ class Course extends CoursesAppModel {
 	
 	public $name = 'Course';
 	
-	public $actsAs = array('Tree', 'Themeable');
-	
 /**
  * Display field
  *
@@ -31,7 +29,7 @@ class Course extends CoursesAppModel {
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
 			'dependent' => false,
-			'conditions' => '',
+			'conditions' => array('type' => 'lesson'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',
@@ -46,10 +44,6 @@ class Course extends CoursesAppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		),
-		'Answer' => array(
-			'className' => 'Answers.Answer',
-			'foreignKey' => 'foreign_key'
 		),
 		'Task' => array(
 			'className' => 'Tasks.Task',
@@ -68,21 +62,22 @@ class Course extends CoursesAppModel {
 	public $belongsTo = array(
 		'Series' => array(
 			'className' => 'Courses.CourseSeries',
-			'foreignKey' => 'parent_id'
+			'foreignKey' => 'parent_id',
+			'conditions' => array('Series.type' => 'series'),
 		),
 		'Teacher' => array(
 			'className' => 'Users.User',
 			'foreignKey' => 'creator_id'
 		)
 	);
-	
-// Please stop leaving these comment blocks around with no direction on why or when it will be dealt with. 
-// public $hasAndBelongsToMany = array(
-//		'User' => array(
-//			'className' => 'Users.User',
-//			'join_table' => 'course_users'
-//		)
-//	);
+
+	public $hasOne = array(
+		'UserGroup' => array(
+			'className' => 'Users.UserGroup',
+			'foreignKey' => 'foreign_key'
+		)
+	);
+
     
 	public function __construct($id = null, $table = null, $ds = null) {
 		if (in_array('Categories', CakePlugin::loaded())) {
@@ -100,25 +95,35 @@ class Course extends CoursesAppModel {
 	}
 	
 /**
- * before find method
- * 
- * @param array $queryData
- * @return array
- */
-	public function beforeFind(array $queryData) {
-		$queryData['conditions'][$this->alias.'.type'] = 'course';
-		return $queryData;
-	}
-	
-/**
  * before save method
  * 
  * @param array $options
  * @return true
  */
 	public function beforeSave(array $options = array()) {
+		parent::beforeSave($options);
+		
 		$this->data[$this->alias]['type'] = 'course';
 		return true;
+	}
+
+	
+/**
+ * 
+ * @param boolean $created
+ */
+	public function afterSave(boolean $created) {
+		parent::afterSave($created);
+		if ( $created ) {
+			// create a UserGroup for this Course
+			$data = $this->UserGroup->create(array(
+				'title' => $this->data['Course']['name'],
+				'model' => 'Course',
+				'foreign_key' => $this->id,
+				'owner_id' => CakeSession::read('Auth.User.id')
+			));
+			$this->UserGroup->save($data);
+		}
 	}
 	
 }

@@ -9,6 +9,8 @@ class CourseLesson extends CoursesAppModel {
 	
 	public $name = 'CourseLesson';
 	
+	public $alias = 'Lesson';
+	
 	public $useTable = 'courses';
 	
 /**
@@ -49,18 +51,10 @@ class CourseLesson extends CoursesAppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		),
-		'Answer' => array(
-			'className' => 'Answers.Answer',
-			'foreignKey' => 'foreign_key'
-		),
 	);
-
-	public function beforeFind(array $queryData) {
-		$queryData['conditions'][$this->alias.'.type'] = 'lesson';
-		return $queryData;
-	}
 	
 	public function beforeSave(array $options = array()) {
+		parent::beforeSave($options);
 		$this->data[$this->alias]['type'] = 'lesson';
 		return true;
 	}

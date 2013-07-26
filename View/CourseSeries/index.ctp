@@ -1,5 +1,5 @@
 <div class="series index">
-	<h2><?php echo __('Series');?></h2>
+	<h2><?php echo __($page_title);?></h2>
 	<table cellpadding="0" cellspacing="0">
 	<tr>
 			<th><?php echo $this->Paginator->sort('name');?></th>

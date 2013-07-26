@@ -74,13 +74,6 @@
 				echo $this->Html->tag('table', $this->Html->tableHeaders(array('Name', 'Due Date', 'Completions')) . $this->Html->tableCells($assignmentCells));
 			}
 
-			// Quizzes / Tests
-			if ( !empty($course['Answer']) ) {
-				echo '<h4>Quizzes / Tests</h4>';
-				foreach ( $course['Answer'] as $form ) {
-					echo '<li>' . $this->Html->link($form['title'], array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'view', $form['id'])) . '</li>';
-				}
-			}
 
 			// Ungraded Items
 			if ( !empty($course['Grade']) ) {

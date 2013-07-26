@@ -8,8 +8,11 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class _CoursesController extends CoursesAppController {
 
 	public $name = 'Courses';
-	public $uses = array('Courses.Course');
+
+	public $uses = array('Courses.Course', 'Courses.CourseSeries');
+	
 	public $components = array('RequestHandler', 'Template');
+	
 	public $helpers = array('Calendar');
 
 /**
@@ -22,6 +25,7 @@ class _CoursesController extends CoursesAppController {
 		if (!empty($categoryId)) {
 			$this->paginate['conditions']['Course.id'] = $this->_categoryIndex($categoryId);
 		}
+		$this->paginate['conditions']['Course.type'] = 'course';
 		$this->Course->recursive = 0;
 		$this->paginate['contain'][] = 'Category';
 		$this->paginate['contain'][] = 'Series';
@@ -50,23 +54,21 @@ class _CoursesController extends CoursesAppController {
 
 
 	public function dashboard() {
+		
 		$this->set('title_for_layout', 'Courses Dashboard' . ' | ' . __SYSTEM_SITE_NAME);
 
 		$this->set('upcomingCourses', $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.start > NOW()',
 				'Course.type' => 'course',
-				'Course.parent_id' => null,
 				'Course.is_published' => 1
 			),
 			'order' => array('Course.start' => 'ASC')
 		)));
-
 		// teachers
 		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->Series->find('all', array(
 			'conditions' => array(
 				'Series.creator_id' => $this->Auth->user('id'),
-				'Series.type' => 'series',
 				'Series.is_published' => 1
 			),
 			'contain' => array('Course'),
@@ -76,7 +78,6 @@ class _CoursesController extends CoursesAppController {
 		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
-				'Course.type' => 'course',
 				'Course.parent_id' => null,
 				'Course.is_published' => 1
 			),
@@ -145,15 +146,14 @@ class _CoursesController extends CoursesAppController {
 		$course = $this->Course->find('first', array(
 			'conditions' => array('Course.id' => $this->Course->id),
 			'contain' => array(
-				'Answer',
-				'Lesson',
-				'Grade',
+				'CourseLesson',
+				'CourseGrade',
 				'Task' => array(
 					'conditions' => array('Task.parent_id' => null),
 					'ChildTask'
 				),
-				'Series' => array(
-					'fields' => array('Series.id', 'Series.name', 'Series.is_sequential')
+				'CourseSeries' => array(
+					'fields' => array('CourseSeries.id', 'CourseSeries.name', 'CourseSeries.is_sequential')
 				),
 				'Teacher' => array(
 					'fields' => array('Teacher.id', 'Teacher.full_name')
@@ -192,8 +192,9 @@ class _CoursesController extends CoursesAppController {
  */
 	public function add() {
 		if ($this->request->is('post')) {
-			$this->Course->create();
+			//$this->Course->create();
 			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
+			
 			if ($this->Course->save($this->request->data)) {
 				$this->Session->setFlash(__('The course has been created'));
 				$this->redirect(array('action' => 'index'));
@@ -232,6 +233,7 @@ class _CoursesController extends CoursesAppController {
 			$this->request->data = $this->Course->read(null, $id);
 		}
 		$parentCourses = $this->Course->Lesson->find('list');
+		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
 		$this->set(compact('parentCourses'));
 		if (in_array('Categories', CakePlugin::loaded())) {
 			$this->set('categories', $this->Course->Category->find('list'));
@@ -275,6 +277,17 @@ class _CoursesController extends CoursesAppController {
 		$newRegistration['CourseUser']['user_id'] = $this->Auth->user('id');
 		$newRegistration['CourseUser']['course_id'] = $this->Course->id;
 		if ( $this->Course->CourseUser->save($newRegistration) ) {
+			/**
+			 * @todo Add user to the Course's UserGroup upon registration
+			 */
+//			try {
+//				$this->Course->CourseUser->UserUserGroup->add(array(
+//
+//				));
+//			} catch (Exception $exc) {
+//				echo $exc->getTraceAsString();
+//			}
+
 			$this->Session->setFlash(__('Registration Successful.'));
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
@@ -291,6 +304,9 @@ class _CoursesController extends CoursesAppController {
 			'CourseUser.course_id' => $this->Course->id
 		));
 		if ( $unregistered ) {
+			/**
+			 * @todo Remove user from the Course's UserGroup upon Course exit
+			 */
 			$this->Session->setFlash(__('You are no longer registered for this course.'));
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}

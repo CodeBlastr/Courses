@@ -7,7 +7,7 @@ App::uses('CoursesAppModel', 'Courses.Model');
  */
 class CourseSeries extends CoursesAppModel {
 	
-	public $name = 'Series';
+	public $name = 'CourseSeries';
 	
 	public $useTable = 'courses';
 	
@@ -27,40 +27,32 @@ class CourseSeries extends CoursesAppModel {
  */
 	
 	public $hasMany = array(
-//		'Media' => array(
-//			'className' => 'Media.Media',
-//			'foreignKey' => 'foreign_key',
-//			'dependent' => false,
-//			'conditions' => '',
-//			'fields' => '',
-//			'order' => '',
-//			'limit' => '',
-//			'offset' => '',
-//			'exclusive' => '',
-//			'finderQuery' => '',
-//			'counterQuery' => ''
-//		),
-//		'Form' => array(
-//			'className' => 'Forms.Form',
-//			'foreignKey' => 'foreign_key'
-//		),
 		'Course' => array(
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
-			'conditions' => '',
+			'conditions' => array('type' => 'course'),
+			'fields' => '',
+			'order' => ''
+		),
+		'Lesson' => array(
+			'className' => 'Courses.Course',
+			'foreignKey' => 'parent_id',
+			'conditions' => array('type' => 'lesson'),
 			'fields' => '',
 			'order' => ''
 		)
 	);
 	
-
-	public function beforeFind(array $queryData) {
-		$queryData['conditions'][$this->alias.'.type'] = 'series';
-		return $queryData;
-	}
+	public $belongsTo = array(
+		'Teacher' => array(
+			'className' => 'Users.User',
+			'foreignKey' => 'creator_id'
+		)
+	);
 	
 	public function beforeSave(array $options = array()) {
-		$this->data[$this->alias]['type'] = 'series';
+		parent::beforeSave($options);
+		$this->data[$this->name]['type'] = 'series';
 		return true;
 	}
 
