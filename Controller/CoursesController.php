@@ -25,7 +25,7 @@ class _CoursesController extends CoursesAppController {
 		$this->paginate['conditions']['Course.type'] = 'course';
 		$this->Course->recursive = 0;
 		$this->paginate['contain'][] = 'Category';
-		$this->paginate['contain'][] = 'CourseSeries';
+		$this->paginate['contain'][] = 'Series';
 		$this->paginate['contain'][] = 'Teacher';
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
