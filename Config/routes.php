@@ -14,4 +14,4 @@ Router::connect(
 Router::connect(
     '/lessons/:action/*',
     array('plugin' => 'courses', 'controller' => 'courseLessons', 'action' => 'index')
-);
+); 

@@ -7,11 +7,11 @@
 	<div class="span6">
 		<div class="available-items">
 			<ul class="thumbnails">
-			<?php foreach ($availablecourses as $avail): ?>
+			<?php debug($availablecourses);foreach ($availablecourses as $avail): ?>
 			  <li class="draggable">
 			    <a href="#" class="thumbnail">
 			      <img data-src="holder.js/100x100" alt="">
-			      <p><?php echo $avail['Course.title']; ?></p>
+			      <p><?php echo $avail['Course']['name']; ?></p>
 			    </a>
 			  </li>
 			 <?php endforeach; ?>
@@ -20,7 +20,16 @@
 	</div>
 	<div class="span6">
 		<div class="sorted-items droppable" style="min-height: 50px; border: 1px solid #000;">
-			
+			<ul class="thumbnails">
+			<?php foreach ($courses as $course): ?>
+			  <li class="draggable">
+			    <a href="#" class="thumbnail">
+			      <img data-src="holder.js/100x100" alt="">
+			      <p><?php echo $course['Course.title']; ?></p>
+			    </a>
+			  </li>
+			 <?php endforeach; ?>
+			</ul>
 		</div>
 	</div>
 </div>
@@ -67,13 +76,15 @@
 
 <script type="text/javascript">
 	(function($){
+		
+		var availableitems = $('#dragDropItems available-items ul li');
+		var chosenitems = $('#dragDropItems available-items ul li');
+		console.log(availableitems);
+		console.log(chosenitems);
+		
 		$('.draggable').draggable({ 
-				helper: function() {
-						var clone = $(this);
-						console.log(clone);
-						clone.css('width', $(this).width);
-						return clone;
-					} 
+				helper: "clone",
+				revert: "invalid"
 			});
 		$('.droppable').droppable();
 	})(jQuery);
