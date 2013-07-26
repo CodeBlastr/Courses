@@ -7,10 +7,10 @@
 	<div class="span6">
 		<div class="available-items">
 			<ul class="thumbnails">
-			<?php debug($availablecourses);foreach ($availablecourses as $avail): ?>
-			  <li class="draggable">
+			<?php //debug($availablecourses); ?>
+			<?php foreach ($availablecourses as $avail): ?>
+			  <li class="draggable" data-course-id="<?php echo $avail['Course']['id']; ?>">
 			    <a href="#" class="thumbnail">
-			      <img data-src="holder.js/100x100" alt="">
 			      <p><?php echo $avail['Course']['name']; ?></p>
 			    </a>
 			  </li>
@@ -22,10 +22,10 @@
 		<div class="sorted-items droppable" style="min-height: 50px; border: 1px solid #000;">
 			<ul class="thumbnails">
 			<?php foreach ($courses as $course): ?>
-			  <li class="draggable">
+			  <li class="draggablechosen" data-course-id="<?php echo $course['Course']['id']; ?>">
 			    <a href="#" class="thumbnail">
-			      <img data-src="holder.js/100x100" alt="">
-			      <p><?php echo $course['Course.title']; ?></p>
+			      <a href="#" class="remove-item"><i class="icon-minus-sign"></i></a>
+			      <p><?php echo $course['Course']['name']; ?></p>
 			    </a>
 			  </li>
 			 <?php endforeach; ?>
@@ -77,16 +77,69 @@
 <script type="text/javascript">
 	(function($){
 		
-		var availableitems = $('#dragDropItems available-items ul li');
-		var chosenitems = $('#dragDropItems available-items ul li');
+		var availableitems = [];
+		
+		<?php foreach($availablecourses as $avail) {echo 'availableitems.push('.json_encode($avail).');';} ?>
+		
+		var chosenitems = [];
+		
+		<?php foreach($courses as $course) {echo 'availableitems.push('.json_encode($course).');';} ?>
+		
 		console.log(availableitems);
 		console.log(chosenitems);
+			
+		$('.droppable').droppable({
+				drop: function( event, ui ) {
+					var id = ui.draggable.data('course-id');
+					for ( var i = 0; i<availableitems.length; i++ ) {
+						if(availableitems[i].Course.id == id) {
+							chosenitems.push(availableitems.splice(i,1)[0]);
+						}	
+					}
+					rerenderitems();
+				}
+			});
 		
-		$('.draggable').draggable({ 
+		$( "#dragDropItems .sorted-items ul" ).sortable({ connectWith: "#dragDropItems .available-items ul" });
+		
+		$('.sorted-items').on('click', '.icon-minus-sign', function(e){
+			var id = $(this).closest('li').data('course-id');
+					for ( var i = 0; i<chosenitems.length; i++ ) {
+						if(chosenitems[i].Course.id == id) {
+							availableitems.push(chosenitems.splice(i,1)[0]);
+						}	
+					}
+					rerenderitems();
+		});
+		
+		bindEvents();
+		
+		function rerenderitems() {
+			var html ='';
+			for ( var i = 0; i<availableitems.length; i++ ) {
+				 var name = availableitems[i].Course.name;
+				 var id = availableitems[i].Course.id;
+				 html += '<li class="draggable" data-course-id="'+id+'"><a href="#" class="thumbnail"><p>'+name+'</p></a></li>';
+			}
+			$('.available-items ul').html(html);
+			
+			html = '';
+			for ( var i = 0; i<chosenitems.length; i++ ) {
+				 var name = chosenitems[i].Course.name;
+				 var id = chosenitems[i].Course.id;
+				 html += '<li class="draggable" data-course-id="'+id+'"><a href="#" class="thumbnail"><i class="icon-minus-sign"></i><p>'+name+'</p></a></li>';
+			}
+			$('.sorted-items ul').html(html);
+			bindEvents();
+		}
+		
+		function bindEvents () {
+			$('.draggable').draggable({ 
 				helper: "clone",
 				revert: "invalid"
 			});
-		$('.droppable').droppable();
+		}
+		
 	})(jQuery);
 </script>
 

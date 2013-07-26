@@ -135,7 +135,7 @@ class CourseSeriesController extends CoursesAppController {
 			),
 			'fields' => array('Course.id', 'Course.parent_id', 'Course.name'),
 			));
-		debug($availablecourses);
+		
 		$courses = $this->CourseSeries->Course->find('all', array(
 				'conditions' => array(
 									'creator_id' => $this->userId,
