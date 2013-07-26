@@ -8,7 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class _CoursesController extends CoursesAppController {
 
 	public $name = 'Courses';
-	public $uses = array('Courses.Course');
+	public $uses = array('Courses.Course', 'Courses.CourseSeries');
 	public $components = array('RequestHandler');
 	public $helpers = array('Calendar');
 
@@ -22,6 +22,7 @@ class _CoursesController extends CoursesAppController {
 		if (!empty($categoryId)) {
 			$this->paginate['conditions']['Course.id'] = $this->_categoryIndex($categoryId);
 		}
+		$this->paginate['conditions']['Course.type'] = 'course';
 		$this->Course->recursive = 0;
 		$this->paginate['contain'][] = 'Category';
 		$this->paginate['contain'][] = 'CourseSeries';
@@ -50,24 +51,22 @@ class _CoursesController extends CoursesAppController {
 
 
 	public function dashboard() {
+		
 		$this->set('title_for_layout', 'Courses Dashboard' . ' | ' . __SYSTEM_SITE_NAME);
 
 		$this->set('upcomingCourses', $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.start > NOW()',
 				'Course.type' => 'course',
-				'Course.parent_id' => null,
 				'Course.is_published' => 1
 			),
 			'order' => array('Course.start' => 'ASC')
 		)));
-
 		// teachers
 		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->Series->find('all', array(
 			'conditions' => array(
-				'CourseSeries.creator_id' => $this->Auth->user('id'),
-				'CourseSeries.type' => 'series',
-				'CourseSeries.is_published' => 1
+				'Series.creator_id' => $this->Auth->user('id'),
+				'Series.is_published' => 1
 			),
 			'contain' => array('Course'),
 			'order' => array('Series.end' => 'ASC')
@@ -76,7 +75,6 @@ class _CoursesController extends CoursesAppController {
 		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
-				'Course.type' => 'course',
 				'Course.parent_id' => null,
 				'Course.is_published' => 1
 			),
@@ -232,6 +230,7 @@ class _CoursesController extends CoursesAppController {
 			$this->request->data = $this->Course->read(null, $id);
 		}
 		$parentCourses = $this->Course->Lesson->find('list');
+		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
 		$this->set(compact('parentCourses'));
 		if (in_array('Categories', CakePlugin::loaded())) {
 			$this->set('categories', $this->Course->Category->find('list'));

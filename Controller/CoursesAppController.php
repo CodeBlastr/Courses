@@ -2,4 +2,5 @@
 
 class CoursesAppController extends AppController {
     
+	
 }

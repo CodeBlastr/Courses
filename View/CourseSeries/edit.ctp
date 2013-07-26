@@ -1,15 +1,38 @@
+<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet"/>
+<h2><?php echo __('Editing ' . $this->request->data['CourseSeries']['name']); ?></h2>
+<div class="coursesseries form">
 
-<div class="courses form">
+<div id="dragDropItems" class="row-fluid">
+	<div class="span6">
+		<div class="available-items">
+			<ul class="thumbnails">
+			<?php foreach ($availablecourses as $avail): ?>
+			  <li class="draggable">
+			    <a href="#" class="thumbnail">
+			      <img data-src="holder.js/100x100" alt="">
+			      <p><?php echo $avail['Course.title']; ?></p>
+			    </a>
+			  </li>
+			 <?php endforeach; ?>
+			</ul>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="sorted-items droppable" style="min-height: 50px; border: 1px solid #000;">
+			
+		</div>
+	</div>
+</div>
+
 <?php echo $this->Form->create('CourseSeries');?>
 	<fieldset>
-		<legend><?php echo __('Editing Series'); ?></legend>
+		<legend><?php echo __('Editing Series ' . $this->request->data['CourseSeries']['name']); ?></legend>
 	<?php
 	
 	$i = 0;
 	foreach ( $courses as $course ) {
 		$checked = ( $course['Course']['parent_id'] == $this->request->data['CourseSeries']['id'] ) ? true : false;
-//		$potentialChildren = $this->Form->input("Course.$i.id", array( 'type' => 'checkbox', 'label' => $course['Course']['name'], 'value' => $course['Course']['id'], 'checked' => $checked ));
-//		$potentialChildren .= $this->Form->input("Course.$i.order", array( 'value' => $course['Course']['order'] ));
 		$potentialChildren[] = array(
 			$this->Form->input("Course.$i.id", array( 'type' => 'checkbox', 'label' => false, 'value' => $course['Course']['id'], 'checked' => $checked )),
 			$course['Course']['name'],
@@ -35,26 +58,37 @@
 		, array('class' => 'row-fluid')
 	);
 	
-//		echo $this->Form->input('Lesson.location');
-//		echo $this->Form->input('Lesson.school');
-//		echo $this->Form->input('Lesson.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12')));
-//		echo $this->Form->input('Lesson.language', array('options' => array('English', 'Spanish')));
-//		echo $this->Form->input('Lesson.start', array('type' => 'time'));
-//		echo $this->Form->input('Lesson.end', array('type' => 'time'));
-//		echo $this->Form->input('Lesson.is_published', array('label' => 'Active / Inactive'));
-//		echo $this->Form->input('Lesson.is_persistant', array('label' => 'Allow access when Inactive'));
-//		echo $this->Form->input('Lesson.is_private', array('label' => 'Public / Private'));
 		echo $this->Form->input('CourseSeries.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
+		echo $this->Form->input('CourseSeries.is_private', array('label' => 'Private (public won\'t be able to view the series)', 'value' => '1', 'checked' => false));
 	?>
 	</fieldset>
 <?php echo $this->Form->end(__('Save'));?>
 </div>
+
+<script type="text/javascript">
+	(function($){
+		$('.draggable').draggable({ 
+				helper: function() {
+						var clone = $(this);
+						console.log(clone);
+						clone.css('width', $(this).width);
+						return clone;
+					} 
+			});
+		$('.droppable').droppable();
+	})(jQuery);
+</script>
 
 <?php
 //debug( $this->request->data );
 //debug( $courses );
 
 $this->set('context_menu', array('menus' => array(
+	array(
+		'items' => array(
+			$this->Html->link('<i class="icon-tasks"></i>' .__('Dashboard'), array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'dashboard'), array('escape' => false)),
+			),
+	),
 	array(
 		'heading' => 'Series',
 		'items' => array(

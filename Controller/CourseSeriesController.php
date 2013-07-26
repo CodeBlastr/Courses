@@ -16,10 +16,42 @@ class CourseSeriesController extends CoursesAppController {
  * @return void
  */
 	public function index() {
-		$this->Series->recursive = 0;
+		$this->CourseSeries->recursive = 0;
 		$this->paginate = array(
-			'conditions' => array('CourseSeries.parent_id' => null)
+			'conditions' => array(
+				'CourseSeries.type' => 'series',
+				'OR' => array(
+					'creator_id' => $this->Auth->user('id'),
+					'is_private' => 0,
+					) 
+				)
 		);
+		$this->set('page_title', 'All Series being offered');
+		$this->set('series', $this->paginate());
+	}
+	
+	
+	public function my() {
+		$this->CourseSeries->recursive = 0;
+		$this->paginate = array(
+			'conditions' => array('CourseSeries.type' => 'series',
+			'creator_id' => $this->Auth->user('id'),
+			)
+		);
+		$this->view = 'index';
+		$this->set('page_title', 'Series you are teaching');
+		$this->set('series', $this->paginate());
+	}
+	
+	public function taking() {
+		$this->CourseSeries->recursive = 0;
+		$this->paginate = array(
+			'conditions' => array('CourseSeries.type' => 'series',
+			)
+		);
+		$this->paginate['contain'] = array('CourseUser', array('conditions' => array('user_id' => $this->Auth->user('id'))));
+		$this->view = 'index';
+		$this->set('page_title', 'Series you are taking');
 		$this->set('series', $this->paginate());
 	}
 
@@ -61,7 +93,7 @@ class CourseSeriesController extends CoursesAppController {
 					return new CakeResponse(array('body' => $this->CourseSeries->id));
 				} else {
 					$this->Session->setFlash(__('The series has been created'));
-					$this->redirect(array('action' => 'index'));
+					$this->redirect(array('action' => 'edit', $this->CourseSeries->id));
 				}
 			} else {
 				if ( $this->request->is('ajax') ) {
@@ -83,8 +115,8 @@ class CourseSeriesController extends CoursesAppController {
  */
 	public function edit($id = null) {
 		$this->CourseSeries->id = $id;
-		if (!$this->CourseSeries->exists()) {
-			throw new NotFoundException(__('Invalid series'));
+		if (!$this->CourseSeries->exists() || $id == null) {
+			$this->Session->setFlash(__('The series could not be saved. Please, try again.'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->CourseSeries->saveAll($this->request->data)) {
@@ -96,12 +128,22 @@ class CourseSeriesController extends CoursesAppController {
 		} else {
 			$this->request->data = $this->CourseSeries->read(null, $id);
 		}
-		$courses = $this->CourseSeries->Course->find('all', array(
-			'conditions' => array('creator_id' => $this->userId),
+		$availablecourses = $this->CourseSeries->Course->find('all', array(
+			'conditions' => array('creator_id' => $this->userId,
+				'parent_id' => null, //Not attached to a Series Yet
+				'type' => 'course'
+			),
 			'fields' => array('Course.id', 'Course.parent_id', 'Course.name'),
-			'group' => 'Course.parent_id'
 			));
-		$this->set(compact('courses'));
+		debug($availablecourses);
+		$courses = $this->CourseSeries->Course->find('all', array(
+				'conditions' => array(
+									'creator_id' => $this->userId,
+									'parent_id' => $id,
+								),
+				'fields' => array('Course.id', 'Course.parent_id', 'Course.name', 'Course.order'),
+			));
+		$this->set(compact('courses', 'availablecourses'));
 	}
 
 /**

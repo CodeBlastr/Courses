@@ -10,8 +10,6 @@ class Course extends CoursesAppModel {
 	
 	public $name = 'Course';
 	
-	public $actsAs = array('Tree', 'Themeable');
-	
 /**
  * Display field
  *
@@ -31,7 +29,7 @@ class Course extends CoursesAppModel {
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
 			'dependent' => false,
-			'conditions' => '',
+			'conditions' => array('type' => 'lesson'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',
@@ -64,7 +62,8 @@ class Course extends CoursesAppModel {
 	public $belongsTo = array(
 		'Series' => array(
 			'className' => 'Courses.CourseSeries',
-			'foreignKey' => 'parent_id'
+			'foreignKey' => 'parent_id',
+			'conditions' => array('Series.type' => 'series'),
 		),
 		'Teacher' => array(
 			'className' => 'Users.User',

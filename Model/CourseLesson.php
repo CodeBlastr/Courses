@@ -9,6 +9,8 @@ class CourseLesson extends CoursesAppModel {
 	
 	public $name = 'CourseLesson';
 	
+	public $alias = 'Lesson';
+	
 	public $useTable = 'courses';
 	
 /**
@@ -50,11 +52,6 @@ class CourseLesson extends CoursesAppModel {
 			'counterQuery' => ''
 		),
 	);
-
-	public function beforeFind(array $queryData) {
-		$queryData['conditions'][$this->alias.'.type'] = 'lesson';
-		return $queryData;
-	}
 	
 	public function beforeSave(array $options = array()) {
 		parent::beforeSave($options);

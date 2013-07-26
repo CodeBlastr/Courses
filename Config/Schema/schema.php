@@ -81,7 +81,7 @@ class CoursesSchema extends CakeSchema {
 	);
 	public $courses = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'parent_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'parent_id' => array('type' => 'string', 'null' => true, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'lft' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
 		'rght' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'length' => 10),
 		'name' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
@@ -93,7 +93,7 @@ class CoursesSchema extends CakeSchema {
 		'start' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'end' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'is_published' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
-		'is_private' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
+		'is_private' => array('type' => 'boolean', 'null' => false, 'default' => 0),
 		'is_persistant' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
 		'is_sequential' => array('type' => 'boolean', 'null' => false, 'default' => NULL),
 		'settings' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
