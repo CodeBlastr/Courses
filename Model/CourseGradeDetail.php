@@ -9,7 +9,7 @@ class CourseGradeDetail extends CoursesAppModel {
 	
 	public $name = 'CourseGradeDetail';
 	
-	public $useTable = 'course_grade_detail';
+	public $useTable = 'course_grade_details';
 
 /**
  * belongsTo associations
