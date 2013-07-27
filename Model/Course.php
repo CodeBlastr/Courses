@@ -25,11 +25,11 @@ class Course extends CoursesAppModel {
  * @var array
  */
 	public $hasMany = array(
-		'Lesson' => array(
+		'CourseLesson' => array(
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
 			'dependent' => false,
-			'conditions' => array('type' => 'lesson'),
+			'conditions' => array('CourseLesson.type' => 'lesson'),
 			'fields' => '',
 			'order' => '',
 			'limit' => '',
@@ -63,7 +63,7 @@ class Course extends CoursesAppModel {
 		'CourseSeries' => array(
 			'className' => 'Courses.CourseSeries',
 			'foreignKey' => 'parent_id',
-			'conditions' => array('Series.type' => 'series'),
+			'conditions' => array('CourseSeries.type' => 'series'),
 		),
 		'Teacher' => array(
 			'className' => 'Users.User',

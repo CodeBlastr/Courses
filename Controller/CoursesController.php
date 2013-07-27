@@ -28,7 +28,7 @@ class _CoursesController extends CoursesAppController {
 		$this->paginate['conditions']['Course.type'] = 'course';
 		$this->Course->recursive = 0;
 		$this->paginate['contain'][] = 'Category';
-		$this->paginate['contain'][] = 'Series';
+		$this->paginate['contain'][] = 'CourseSeries';
 		$this->paginate['contain'][] = 'Teacher';
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
@@ -66,13 +66,13 @@ class _CoursesController extends CoursesAppController {
 			'order' => array('Course.start' => 'ASC')
 		)));
 		// teachers
-		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->Series->find('all', array(
+		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->CourseSeries->find('all', array(
 			'conditions' => array(
-				'Series.creator_id' => $this->Auth->user('id'),
-				'Series.is_published' => 1
+				'CourseSeries.creator_id' => $this->Auth->user('id'),
+				'CourseSeries.is_published' => 1
 			),
 			'contain' => array('Course'),
-			'order' => array('Series.end' => 'ASC')
+			'order' => array('CourseSeries.end' => 'ASC')
 		)));
 		
 		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
@@ -202,7 +202,7 @@ class _CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
 			}
 		}
-		$this->set('series', $this->Course->Series->find('list'));
+		$this->set('series', $this->Course->CourseSeries->find('list'));
 		
 		if (in_array('Categories', CakePlugin::loaded())) {
 			$this->set('categories', $this->Course->Category->find('list'));
