@@ -84,7 +84,7 @@
 				<hr />
 				<?php
 				foreach ( $upcomingCourses as $upcomingCourse ) {
-					echo $this->tag('div',
+					echo $this->Html->tag('div',
 							$this->Html->link($upcomingCourse['Course']['name'], array('action' => 'view', $upcomingCourses['Course']['id']))
 							. '<p>'.$upcomingCourses['Course']['description'].'</p>'
 							);
