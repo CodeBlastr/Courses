@@ -31,6 +31,7 @@
 		echo $this->Form->input('Course.is_sequential', array('label' => false, 'class' => 'checkboxToggle'));
 		
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
+		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('legend' => false, 'type' => 'radio'))) : null;
 	?>
 	</fieldset>
 <?php

@@ -49,7 +49,7 @@ class Course extends CoursesAppModel {
 			'className' => 'Tasks.Task',
 			'foreignKey' => 'foreign_key'
 		),
-		'Grade' => array(
+		'CourseGrade' => array(
 			'className' => 'Courses.CourseGrade',
 			'foreignKey' => 'course_id'
 		),
@@ -60,7 +60,7 @@ class Course extends CoursesAppModel {
 	);
 	
 	public $belongsTo = array(
-		'Series' => array(
+		'CourseSeries' => array(
 			'className' => 'Courses.CourseSeries',
 			'foreignKey' => 'parent_id',
 			'conditions' => array('Series.type' => 'series'),
