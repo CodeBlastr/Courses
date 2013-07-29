@@ -103,7 +103,10 @@ class Course extends CoursesAppModel {
 	public function beforeSave(array $options = array()) {
 		parent::beforeSave($options);
 		
-		$this->data[$this->alias]['type'] = 'course';
+		if(!isset($this->data[$this->alias]['type'])) {
+			$this->data[$this->alias]['type'] = 'course';
+		}
+		
 		return true;
 	}
 
@@ -112,8 +115,9 @@ class Course extends CoursesAppModel {
  * 
  * @param boolean $created
  */
-	public function afterSave(boolean $created) {
+	public function afterSave($created) {
 		parent::afterSave($created);
+	
 		if ( $created ) {
 			// create a UserGroup for this Course
 			$data = $this->UserGroup->create(array(
