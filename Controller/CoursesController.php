@@ -277,17 +277,6 @@ class _CoursesController extends CoursesAppController {
 		$newRegistration['CourseUser']['user_id'] = $this->Auth->user('id');
 		$newRegistration['CourseUser']['course_id'] = $this->Course->id;
 		if ( $this->Course->CourseUser->save($newRegistration) ) {
-			/**
-			 * @todo Add user to the Course's UserGroup upon registration
-			 */
-//			try {
-//				$this->Course->CourseUser->UserUserGroup->add(array(
-//
-//				));
-//			} catch (Exception $exc) {
-//				echo $exc->getTraceAsString();
-//			}
-
 			$this->Session->setFlash(__('Registration Successful.'));
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
@@ -302,11 +291,8 @@ class _CoursesController extends CoursesAppController {
 		$unregistered = $this->Course->CourseUser->deleteAll(array(
 			'CourseUser.user_id' => $this->Auth->user('id'),
 			'CourseUser.course_id' => $this->Course->id
-		));
+		), true, true);
 		if ( $unregistered ) {
-			/**
-			 * @todo Remove user from the Course's UserGroup upon Course exit
-			 */
 			$this->Session->setFlash(__('You are no longer registered for this course.'));
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
