@@ -119,9 +119,32 @@ class CourseSeriesController extends CoursesAppController {
 			$this->Session->setFlash(__('The series could not be saved. Please, try again.'));
 		}
 		if ($this->request->is('post') || $this->request->is('put')) {
+			
+			if(isset($this->request->data['Course'])) {
+				//Remove all children first
+				$children = $this->CourseSeries->find('all', array(
+					'conditions' => array('parent_id' => $this->request->data['CourseSeries']['id'])
+				));
+				
+				if(!empty($children)) {
+					for($i = 0 ; $i < count($children) ; $i++ ) {
+						$children[$i]['CourseSeries']['parent_id'] = '';
+						$children[$i]['CourseSeries']['order'] = 0;
+					}
+					
+					//save the children removing them from the series
+					$this->CourseSeries->saveAll($children);
+				}
+				
+				foreach($this->request->data['Course'] as $k => $course) {
+					$course['parent_id'] = $this->request->data['CourseSeries']['id'];
+					$this->request->data['Course'][$k] = $course;
+				}
+
+			}
 			if ($this->CourseSeries->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The series has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $id));
 			} else {
 				$this->Session->setFlash(__('The series could not be saved. Please, try again.'));
 			}
@@ -130,18 +153,18 @@ class CourseSeriesController extends CoursesAppController {
 		}
 		$availablecourses = $this->CourseSeries->Course->find('all', array(
 			'conditions' => array('creator_id' => $this->userId,
-				'parent_id' => null, //Not attached to a Series Yet
-				'type' => 'course'
+				'Course.parent_id' => NULL, //Not attached to a Series Yet
+				'Course.type' => 'course'
 			),
 			'fields' => array('Course.id', 'Course.parent_id', 'Course.name'),
 			));
-		
 		$courses = $this->CourseSeries->Course->find('all', array(
 				'conditions' => array(
-									'creator_id' => $this->userId,
-									'parent_id' => $id,
+									'Course.creator_id' => $this->userId,
+									'Course.parent_id' => $id,
 								),
 				'fields' => array('Course.id', 'Course.parent_id', 'Course.name', 'Course.order'),
+				'order' => array('Course.order ASC'),
 			));
 		$this->set(compact('courses', 'availablecourses'));
 	}
