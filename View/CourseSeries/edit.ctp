@@ -1,69 +1,21 @@
-<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery-ui/jquery-ui-1.10.3.custom.js"></script>
 <link href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css" rel="stylesheet"/>
-<h2><?php echo __('Editing ' . $this->request->data['CourseSeries']['name']); ?></h2>
+<h2><?php echo __('Editing Series: ' . $this->request->data['CourseSeries']['name']); ?></h2>
 <div class="coursesseries form">
 
-<div id="dragDropItems" class="row-fluid">
-	<div class="span6">
-		<div class="available-items">
-			<ul class="thumbnails">
-			<?php //debug($availablecourses); ?>
-			<?php foreach ($availablecourses as $avail): ?>
-			  <li class="draggable" data-course-id="<?php echo $avail['Course']['id']; ?>">
-			    <a href="#" class="thumbnail">
-			      <p><?php echo $avail['Course']['name']; ?></p>
-			    </a>
-			  </li>
-			 <?php endforeach; ?>
-			</ul>
-		</div>
-	</div>
-	<div class="span6">
-		<div class="sorted-items droppable" style="min-height: 50px; border: 1px solid #000;">
-			<ul class="thumbnails">
-			<?php foreach ($courses as $course): ?>
-			  <li class="draggablechosen" data-course-id="<?php echo $course['Course']['id']; ?>">
-			    <a href="#" class="thumbnail">
-			      <a href="#" class="remove-item"><i class="icon-minus-sign"></i></a>
-			      <p><?php echo $course['Course']['name']; ?></p>
-			    </a>
-			  </li>
-			 <?php endforeach; ?>
-			</ul>
-		</div>
-	</div>
-</div>
-
-<?php echo $this->Form->create('CourseSeries');?>
+<?php echo $this->Form->create('CourseSeries');
+	echo $this->Form->hidden('CourseSeries.id');
+	?>
 	<fieldset>
-		<legend><?php echo __('Editing Series ' . $this->request->data['CourseSeries']['name']); ?></legend>
 	<?php
-	
-	$i = 0;
-	foreach ( $courses as $course ) {
-		$checked = ( $course['Course']['parent_id'] == $this->request->data['CourseSeries']['id'] ) ? true : false;
-		$potentialChildren[] = array(
-			$this->Form->input("Course.$i.id", array( 'type' => 'checkbox', 'label' => false, 'value' => $course['Course']['id'], 'checked' => $checked )),
-			$course['Course']['name'],
-			$this->Form->input("Course.$i.order", array( 'value' => $course['Course']['order'], 'min' => 1, 'max' => count($courses), 'label' => false, 'class' => 'input-mini' ))
-		);
-		++$i;
-	}
 		
 	echo $this->Html->tag('div',
 			
 		$this->Html->tag('div',
 			$this->Form->input('CourseSeries.name', array('class' => 'input-xlarge'))
-			. $this->Form->input('CourseSeries.description', array('label' => 'Description', 'class' => 'input-xlarge'))
-			, array('class' => 'span6')
+			. $this->Form->input('CourseSeries.description', array('label' => 'Description', 'class' => 'input-xlarge', 'style' => 'width:100%;'))
+			, array('class' => 'span12')
 		)
-		. $this->Html->tag('label', 'Courses in this series')
-		. $this->Html->tag('table',
-				$this->Html->tableHeaders(array(false, 'course', 'order'))
-				. $this->Html->tableCells($potentialChildren)
-				, array('class' => 'span5')
-		)
-	
 		, array('class' => 'row-fluid')
 	);
 	
@@ -71,6 +23,49 @@
 		echo $this->Form->input('CourseSeries.is_private', array('label' => 'Private (public won\'t be able to view the series)', 'value' => '1', 'checked' => false));
 	?>
 	</fieldset>
+	<fieldset id="attachedCourses">
+		<?php 
+			for ( $i = 0 ; $i < count($courses) ; $i++ ) {
+				echo $this->Form->hidden('Course.'.$i.'.id', array('value' => $courses[$i]['Course']['id']));
+				echo $this->Form->hidden('Course.'.$i.'.order', array('value' => $i));
+				echo $this->Form->hidden('Course.'.$i.'.name', array('value' => $courses[$i]['Course']['name']));
+			} 	
+		?>
+	</fieldset>
+	<hr />
+	<div id="dragDropItems" class="row-fluid">
+	<div class="span6">
+		<h6>Courses in Series</h6>
+		<div class="sorted-items droppable" style="min-height: 50px; border: 1px solid #000;">
+			<ul>
+			<?php foreach ($courses as $index => $course): ?>
+			  <li class="chosen-course" data-order="<?php echo $index; ?>" data-course-id="<?php echo $course['Course']['id']; ?>">
+			    <a href="#" class="thumbnail clearfix">
+			      <p><?php echo $course['Course']['name']; ?></p>
+			      <i class="icon-minus-sign"></i>
+			    </a>
+			  </li>
+			 <?php endforeach; ?>
+			</ul>
+		</div>
+	</div>
+	<div class="span6">
+		<h6>Available Courses</h6>
+		<div class="available-items">
+			<ul>
+			<?php //debug($availablecourses); ?>
+			<?php foreach ($availablecourses as $avail): ?>
+			  <li class="draggable" data-course-id="<?php echo $avail['Course']['id']; ?>">
+			    <a href="#" class="thumbnail clearfix">
+			      <p><?php echo $avail['Course']['name']; ?></p>
+			    </a>
+			  </li>
+			 <?php endforeach; ?>
+			</ul>
+		</div>
+	</div>
+	</div>
+	<hr />
 <?php echo $this->Form->end(__('Save'));?>
 </div>
 
@@ -83,26 +78,11 @@
 		
 		var chosenitems = [];
 		
-		<?php foreach($courses as $course) {echo 'availableitems.push('.json_encode($course).');';} ?>
+		<?php foreach($courses as $course) {echo 'chosenitems.push('.json_encode($course).');';} ?>
 		
-		console.log(availableitems);
-		console.log(chosenitems);
-			
-		$('.droppable').droppable({
-				drop: function( event, ui ) {
-					var id = ui.draggable.data('course-id');
-					for ( var i = 0; i<availableitems.length; i++ ) {
-						if(availableitems[i].Course.id == id) {
-							chosenitems.push(availableitems.splice(i,1)[0]);
-						}	
-					}
-					rerenderitems();
-				}
-			});
-		
-		$( "#dragDropItems .sorted-items ul" ).sortable({ connectWith: "#dragDropItems .available-items ul" });
 		
 		$('.sorted-items').on('click', '.icon-minus-sign', function(e){
+			e.preventDefault();
 			var id = $(this).closest('li').data('course-id');
 					for ( var i = 0; i<chosenitems.length; i++ ) {
 						if(chosenitems[i].Course.id == id) {
@@ -119,7 +99,7 @@
 			for ( var i = 0; i<availableitems.length; i++ ) {
 				 var name = availableitems[i].Course.name;
 				 var id = availableitems[i].Course.id;
-				 html += '<li class="draggable" data-course-id="'+id+'"><a href="#" class="thumbnail"><p>'+name+'</p></a></li>';
+				 html += '<li class="draggable" data-course-id="'+id+'"><a href="#" class="thumbnail clearfix"><p>'+name+'</p></a></li>';
 			}
 			$('.available-items ul').html(html);
 			
@@ -127,21 +107,84 @@
 			for ( var i = 0; i<chosenitems.length; i++ ) {
 				 var name = chosenitems[i].Course.name;
 				 var id = chosenitems[i].Course.id;
-				 html += '<li class="draggable" data-course-id="'+id+'"><a href="#" class="thumbnail"><i class="icon-minus-sign"></i><p>'+name+'</p></a></li>';
+				 html += '<li class="chosen-course" data-order="'+i+'" data-course-id="'+id+'"><a href="#" class="thumbnail clearfix"><i class="icon-minus-sign"></i><p>'+name+'</p></a></li>';
 			}
 			$('.sorted-items ul').html(html);
+			renderFormItems();
 			bindEvents();
+		}
+		
+		function renderFormItems() {
+			html = '';
+			for ( var i = 0; i<chosenitems.length; i++ ) {
+				 var name = chosenitems[i].Course.name;
+				 var id = chosenitems[i].Course.id;
+				 html += '<input id="Course'+i+'Id" type="hidden" value="'+id+'" name="data[Course]['+i+'][id]">';
+				 html += '<input id="Course'+i+'Order" type="hidden" value="'+i+'" name="data[Course]['+i+'][order]">';
+				 html += '<input id="Course'+i+'Name" type="hidden" value="'+name+'" name="data[Course]['+i+'][name]">';
+			}
+			$('#attachedCourses').html(html);
 		}
 		
 		function bindEvents () {
 			$('.draggable').draggable({ 
 				helper: "clone",
-				revert: "invalid"
+				revert: "invalid",
+				start: function( event, ui ) {
+					$('.droppable').droppable({
+						drop: function( event, ui ) {
+							var id = ui.draggable.data('course-id');
+							for ( var i = 0; i<availableitems.length; i++ ) {
+								if(availableitems[i].Course.id == id) {
+									chosenitems.push(availableitems.splice(i,1)[0]);
+								}	
+							}
+						rerenderitems();
+						}
+					});
+				},
+				stop: function( event, ui ) {
+					$('.droppable').droppable('destroy');
+				}
 			});
+			$( "#dragDropItems .sorted-items ul" ).sortable({
+				placeholder: "sortable-placeholder",
+				forcePlaceholderSize: true,
+				forceHelperSize: true,
+				update: function( event, ui ) {
+					var sorteditems = [];
+					$('.sorted-items ul li').each(function(index, el) {
+						var i = $(el).data('order');
+						item = chosenitems[i];
+						sorteditems.push(item);
+					});
+					chosenitems = sorteditems;
+					rerenderitems();
+				}
+			 });
 		}
 		
 	})(jQuery);
 </script>
+
+<style>
+	#dragDropItems ul {
+		padding: 10px;
+		margin: 0;
+		list-style: none;
+	}
+	#dragDropItems ul li a {
+		padding: 20px 10px;
+	}
+	#dragDropItems ul li p {
+		float: left;
+		margin: 0;
+	}
+	#dragDropItems ul li .icon-minus-sign {
+		float: right;
+		margin-right:10px;
+	}
+</style>
 
 <?php
 //debug( $this->request->data );

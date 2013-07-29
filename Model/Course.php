@@ -96,6 +96,28 @@ class Course extends CoursesAppModel {
 	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
 		}
+		if (in_array('Subscribers', CakePlugin::loaded())) {
+			$this->actsAs['Subscribers.Subscribable'] = array('modelAlias' => 'Course');
+		}
+
+		if(CakePlugin::loaded('Media')) {
+			$this->actsAs[] = 'Media.MediaAttachable';
+			
+			$this->hasMany['Media'] = array(
+				'className' => 'Media.Media',
+				'foreignKey' => 'foreign_key',
+				'dependent' => false, // Incase Media is attached to more that one model
+				'conditions' => '',
+				'fields' => '',
+				'order' => '',
+				'limit' => '',
+				'offset' => '',
+				'exclusive' => '',
+				'finderQuery' => '',
+				'counterQuery' => ''
+			);
+		}
+		
 		parent::__construct($id, $table, $ds);
 	}
 	
@@ -108,35 +130,27 @@ class Course extends CoursesAppModel {
 	public function beforeSave(array $options = array()) {
 		parent::beforeSave($options);
 		
-		$this->data[$this->alias]['type'] = 'course';
+		if(!isset($this->data[$this->alias]['type'])) {
+			$this->data[$this->alias]['type'] = 'course';
+		}
+		
 		return true;
-	}
-
-	
-	public function userRemoved($userId, $courseId) {
-//		$data['UserGroup']['user_id'] = $userId;
-//		$data['UserGroup']['model'] = 'Course';
-//		$data['UserGroup']['foreign_key'] = $courseId;
-//		$this->removeUserFromUserGroup($data);
 	}
 
 
 /**
- * 
+ * after save call back
  * @param boolean $created
  */
-//	public function afterSave($created) {
-//		parent::afterSave($created);
-//		if ( $created ) {
-//			// create a UserGroup for this Course
-//			$data = $this->UserGroup->create(array(
-//				'title' => $this->data['Course']['name'],
-//				'model' => 'Course',
-//				'foreign_key' => $this->id,
-//				'owner_id' => CakeSession::read('Auth.User.id')
-//			));
-//			$this->UserGroup->save($data);
-//		}
-//	}
+	public function afterSave($created) {
+		parent::afterSave($created);
+	
+		if ( $created ) {	
+			// we say in the model when people get subscribed
+			if (in_array('Subscribers', CakePlugin::loaded())) {
+				$this->subscribe(CakeSession::read('Auth.User.id'));
+			}
+		}
+	}
 	
 }

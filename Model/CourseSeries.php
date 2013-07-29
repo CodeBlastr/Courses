@@ -54,7 +54,9 @@ class CourseSeries extends CoursesAppModel {
 	
 	public function beforeSave(array $options = array()) {
 		parent::beforeSave($options);
-		$this->data[$this->name]['type'] = 'series';
+		if(!isset($this->data[$this->alias]['type'])) {
+			$this->data[$this->alias]['type'] = 'series';
+		}
 		return true;
 	}
 

@@ -11,7 +11,9 @@ class CourseUserTestCase extends CakeTestCase {
  *
  * @var array
  */
-	public $fixtures = array('app.course_user', 'app.user', 'app.course');
+	public $fixtures = array(
+		'plugin.Courses.CourseUser',
+		);
 
 /**
  * setUp method
@@ -33,5 +35,17 @@ class CourseUserTestCase extends CakeTestCase {
 
 		parent::tearDown();
 	}
+	
+/**
+ * save test
+ */
+ 	public function testSave() {
+ 		$before = $this->CourseUser->find('count');
+ 		$data['CourseUser']['user_id'] = 1;
+		$data['CourseUser']['course_id'] = 2;
+ 		debug($this->CourseUser->save($data));
+ 		$after = $this->CourseUser->find('count');
+		$this->assertTrue($after > $before);
+ 	}
 
 }

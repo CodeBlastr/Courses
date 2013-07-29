@@ -5,17 +5,13 @@
  */
 class CourseUserFixture extends CakeTestFixture {
 
+	
 /**
- * Fields
+ * Import
  *
  * @var array
  */
-	public $fields = array(
-		'user_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'user_id', 'unique' => 1)),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
-	);
+	public $import = array('config' => 'Courses.CourseUser');
 
 /**
  * Records

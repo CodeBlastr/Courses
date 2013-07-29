@@ -17,8 +17,8 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['CourseSeries']['id'])),
-			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			$this->Html->link(__('Edit this Series'), array('controller' => 'courseSeries', 'action' => 'edit', $series['CourseSeries']['id'])),
+			$this->Html->link(__('Create New Series'), array('controller' => 'courseSeries', 'action' => 'add'))
 			),
 		),
 	array(
@@ -35,8 +35,8 @@ $this->set('guest_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['CourseSeries']['id'])),
-			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			$this->Html->link(__('Edit this Series'), array('controller' => 'courseSeries', 'action' => 'edit', $series['CourseSeries']['id'])),
+			$this->Html->link(__('Create New Series'), array('controller' => 'courseSeries', 'action' => 'add'))
 			),
 		),
 	array(
@@ -53,8 +53,8 @@ $this->set('owner_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('Edit this Series'), array('controller' => 'series', 'action' => 'edit', $series['CourseSeries']['id'])),
-			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			$this->Html->link(__('Edit this Series'), array('controller' => 'courseSeries', 'action' => 'edit', $series['CourseSeries']['id'])),
+			$this->Html->link(__('Create New Series'), array('controller' => 'courseSeries', 'action' => 'add'))
 			),
 		),
 	array(

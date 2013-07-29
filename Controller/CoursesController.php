@@ -232,7 +232,7 @@ class _CoursesController extends CoursesAppController {
 			$this->Course->contain(array('Category'));
 			$this->request->data = $this->Course->read(null, $id);
 		}
-		$parentCourses = $this->Course->Lesson->find('list');
+		$parentCourses = $this->Course->CourseLesson->find('list');
 		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
 		$this->set(compact('parentCourses'));
 		if (in_array('Categories', CakePlugin::loaded())) {

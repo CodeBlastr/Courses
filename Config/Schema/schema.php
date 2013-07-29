@@ -72,11 +72,10 @@ class CoursesSchema extends CakeSchema {
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
-	
 	public $course_users = array(
-		'user_id' => array('type' => 'integer', 'null' => false, 'default' => NULL, 'key' => 'primary'),
-		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
-		'indexes' => array('PRIMARY' => array('column' => 'user_id', 'unique' => 1)),
+		'user_id' => array('type' => 'string', 'length' => 36, 'null' => false, 'default' => NULL),
+		'course_id' => array('type' => 'string', 'length' => 36, 'null' => false, 'default' => NULL),
+		'indexes' => array('INDEX' => array('column' => 'user_id', 'unique' => false)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
 	public $courses = array(
