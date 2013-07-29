@@ -287,7 +287,6 @@ class _CoursesController extends CoursesAppController {
 //			} catch (Exception $exc) {
 //				echo $exc->getTraceAsString();
 //			}
-
 			$this->Session->setFlash(__('Registration Successful.'));
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}

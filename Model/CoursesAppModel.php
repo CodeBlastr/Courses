@@ -10,7 +10,6 @@ class CoursesAppModel extends AppModel {
  * Added media.attachable here so its available to all children Models
  * 
  * @return void
- */ 
 	public function __construct($id = false, $table = null, $ds = null) {
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs[] = 'Media.MediaAttachable';
@@ -32,4 +31,5 @@ class CoursesAppModel extends AppModel {
 		parent::__construct($id, $table, $ds); 
 	}
 	
+ */ 
 }

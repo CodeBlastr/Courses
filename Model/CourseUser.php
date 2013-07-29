@@ -38,12 +38,24 @@ class CourseUser extends CoursesAppModel {
 		)
 	);
 	
+/**
+ * after save callback
+ */
+	public function afterSave() {
+		// we say in the model when people get subscribed
+		if (in_array('Subscribers', CakePlugin::loaded())) {
+			$subscriber['Subscriber']['model'] = 'Course';
+			$subscriber['Subscriber']['foreign_key'] = $this->data['CourseUser']['course_id'];
+			$subscriber['Subscriber']['user_id'] = $this->data['CourseUser']['user_id'];
+			$this->Course->subscribe($subscriber);
+		}
+	}
 	
-	/**
-	 * Returns a nice array of the participants in a Course
-	 * @param int $courseId
-	 * @return array
-	 */
+/**
+ * Returns a nice array of the participants in a Course
+ * @param int $courseId
+ * @return array
+ */
 	public function getCourseUsers ( $courseId ) {
 		$courseUsers = $this->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $courseId),
