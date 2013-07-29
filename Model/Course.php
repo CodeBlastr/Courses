@@ -17,7 +17,18 @@ class Course extends CoursesAppModel {
  */
 	public $displayField = 'name';
 
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
+
+/**
+ * Behavior list
+ * @var array 
+ */
+	public $actsAs = array(
+		'Tree',
+		'Users.UserGroupable' => array(
+			'hasMany' => 'CourseUser'
+		)
+	);
+
 
 /**
  * hasMany associations
@@ -71,12 +82,6 @@ class Course extends CoursesAppModel {
 		)
 	);
 
-	public $hasOne = array(
-		'UserGroup' => array(
-			'className' => 'Users.UserGroup',
-			'foreignKey' => 'foreign_key'
-		)
-	);
 
     
 	public function __construct($id = null, $table = null, $ds = null) {
@@ -108,22 +113,30 @@ class Course extends CoursesAppModel {
 	}
 
 	
+	public function userRemoved($userId, $courseId) {
+//		$data['UserGroup']['user_id'] = $userId;
+//		$data['UserGroup']['model'] = 'Course';
+//		$data['UserGroup']['foreign_key'] = $courseId;
+//		$this->removeUserFromUserGroup($data);
+	}
+
+
 /**
  * 
  * @param boolean $created
  */
-	public function afterSave(boolean $created) {
-		parent::afterSave($created);
-		if ( $created ) {
-			// create a UserGroup for this Course
-			$data = $this->UserGroup->create(array(
-				'title' => $this->data['Course']['name'],
-				'model' => 'Course',
-				'foreign_key' => $this->id,
-				'owner_id' => CakeSession::read('Auth.User.id')
-			));
-			$this->UserGroup->save($data);
-		}
-	}
+//	public function afterSave($created) {
+//		parent::afterSave($created);
+//		if ( $created ) {
+//			// create a UserGroup for this Course
+//			$data = $this->UserGroup->create(array(
+//				'title' => $this->data['Course']['name'],
+//				'model' => 'Course',
+//				'foreign_key' => $this->id,
+//				'owner_id' => CakeSession::read('Auth.User.id')
+//			));
+//			$this->UserGroup->save($data);
+//		}
+//	}
 	
 }

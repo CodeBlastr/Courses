@@ -15,6 +15,11 @@ class CourseUser extends CoursesAppModel {
  */
 	public $primaryKey = 'user_id';
 
+	public $actsAs = array(
+		'Users.UserGroupable' => array(
+			'belongsTo' => 'Course'
+		)
+	);
 
 /**
  * belongsTo associations
