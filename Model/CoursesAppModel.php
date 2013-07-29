@@ -2,7 +2,7 @@
 App::uses('AppModel', 'Model');
 class CoursesAppModel extends AppModel {
 	
-	public $actsAs = array('Tree', 'Themeable');
+	public $actsAs = array('Themeable');
 	
 /**
  * Constructor

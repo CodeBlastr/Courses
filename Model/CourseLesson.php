@@ -12,6 +12,8 @@ class CourseLesson extends CoursesAppModel {
 	public $alias = 'Lesson';
 	
 	public $useTable = 'courses';
+
+	public $actsAs = array('Tree');
 	
 /**
  * Display field
