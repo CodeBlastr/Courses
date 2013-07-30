@@ -116,11 +116,16 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			),
 			'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
 		));
+		?>
 
-		// messages
-		echo '<h5>Course Messages</h5>';
-		echo $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'));
+		<h5>Group Wall</h5>
+		<?php echo $this->Html->link('view all', array('plugin' => 'users', 'controller' => 'userGroups', 'action' => 'view', $course['UserGroup']['id'])); ?>
+		<?php echo $this->element('groupActivity', array('id' => $course['UserGroup']['id']), array('plugin' => 'Users')); ?>
 
+		<h5>Course Messages</h5>
+		<?php echo $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages')); ?>
+
+		<?php
 		// roster
 		if ( !empty($courseUsers) ) {
 			echo '<h5>Roster</h5>';

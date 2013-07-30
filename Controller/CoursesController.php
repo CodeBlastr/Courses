@@ -157,6 +157,9 @@ class _CoursesController extends CoursesAppController {
 				),
 				'Teacher' => array(
 					'fields' => array('Teacher.id', 'Teacher.full_name')
+				),
+				'UserGroup' => array(
+					'fields' => array('UserGroup.id')
 				)
 			)
 		));
