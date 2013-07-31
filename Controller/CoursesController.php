@@ -69,7 +69,8 @@ class _CoursesController extends CoursesAppController {
 		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->CourseSeries->find('all', array(
 			'conditions' => array(
 				'CourseSeries.creator_id' => $this->Auth->user('id'),
-				'CourseSeries.is_published' => 1
+				#'CourseSeries.is_published' => 1,
+				'CourseSeries.type' => 'series'
 			),
 			'contain' => array('Course'),
 			'order' => array('CourseSeries.end' => 'ASC')
@@ -79,7 +80,8 @@ class _CoursesController extends CoursesAppController {
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
 				'Course.parent_id' => null,
-				'Course.is_published' => 1
+				#'Course.is_published' => 1
+				'Course.type' => 'course'
 			),
 			'order' => array('Course.end' => 'ASC')
 		)));
@@ -194,6 +196,7 @@ class _CoursesController extends CoursesAppController {
  * @return void
  */
 	public function add() {
+		$this->set('title_for_layout', 'Create a New Course | ' . __SYSTEM_SITE_NAME);
 		if ($this->request->is('post')) {
 			//$this->Course->create();
 			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
@@ -205,7 +208,12 @@ class _CoursesController extends CoursesAppController {
 				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
 			}
 		}
-		$this->set('series', $this->Course->CourseSeries->find('list'));
+		$this->set('series', $this->Course->CourseSeries->find('list', array(
+			'conditions' => array(
+				'type' => 'series',
+				'creator_id' => $this->userId
+			)
+		)));
 		
 		if (in_array('Categories', CakePlugin::loaded())) {
 			$this->set('categories', $this->Course->Category->find('list'));
