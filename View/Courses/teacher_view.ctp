@@ -10,10 +10,10 @@
 		<!-- <p><?php echo $course['Course']['description'] ?></p> -->
 
 		<?php
-		if ( !empty($course['Series']['name']) ) {
+		if ( !empty($course['CourseSeries']['name']) ) {
 			echo $this->Html->tag('p', $this->Html->tag('i',
-					'This course is part of the series: ' . $this->Html->link($course['Series']['name'],
-							array('controller' => 'series', 'action' => 'view', $course['Series']['id']))
+					'This course is part of the series: ' . $this->Html->link($course['CourseSeries']['name'],
+							array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']))
 					)
 			);
 		}
@@ -101,9 +101,9 @@
 	</div>
 
 	<div class="span4 pull-right">
+
+		<h5>Course Calendar</h5>
 		<?php
-		// calendar
-		echo '<h5>Course Calendar</h5>';
 		echo $this->Calendar->renderCalendar(array(
 			'sources' => array(
 				'/courses/courses/calendar/teacher/' . $course['Course']['id']
@@ -112,24 +112,25 @@
 		));
 		?>
 
-		<h5>Group Wall</h5>
-		<?php echo $this->Html->link('view all', array('plugin' => 'users', 'controller' => 'userGroups', 'action' => 'view', $course['UserGroup']['id'])); ?>
+		<h5><?php echo $this->Html->link('Group Wall', array('plugin' => 'users', 'controller' => 'userGroups', 'action' => 'view', $course['UserGroup']['id'])) ?></h5>
 		<?php echo $this->element('groupActivity', array('id' => $course['UserGroup']['id']), array('plugin' => 'Users')); ?>
 
+		<h5>Course Messages</h5>
 		<?php
-		// messages
-		echo '<h5>Course Messages</h5>';
 		echo $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'));
+		?>
 
-		// roster
+		<h5>Roster</h5>
+		<?php
 		if ( !empty($courseUsers) ) {
-			echo '<h5>Roster</h5>';
 			foreach ( $courseUsers as $user ) {
 				$userCells[] = array(
 					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
 				);
 			}
 			echo $this->Html->tag('table', $this->Html->tableCells($userCells));
+		} else {
+			echo '<i>no students</i>';
 		}
 		?>
 	</div>
