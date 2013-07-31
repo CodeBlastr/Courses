@@ -21,8 +21,8 @@ class CourseSeriesController extends CoursesAppController {
 			'conditions' => array(
 				'CourseSeries.type' => 'series',
 				'OR' => array(
-					'creator_id' => $this->Auth->user('id'),
-					'is_private' => 0,
+					'CourseSeries.creator_id' => $this->Auth->user('id'),
+					'CourseSeries.is_private' => 0,
 					) 
 				)
 		);
@@ -68,17 +68,72 @@ class CourseSeriesController extends CoursesAppController {
 		if (!$this->CourseSeries->exists()) {
 			throw new NotFoundException(__('Invalid series'));
 		}
-		$series =  $this->CourseSeries->find('first', array(
+		$this->set('series', $this->CourseSeries->find('first', array(
 			'conditions' => array('id' => $id),
 			'contain' => array(
 				'Course' => array(
 					'order' => array('Course.order' => 'asc')
 				)
 			)
-		));
-		$this->set(compact('series'));
-		$this->set('title_for_layout', $series['CourseSeries']['name'] . ' < Series | ' . __SYSTEM_SITE_NAME);
+		)));
+
+		$this->set( 'isEnrolled', $this->CourseSeries->isUserEnrolled($this->userId, $this->viewVars['series']['CourseSeries']['id']) );
+		$this->set( 'isOwner', ($this->userId == $this->viewVars['series']['CourseSeries']['creator_id']) );
+
+		$this->set('title_for_layout', $this->viewVars['series']['CourseSeries']['name'] . ' < Series | ' . __SYSTEM_SITE_NAME);
 	}
+
+
+	public function register($id = null) {
+		$this->CourseSeries->id = $id;
+		if ( !$this->CourseSeries->exists() ) {
+			throw new NotFoundException(__('Invalid series'));
+		}
+		// find all courses in this series
+		$seriesCourses = $this->CourseSeries->Course->find('all', array(
+			'conditions' => array(
+				'parent_id' => $this->CourseSeries->id
+			),
+			'fields' => array('id')
+		));
+		// add this user to course_users
+		$newRegistrations = array();
+		foreach ( $seriesCourses as $seriesCourse ) {
+			$newRegistrations[] = array(
+					'user_id' => $this->userId,
+					'course_id' => $seriesCourse['Course']['id']
+			);
+		}
+
+		if ( $this->CourseSeries->Course->CourseUser->saveMany($newRegistrations) ) {
+			$this->Session->setFlash(__('Registration Successful.'));
+			$this->redirect(array('action' => 'view', $this->CourseSeries->id));
+		}
+	}
+
+	public function unregister($id = null) {
+		$this->CourseSeries->id = $id;
+		if ( !$this->CourseSeries->exists() ) {
+			throw new NotFoundException(__('Invalid series'));
+		}
+		// find all courses in this series
+		$seriesCourses = $this->CourseSeries->Course->find('list', array(
+			'conditions' => array(
+				'parent_id' => $this->CourseSeries->id
+			),
+			'fields' => array('id')
+		));
+		// remove this user from course_users
+		$unregistered = $this->CourseSeries->Course->CourseUser->deleteAll(array(
+			'CourseUser.user_id' => $this->userId,
+			'CourseUser.course_id' => $seriesCourses
+		), true, true);
+		if ( $unregistered ) {
+			$this->Session->setFlash(__('You are no longer registered for this series.'));
+			$this->redirect(array('action' => 'view', $this->CourseSeries->id));
+		}
+	}
+
 
 /**
  * add method

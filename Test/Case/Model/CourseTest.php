@@ -1,5 +1,5 @@
 <?php
-App::uses('Course', 'Model');
+App::uses('Course', 'Courses.Model');
 
 /**
  * Course Test Case
@@ -11,7 +11,7 @@ class CourseTestCase extends CakeTestCase {
  *
  * @var array
  */
-	public $fixtures = array('app.course');
+	public $fixtures = array('courses.course');
 
 /**
  * setUp method

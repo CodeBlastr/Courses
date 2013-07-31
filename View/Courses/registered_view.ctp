@@ -15,10 +15,10 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p><?php echo $course['Course']['description'] ?></p>
 
 	<?php
-	if ( !empty($course['Series']['name']) ) {
+	if ( !empty($course['CourseSeries']['name']) ) {
 		echo $this->Html->tag('p',
 			$this->Html->tag('i',
-				'This course is part of the series: ' . $this->Html->link($course['Series']['name'], array('controller' => 'series', 'action' => 'view', $course['Series']['id']))
+				'This course is part of the series: ' . $this->Html->link($course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']))
 			)
 		);
 	}

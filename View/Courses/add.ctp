@@ -1,10 +1,4 @@
-<ol>FLOW:
-	<li>Create the course</li>
-	<li><a href="/media/media/add_resource">Add Classes &AMP; Resources</a></li>
-	<li><a href="/courses/grades/setup">Setup Gradebook</a></li>
-	<li><a href="/forms/forms/add/formanswer">Add a Quiz</a></li>
-	<li><a href="/invites/invites/invitation">Invite people</a></li>
-</ol>
+
 <div class="courses form">
 <?php echo $this->Form->create('Course', array('type' => 'file'));?>
 	<fieldset>
@@ -13,7 +7,7 @@
 		//echo $this->Form->input('Course.parent_id');
 		echo $this->Element('Media.media_selector', array('selected' => 1));
 		echo $this->Html->tag('div',
-			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array(null => 'Create New...'), 'label' => 'Part of a Series?'))
+			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array(null => '- existing series -'), 'label' => 'Part of a Series? <a href="#toggleSeriesAdd" class="toggleSeriesAdd">(create new series)</a>'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
 			);			
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
@@ -25,11 +19,21 @@
 			. $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => false, 'class' => 'input-small required', 'div' => array('class' => 'span5')))
 		);
 		echo $this->Form->input('Course.description', array('label' => 'Description', 'class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
-		echo $this->Form->input('Course.is_published', array('label' => 'Publish?'));
-		echo $this->Form->input('Course.is_persistant', array('label' => 'Access when Inactive?'));
-		echo $this->Form->input('Course.is_private', array('label' => 'Private'));
-		echo $this->Form->input('Course.is_sequential', array('label' => __('Require Sequence <i class="icon-question-sign">%s</i>', $this->Html->link('', '#', array('data-toggle' => 'tooltip', 'title' => 'first tooltip')))));
+
+		echo '<span>Course Availability</span>';
+		echo $this->Form->input('Course.is_published', array('label' => false, 'class' => 'checkboxToggle', 'data-yes' => 'Active', 'data-no' => 'Inactive', 'data-width' => 105));
+
+		echo '<span>Allow access after End Date?</span>';
+		echo $this->Form->input('Course.is_persistant', array('label' => false, 'class' => 'checkboxToggle'));
+
+		echo '<span>Course Visibility</span>';
+		echo $this->Form->input('Course.is_private', array('label' => false, 'class' => 'checkboxToggle', 'data-yes' => 'Private', 'data-no' => 'Public', 'data-width' => 105));
+
+		echo '<span>Require members to go only through the defined sequence?</span>';
+		echo $this->Form->input('Course.is_sequential', array('label' => false, 'class' => 'checkboxToggle'));
+		
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
+
 		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('type' => 'radio'))) : null;
 	?>
 	</fieldset>
@@ -47,13 +51,14 @@ echo $this->Form->end();
 	<fieldset>
 		<legend><?php echo __('Create Series'); ?></legend>
 		<?php
-		echo $this->Form->input('Series.name');
-		echo $this->Form->input('Series.description', array('label' => 'Description'));
+		echo $this->Form->input('CourseSeries.name');
+		echo $this->Form->input('CourseSeries.description', array('label' => 'Description'));
 		echo $this->Js->submit('Save', array(
 			'update' => '#content',
-			'url'=>'/courses/series/add',
+			'url'=>'/courses/courseSeries/add',
 			'success' => 'setNewSeries(data);'
 			));
+		echo '<a href="#toggleSeriesAdd" class="toggleSeriesAdd close">cancel</a>';
 		echo $this->Form->end();
 		echo $this->Js->writeBuffer();
 		?>
@@ -61,21 +66,17 @@ echo $this->Form->end();
 </div>
 
 <script type="text/javascript">
-	$("#CourseParentId").change(function(){
-		if ( $(this).val() === 'true' ) {
-			$("#seriesAdd").show();
-		} else {
+	$(document).ready(function() {
+		$(".toggleSeriesAdd").click(function(){
+			$("#seriesAdd").toggle();
+		});
+		function setNewSeries(data) {
+			$("<option/>").val(data).text($("#SeriesName").val()).appendTo("#CourseParentId");
+			$("#MediaForeignKey").val(data);
 			$("#seriesAdd").hide();
 		}
 	});
-	function setNewSeries(data) {
-		$("<option/>").val(data).text($("#SeriesName").val()).appendTo("#CourseParentId");
-		$("#MediaForeignKey").val(data);
-		$("#seriesAdd").hide();
-	}
-
 </script>
-
 <?php
 $this->set('context_menu', array('menus' => array(
 	array(

@@ -183,7 +183,8 @@
 					foreach ( $seriesAsTeacher as $series ) {
 						echo '<div class="row-fluid">';
 						echo '<div class="series-row span12">';
-						echo $this->Html->tag('h5', $series['Series']['name']);
+						echo $this->Html->tag('h5', $series['CourseSeries']['name']);
+
 						foreach ( $series['Course'] as $seriesCourse ) {
 							echo $this->Html->tag('div',
 								// $this->Html->link(

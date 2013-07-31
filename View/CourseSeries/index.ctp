@@ -10,7 +10,7 @@
 	<?php
 	foreach ($series as $aSeries): ?>
 	<tr>
-		<td><?php echo h($aSeries['CourseSeries']['name']); ?>&nbsp;</td>
+		<td><?php echo $this->Html->link(h($aSeries['CourseSeries']['name']), array('action' => 'view', $aSeries['CourseSeries']['id'])); ?>&nbsp;</td>
 		<td><?php echo h($aSeries['CourseSeries']['description']); ?>&nbsp;</td>
 		<td><?php echo h($aSeries['CourseSeries']['location']); ?>&nbsp;</td>
 		<td><?php echo h($aSeries['CourseSeries']['language']); ?>&nbsp;</td>
