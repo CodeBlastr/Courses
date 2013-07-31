@@ -60,4 +60,38 @@ class CourseSeries extends CoursesAppModel {
 		return true;
 	}
 
+/**
+ * 
+ * @param string $userId
+ * @param string $seriesId
+ * @return boolean
+ */
+	public function isUserEnrolled($userId, $seriesId) {
+		// find all course IDs in this series
+		$seriesCourses = $this->find('all', array(
+			'conditions' => array('parent_id' => $seriesId),
+			'fields' => array('id')
+		));
+		// find this user's enrolled courses
+		$userCourses = $this->Course->CourseUser->find('all', array(
+			'conditions' => array('CourseUser.user_id' => $userId),
+			'contain' => array(
+				'Course' => array(
+					'fields' => array('id')
+				)
+			)
+		));
+
+		// compare and return
+		$seriesCourses = Set::extract('/CourseSeries/id', $seriesCourses);
+		$userCourses = Set::extract('/Course/id', $userCourses);
+
+		$collision = array_intersect($userCourses, $seriesCourses);
+//debug($seriesCourses);
+//debug($userCourses);
+//debug($collision);
+//break;
+		return ( count($collision) == count($seriesCourses) );
+	}
+
 }

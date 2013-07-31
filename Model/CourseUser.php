@@ -13,7 +13,7 @@ class CourseUser extends CoursesAppModel {
  *
  * @var string
  */
-	public $primaryKey = 'user_id';
+	public $primaryKey = 'id';
 
 	public $actsAs = array(
 		'Users.UserGroupable' => array(

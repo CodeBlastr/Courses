@@ -10,6 +10,15 @@ foreach ( $series['Course'] as $course ) {
 }
 echo $this->Html->tag('ol', $seriesCourses);
 
+if ( !$isOwner ) {
+	if ( !$isEnrolled ) {
+		echo $this->Html->link('Register', array('action' => 'register', $series['CourseSeries']['id']), array('class' => 'btn btn-primary'));
+	} else {
+		echo $this->Html->link('Unregister', array('action' => 'unregister', $series['CourseSeries']['id']), array('class' => 'btn btn-danger'));
+	}
+}
+
+
 /**
  * Menus !
  */
