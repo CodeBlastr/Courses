@@ -13,16 +13,6 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<div class="row-fluid">
 		<div class="span8">
 			<p><?php echo $course['Course']['description'] ?></p>
-
-			<?php
-			if ( !empty($course['CourseSeries']['name']) ) {
-				echo $this->Html->tag('p',
-					$this->Html->tag('i',
-						'This course is part of the series: ' . $this->Html->link($course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']))
-					)
-				);
-			}
-			?>
 			<table>
 				<tr>
 					<td><b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)</td>
@@ -35,12 +25,32 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			</table>
 			<hr />
 
+			<?php
+			if ( !empty($course['CourseSeries']['name']) ) {
+				echo $this->Html->tag('p',
+					$this->Html->tag('i',
+						'This course is part of the series: ' . $this->Html->link($course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']))
+					)
+				);
+			}
+			?>
+
 			<p>
 				<?php
-				if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
-					echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+				if ( !empty($course['CourseSeries']) && ($course['CourseSeries']['is_sequential'] === true) ) {
+					// (un)register from a sequential Series
+					if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+						echo $this->Html->link('Register for ' . $course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'register', $course['CourseSeries']['id']), array('class' => 'btn btn-primary'));
+					} else {
+						echo $this->Html->link('Drop ' . $course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'unregister', $course['CourseSeries']['id']), array('class' => 'btn btn-danger'));
+					}
 				} else {
-					echo $this->Html->link('Unregister', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+					// (un)register from a normal Course
+					if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+						echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+					} else {
+						echo $this->Html->link('Drop Course', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+					}
 				}
 				?>
 			</p>

@@ -36,8 +36,20 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	</table>
 	<p>
 		<?php
-		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
-			echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+		if ( !empty($course['CourseSeries']) && ($course['CourseSeries']['is_sequential'] === true) ) {
+			// (un)register from a sequential Series
+			if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+				echo $this->Html->link('Register for ' . $course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'register', $course['CourseSeries']['id']), array('class' => 'btn btn-primary'));
+			} else {
+				echo $this->Html->link('Drop ' . $course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'unregister', $course['CourseSeries']['id']), array('class' => 'btn btn-danger'));
+			}
+		} else {
+			// (un)register from a normal Course
+			if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+				echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+			} else {
+				echo $this->Html->link('Drop Course', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+			}
 		}
 		?>
 	</p>
