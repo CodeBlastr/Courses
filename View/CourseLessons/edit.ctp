@@ -19,6 +19,9 @@
 		echo $this->Form->input('CourseLesson.is_private', array('label' => 'Public / Private'));
 		echo $this->Form->input('CourseLesson.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
 		echo $this->Form->input('CourseLesson.language', array('options' => array('English' => 'English', 'Spanish' => 'Spanish')));
+
+		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('type' => 'radio'))) : null;
+
 	?>
 	</fieldset>
 <?php

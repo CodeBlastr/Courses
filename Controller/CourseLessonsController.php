@@ -9,6 +9,7 @@ class CourseLessonsController extends CoursesAppController {
 
 	public $name = 'CourseLessons';
 	public $uses = 'Courses.CourseLesson';
+	public $components = array('Template');
 
 /**
  * index method
@@ -38,7 +39,7 @@ class CourseLessonsController extends CoursesAppController {
 		}
 		$lesson =  $this->CourseLesson->find('first', array(
 			'conditions' => array('CourseLesson.id' => $id),
-			'contain' => array('Form', 'Media', 'Course')
+			'contain' => array('Media', 'Course')
 		));
 
 		$this->set(compact('lesson'));
@@ -69,9 +70,12 @@ class CourseLessonsController extends CoursesAppController {
 			}
 		}
 		$parentCourses = $this->CourseLesson->Course->find('list', array(
-			'conditions' => array('creator_id' => $this->userId)
+			'conditions' => array('creator_id' => $this->userId, 'type' => 'course'),
+			'order' => array('name' => 'ASC')
 			));
 		$this->set(compact('parentCourses'));
+
+		$this->set('title_for_layout', 'Create a Lesson | ' . __SYSTEM_SITE_NAME);
 	}
 
 /**
