@@ -103,19 +103,19 @@ class Course extends CoursesAppModel {
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs[] = 'Media.MediaAttachable';
 			
-			$this->hasMany['Media'] = array(
-				'className' => 'Media.Media',
-				'foreignKey' => 'foreign_key',
-				'dependent' => false, // Incase Media is attached to more that one model
-				'conditions' => '',
-				'fields' => '',
-				'order' => '',
-				'limit' => '',
-				'offset' => '',
-				'exclusive' => '',
-				'finderQuery' => '',
-				'counterQuery' => ''
-			);
+			// $this->hasMany['Media'] = array(
+				// 'className' => 'Media.Media',
+				// 'foreignKey' => 'foreign_key',
+				// 'dependent' => false, // Incase Media is attached to more that one model
+				// 'conditions' => '',
+				// 'fields' => '',
+				// 'order' => '',
+				// 'limit' => '',
+				// 'offset' => '',
+				// 'exclusive' => '',
+				// 'finderQuery' => '',
+				// 'counterQuery' => ''
+			// );
 		}
 		
 		parent::__construct($id, $table, $ds);

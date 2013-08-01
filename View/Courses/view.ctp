@@ -162,7 +162,7 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => 'Lessons',
 		'items' => array(
-			$this->Html->link(__('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add')),
+			$this->Html->link(__('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add', $course['Course']['id'])),
 			),
 		),
 	array(

@@ -165,7 +165,7 @@ class _CoursesController extends CoursesAppController {
 				)
 			)
 		));
-		
+				
 		$courseUsers = $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $this->Course->id),
 			'contain' => array('User'),
@@ -183,7 +183,7 @@ class _CoursesController extends CoursesAppController {
 			$this->view = 'registered_view';
 			$isOwner = false;
 		}
-
+		
 		$this->set('isOwner', $isOwner);
 		$this->set('courseUsers', $courseUsers);
 		$this->set('course', $course);
@@ -196,6 +196,7 @@ class _CoursesController extends CoursesAppController {
  * @return void
  */
 	public function add() {
+		debug($this->request->data);
 		$this->set('title_for_layout', 'Create a New Course | ' . __SYSTEM_SITE_NAME);
 		if ($this->request->is('post')) {
 			//$this->Course->create();

@@ -5,7 +5,7 @@
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
 		//echo $this->Form->input('Course.parent_id');
-		echo $this->Element('Media.media_selector', array('selected' => 1));
+		echo $this->Element('Media.media_selector');
 		echo $this->Html->tag('div',
 			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array(null => '- existing series -'), 'label' => 'Part of a Series? <a href="#toggleSeriesAdd" class="toggleSeriesAdd">(create new series)</a>'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))

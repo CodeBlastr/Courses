@@ -99,9 +99,12 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	}
 
 	if ( !empty($course['Media']) ) {
-		echo '<h4>Course Materials</h4>';
-		echo $this->element('Courses.displayMaterialsThumbs', array('media' => $course['Media']));
-	}
+				echo '<h4>Course Materials</h4>';
+				foreach($course['Media'] as $media) {
+					echo $this->Media->display($media, array('width' => 100, 'height' => 100));
+				}
+				
+			}
 
 	?>
 

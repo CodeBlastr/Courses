@@ -4,6 +4,7 @@
 		<legend><?php echo __('Edit Course'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
+		echo $this->Element('Media.media_selector');
 		echo $this->Html->tag('div',
 			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array('false' => 'No', 'true' => 'Create New...'), 'label' => 'Part of a Series?'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))

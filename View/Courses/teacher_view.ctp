@@ -95,7 +95,13 @@
 				echo $this->Html->tag('table', $this->Html->tableHeaders($studentGradeHeader) . $this->Html->tableCells($studentGradeCells));
 			}
 
-
+			if ( !empty($course['Media']) ) {
+				echo '<h4>Course Materials</h4>';
+				foreach($course['Media'] as $media) {
+					echo '<div class="span3">'.$this->Media->display($media, array('width' => 100, 'height' => 100)).'</div>';
+				}
+				
+			}
 			?>
 
 	</div>
@@ -157,7 +163,7 @@ $this->set('context_menu', array('menus' => array(
 		array(
 			'heading' => 'Lessons',
 			'items' => array(
-				$this->Html->link('<i class="icon-facetime-video"></i>' . __('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add'), array('escape' => false)),
+				$this->Html->link('<i class="icon-facetime-video"></i>' . __('Create New Lesson'), array('controller' => 'course_lessons', 'action' => 'add', $course['Course']['id']), array('escape' => false)),
 			),
 		),
 		array(
