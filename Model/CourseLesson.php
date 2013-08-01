@@ -9,7 +9,7 @@ class CourseLesson extends CoursesAppModel {
 	
 	public $name = 'CourseLesson';
 	
-	public $alias = 'Lesson';
+	//public $alias = 'Lesson';
 	
 	public $useTable = 'courses';
 
