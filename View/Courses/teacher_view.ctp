@@ -33,7 +33,7 @@
 		<hr />
 
 			<div class="related">
-				<?php if (!empty($course['Lesson'])):?>
+				<?php if (!empty($course['CourseLesson'])):?>
 					<h4><?php echo __('Lessons'); ?></h4>
 					<table cellpadding = "0" cellspacing = "0">
 					<tr>
@@ -44,7 +44,7 @@
 					</tr>
 					<?php
 						$i = 0;
-						foreach ($course['Lesson'] as $childCourse): ?>
+						foreach ($course['CourseLesson'] as $childCourse): ?>
 						<tr>
 							<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
 							<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>

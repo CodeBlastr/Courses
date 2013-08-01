@@ -57,7 +57,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 
 	<div class="related row span12">
 		<h4><?php echo __('Lessons');?></h4>
-		<?php if (!empty($course['Lesson'])):?>
+		<?php if (!empty($course['CourseLesson'])):?>
 			<table cellpadding = "0" cellspacing = "0">
 			<tr>
 				<th></th>
@@ -66,7 +66,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			</tr>
 			<?php
 				$i = 0;
-				foreach ($course['Lesson'] as $childCourse): ?>
+				foreach ($course['CourseLesson'] as $childCourse): ?>
 				<tr>
 					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
 					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
