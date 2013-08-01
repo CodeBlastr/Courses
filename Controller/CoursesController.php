@@ -490,6 +490,35 @@ class _CoursesController extends CoursesAppController {
 		}
 	    exit;
 	}
+
+
+/**
+ * AJAX handler for a pass/fail checbox
+ * @param string $courseId
+ * @param string $studentId
+ * @return boolean
+ */
+	public function passFail($courseId = null, $studentId = null) {
+
+		if ( $this->request->isAjax() && $courseId && $studentId ) {
+			$this->autoRender = $this->layout = false;
+			
+			$updated = $this->Course->CourseUser->updateAll(
+				array('CourseUser.is_complete' => $this->request->data['isComplete']),
+				array('CourseUser.user_id' => $studentId, 'CourseUser.course_id' => $courseId)
+			);
+
+			if ( $updated ) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			$this->Session->setFlash('Invalid request');
+			$this->redirect($this->referer());
+		}
+	}
+
 }
 
 if (!isset($refuseInit)) {

@@ -125,10 +125,11 @@
 		if ( !empty($courseUsers) ) {
 			foreach ( $courseUsers as $user ) {
 				$userCells[] = array(
-					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
+					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id'])),
+					$this->Form->checkbox('CourseUser.is_complete', array('checked' => $user['CourseUser']['is_complete'], 'data-userid' => $user['User']['id'], 'class' => 'passFailCheckbox')),
 				);
 			}
-			echo $this->Html->tag('table', $this->Html->tableCells($userCells));
+			echo $this->Html->tag('table', $this->Html->tableHeaders(array('name', 'pass / fail')) . $this->Html->tableCells($userCells));
 		} else {
 			echo '<i>no students</i>';
 		}
@@ -136,6 +137,21 @@
 	</div>
 </div>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".passFailCheckbox").change(function(){
+			$.ajax({
+				url: '<?php echo Router::url(array('controller' => 'courses', 'action' => 'passFail', $course['Course']['id'])) ?>' + '/' + $(this).attr('data-userid'),
+				data: {data:{isComplete:$(this).is(":checked")}},
+				cache: false,
+				type: 'POST',
+				error: function(){
+
+				}
+			});
+		});
+	});
+</script>
 
 <?php
 $this->set('context_menu', array('menus' => array(
