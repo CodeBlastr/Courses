@@ -243,7 +243,6 @@ class _CoursesController extends CoursesAppController {
  * @return void
  */
 	public function add() {
-		debug($this->request->data);
 		$this->set('title_for_layout', 'Create a New Course | ' . __SYSTEM_SITE_NAME);
 		if ($this->request->is('post')) {
 			//$this->Course->create();
