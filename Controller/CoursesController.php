@@ -230,7 +230,6 @@ class _CoursesController extends CoursesAppController {
 			$this->view = 'registered_view';
 			$isOwner = false;
 		}
-		
 		$this->set('isOwner', $isOwner);
 		$this->set('courseUsers', $courseUsers);
 		$this->set('course', $course);

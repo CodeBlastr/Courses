@@ -59,7 +59,12 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			<h3>Instructed by:</h3>
 			<?php
 			echo $this->element('Users.snpsht', array('useGallery' => true, 'userId' => $course['Teacher']['id'], 'thumbSize' => 'medium', 'thumbLink' => 'default', 'showFirstName' => true, 'showLastName' => true));
-			?>
+			
+			// ratings		
+			if (!empty($course['Course']['_rating'])) {
+				echo __('<hr /><h5>Course Rating (%s out of 5)', number_format($course['Course']['_rating'], 2, '.', ','));
+				echo $this->Rating->bar(number_format($course['Course']['_rating'], 2, '.', ','), 5, array('outerClass' => 'progress', 'innerClass' => 'bar bar-success'));
+			}?>
 		</div>
 	</div>
 
