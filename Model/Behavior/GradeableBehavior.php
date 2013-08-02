@@ -1,8 +1,8 @@
 <?php
 
-app::uses('Courses.CourseGrade', 'Courses.Model');
-app::uses('Courses.CourseGradeDetail', 'Courses.Model');
-app::uses('Courses.CourseGradeAnswer', 'Courses.Model');
+app::uses('CourseGrade', 'Courses.Model');
+app::uses('CourseGradeDetail', 'Courses.Model');
+app::uses('CourseGradeAnswer', 'Courses.Model');
 
 class GradeableBehavior extends ModelBehavior {
 		
@@ -61,7 +61,7 @@ class GradeableBehavior extends ModelBehavior {
 	 */
 	
 	public function beforeSave(Model $Model) {
-		parent::beforeSave($options);
+		parent::beforeSave($Model);
 		if(isset($Model->data[$Model->alias]) && isset($Model->data['CourseGradeDetail'])) {
 			$this->detailId = $Model->data['CourseGradeDetail']['foreign_key'];
 			$this->detailModel = isset($Model->data['CourseGradeDetail']['model']) ? $Model->data['CourseGradeDetail']['model'] : $Model->alias;
@@ -77,9 +77,9 @@ class GradeableBehavior extends ModelBehavior {
 	}
 	
 	public function afterSave(Model $Model, $created) {
-		
+
 		//If Model isn't saved or is not new, create the grades
-		if(isset($this->data) && !empty($this->data)) {
+		if ( isset($Model->data) && !empty($Model->data) ) {
 		
 			//Get the grading details
 			$GradeDetail = new CourseGradeDetail;
@@ -88,9 +88,20 @@ class GradeableBehavior extends ModelBehavior {
 				'foreign_key' => $this->detailId,
 				'model' => $this->detailModel,
 			));
-			
+
+			if ( $created ) {
+				if ( $Model->data[$Model->alias]['is_gradeable'] ) {
+					// This newly created Gradeable thing needs a row in CourseGradeDetails
+					$newGradeDetail = $GradeDetail->create(array(
+						'course_id' => $Model->data[$Model->alias]['foreign_key'],
+						'model' => $Model->alias,
+						'foreign_key' => $Model->id
+					));
+					$GradeDetail->save($newGradeDetail);
+				}
+			}
+
 			if(empty($gradedetails)) {
-				
 				
 			}else {
 				$CourseGrade = new CourseGrade;
