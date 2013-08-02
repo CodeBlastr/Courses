@@ -24,7 +24,7 @@ class CoursesSchema extends CakeSchema {
 		'course_grade_detail_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'model' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'course_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'student_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
 		'grade' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 3),
 		'total' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 3),
@@ -57,7 +57,7 @@ class CoursesSchema extends CakeSchema {
 	
 	public $course_grade_details = array(
 		'id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'key' => 'primary', 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'course_id' => array('type' => 'integer', 'null' => false, 'default' => NULL),
+		'course_id' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'model' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'foreign_key' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'name' => array('type' => 'string', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
