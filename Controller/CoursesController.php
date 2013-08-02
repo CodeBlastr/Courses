@@ -209,7 +209,6 @@ class _CoursesController extends CoursesAppController {
 				$this->redirect(array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']));
 			}
 		}
-		
 		$this->set('isOwner', $isOwner);
 		$this->set('courseUsers', $courseUsers);
 		$this->set('course', $course);

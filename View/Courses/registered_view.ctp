@@ -1,9 +1,5 @@
 <div class="row-fluid">
 <?php
-
-//debug($course);
-//debug($courseUsers);
-
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
 $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
@@ -23,17 +19,6 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		);
 	}
 	?>
-		
-	<?php 
-	
-	if (!empty($courseUsers[$this->Session->read('Auth.User.id')]['CourseUser']['is_complete'])) {
-		echo $this->Rating->display(array(
-			'item' => $course['Course']['id'],
-			'type' => 'radio',
-			'stars' => 5,
-			'value' => $item['rating'],
-			'createForm' => array('url' => array(/*$this->passedArgs, */'rate' => $course['Course']['id'], 'redirect' => true))));
-	} ?>
 
 	<table>
 		<tr>
@@ -134,7 +119,21 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 
 </div>
 	<div class="span4 pull-right">
-		<?php
+		
+		<?php 
+		// ratings
+		if ($course['Course']['_user_rated'] == 'false' && !empty($courseUsers[$this->Session->read('Auth.User.id')]['CourseUser']['is_complete'])) {
+			echo __('<h5>Rate the Course</h5><div class="ratingsForm clearfix">%s</div><hr />', $this->Rating->display(array(
+				'item' => $course['Course']['id'],
+				'type' => 'radio',
+				'stars' => 5,
+				'value' => $item['rating'],
+				'createForm' => array('url' => array($this->passedArgs[0], 'rate' => $course['Course']['id'])))));
+		} else if ($course['Course']['_user_rated'] == 'true') {
+			echo __('<h5>Course Rating (%s out of 5)', number_format($course['Course']['_rating'], 2, '.', ','));
+			echo $this->Rating->bar(number_format($course['Course']['_rating'], 2, '.', ','), 5, array('outerClass' => 'progress', 'innerClass' => 'bar bar-success'));
+		}
+		
 		// calendar
 		echo $this->Calendar->renderCalendar(array(
 			'sources' => array(
