@@ -54,12 +54,7 @@
 									// array('action' => 'view', $course['Course']['id']),
 									// array('escape' => false, 'title' => 'View')
 								// )
-								$this->Html->link(
-									'<i class="icon-edit"></i>',
-									array('action' => 'edit', $course['Course']['id']),
-									array('escape' => false, 'title' => 'Edit')
-								)
-								. $this->Html->tag('div',
+								$this->Html->tag('div',
 									$this->Html->link(
 										$course['Course']['name'],
 										array('action' => 'view', $course['Course']['id']),
