@@ -392,7 +392,10 @@ class _CoursesController extends CoursesAppController {
 
 			// get my Courses to attach to
 			$this->set('parentCourses', $this->Course->find('list', array(
-				'conditions' => array('creator_id' => $this->userId)
+				'conditions' => array(
+					'creator_id' => $this->userId,
+					'type' => 'course'
+				)
 			)));
 
 			$this->view = 'teacher_assignment';
