@@ -23,6 +23,17 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		);
 	}
 	?>
+		
+	<?php 
+	
+	if (!empty($courseUsers[$this->Session->read('Auth.User.id')]['CourseUser']['is_complete'])) {
+		echo $this->Rating->display(array(
+			'item' => $course['Course']['id'],
+			'type' => 'radio',
+			'stars' => 5,
+			'value' => $item['rating'],
+			'createForm' => array('url' => array(/*$this->passedArgs, */'rate' => $course['Course']['id'], 'redirect' => true))));
+	} ?>
 
 	<table>
 		<tr>

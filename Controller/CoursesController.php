@@ -16,6 +16,20 @@ class _CoursesController extends CoursesAppController {
 	public $helpers = array('Calendar');
 
 /**
+ * Constructor method
+ * 
+ * @param
+ * @param
+ */
+	public function __construct($request = null, $response = null) {
+		if (in_array('Ratings', CakePlugin::loaded())) {
+			$this->components[] = 'Ratings.Ratings';
+			$this->helpers[] = 'Ratings.Rating';
+		}
+		parent::__construct($request, $response);
+	}
+
+/**
  * index method
  *
  * @return void

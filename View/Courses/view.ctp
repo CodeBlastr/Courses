@@ -1,4 +1,4 @@
-<?php
+asdfasdf<?php
 
 //debug($course);
 //debug($courseUsers);

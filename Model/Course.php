@@ -99,7 +99,9 @@ class Course extends CoursesAppModel {
 		if (in_array('Subscribers', CakePlugin::loaded())) {
 			$this->actsAs['Subscribers.Subscribable'] = array('modelAlias' => 'Course');
 		}
-
+		if (in_array('Ratings', CakePlugin::loaded())) {
+			$this->actsAs[] = 'Ratings.Ratable';
+		}
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs[] = 'Media.MediaAttachable';
 			

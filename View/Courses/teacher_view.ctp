@@ -18,7 +18,6 @@
 			);
 		}
 		?>
-		
 		<table>
 			<tr>
 				<td><b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)</td>
