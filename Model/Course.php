@@ -154,5 +154,52 @@ class Course extends CoursesAppModel {
 			}
 		}
 	}
-	
+
+
+/**
+ *
+ * @param int $userId
+ * @param string $courseId
+ * @return boolean
+ */
+	public function canUserTakeCourse($userId, $courseId) {
+		// get all Course Completion data for this user
+		$completion = $this->CourseUser->find('all', array(
+			'conditions' => array('CourseUser.user_id' => $userId)
+		));
+		// get the course's information
+		$course = $this->find('first', array(
+			'conditions' => array('Course.id' => $courseId),
+			'contain' => array(
+				'CourseSeries' => array(
+					'fields' => array('CourseSeries.id', 'CourseSeries.is_sequential'),
+					'Course' => array(
+						'fields' => array('Course.order'),
+					)
+				),
+			)
+		));
+
+		$completedCourses = array();
+		foreach ( $completion as $mightBeCompleted ) {
+			if ( $mightBeCompleted['CourseUser']['is_complete'] == true ) {
+				$completedCourses[] = $mightBeCompleted['CourseUser']['course_id'];
+			}
+		}
+
+		$canTakeCourse = true;
+		if ( $course['CourseSeries']['is_sequential'] == 1 && $course['Course']['order'] !== 0 ) {
+			for ( $index = 0; $index < $course['Course']['order']; $index++ ) {
+				if ( in_array($course['CourseSeries']['Course'][$index]['id'], $completedCourses) ) {
+					$canTakeCourse = true;
+				} else {
+					$canTakeCourse = false;
+					break;
+				}
+			}
+		}
+
+		return $canTakeCourse;
+	}
+
 }

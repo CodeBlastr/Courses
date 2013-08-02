@@ -193,11 +193,6 @@ class _CoursesController extends CoursesAppController {
 		));
 		$courseUsers = Set::combine($courseUsers, '{n}.User.id', '{n}');
 
-		// get all Course Completion data for this user
-		$completion = $this->Course->CourseUser->find('all', array(
-			'conditions' => array('CourseUser.user_id' => $this->userId)
-		));
-
 		// Decide between: Teacher | Guest | Student
 		if ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
 			$this->view = 'teacher_view';
@@ -206,29 +201,13 @@ class _CoursesController extends CoursesAppController {
 			$this->view = 'guest_view';
 			$isOwner = false;
 		} else {
-			// If this course is in a sequence, we need to check to see if the Student passed the previous course..
-			$canTakeCourse = true; // 
-
-			$completedCourses = array();
-			foreach ( $completion as $mightBeCompleted ) {
-				if ( $mightBeCompleted['CourseUser']['is_complete'] == true ) {
-					$completedCourses[] = $mightBeCompleted['CourseUser']['course_id'];
-				}
-			}
-
-			if ( $course['CourseSeries']['is_sequential'] == 1 && $course['Course']['order'] !== 0 ) {
-				for ( $index = 0; $index < $course['Course']['order']; $index++ ) {
-					if ( in_array($course['CourseSeries']['Course'][$index]['id'], $completedCourses) ) {
-						$canTakeCourse = true;
-					} else {
-						$canTakeCourse = false;
-						break;
-					}
-				}
-			}
-			$this->set('canTakeCourse', $canTakeCourse);
 			$this->view = 'registered_view';
 			$isOwner = false;
+			// If this course is in a sequence, we need to check to see if the Student passed the previous course..
+			if ( !$this->Course->canUserTakeCourse($this->userId, $course['Course']['id']) ) {
+				$this->Session->setFlash('You must complete the prerequisites in this series to view this course.');
+				$this->redirect(array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']));
+			}
 		}
 		$this->set('isOwner', $isOwner);
 		$this->set('courseUsers', $courseUsers);
