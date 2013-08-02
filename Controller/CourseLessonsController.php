@@ -38,13 +38,8 @@ class CourseLessonsController extends CoursesAppController {
 			throw new NotFoundException(__('Invalid lesson'));
 		}
 		$lesson =  $this->CourseLesson->find('first', array(
-<<<<<<< HEAD
-			'conditions' => array('Lesson.id' => $id),
-			'contain' => array('Form', 'Media', 'Course')
-=======
 			'conditions' => array('CourseLesson.id' => $id),
 			'contain' => array('Media', 'Course')
->>>>>>> b73b70609c12fd9730fc97d7b47a6e34758dc666
 		));
 
 		$this->set(compact('lesson'));
