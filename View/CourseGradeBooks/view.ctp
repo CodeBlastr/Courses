@@ -14,7 +14,7 @@ if ( !empty($course) ) {
 	echo $this->Html->tag('p', '<b>Session: </b>'. $this->Time->niceShort($course['Course']['start']) . ' to ' . $this->Time->niceShort($course['Course']['end']));
 
 	// initiate the table headings array
-	$tableHeaders = array('Student', 'Average');
+	$tableHeaders = array('Pass / Fail', 'Student', 'Average');
 
 	// add the rest of our table headers, and get some grade data while we are there
 	$i = 1;
@@ -41,6 +41,7 @@ if ( !empty($course) ) {
 		}
 		$studentAverage = $studentAverage / ( count($course['Task']) + count($course['Answer']) );
 		$studentRow = array(
+			$this->Form->checkbox('CourseUser.is_complete', array('checked' => $student['CourseUser']['is_complete'], 'data-userid' => $student['User']['id'], 'class' => 'passFailCheckbox')),
 			$this->Html->link($student['User']['full_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $student['User']['id'])),
 			$this->Number->toPercentage($studentAverage)
 		);
@@ -56,13 +57,14 @@ if ( !empty($course) ) {
 	// add a row of overall course averages
 	$tableCells .= $this->Html->tableCells(array(
 		array(
+			'',
 			'Overall',
 			$this->Number->toPercentage(array_sum($courseAverage) / count($courseAverage))
 		)
 	));
 
 	// some final formatting..
-	$tableTitles = array('', '', array('Assignments', array('colspan' => count($course['Task']))), array('Quizzes / Tests', array('colspan' => count($course['Form']))));
+	$tableTitles = array('', '', '', array('Assignments', array('colspan' => count($course['Task']))), array('Quizzes / Tests', array('colspan' => count($course['Form']))));
 	$tableTitles = $this->Html->tableCells($tableTitles);
 	$tableHeaders = $this->Html->tableHeaders($tableHeaders);
 
@@ -70,3 +72,20 @@ if ( !empty($course) ) {
 	echo $this->Html->tag('table', $tableTitles . $tableHeaders . $tableCells, array('class' => 'table-bordered'));
 
 }
+
+?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".passFailCheckbox").change(function(){
+			$.ajax({
+				url: '<?php echo Router::url(array('controller' => 'courses', 'action' => 'passFail', $course['Course']['id'])) ?>' + '/' + $(this).attr('data-userid'),
+				data: {data:{isComplete:$(this).is(":checked")}},
+				cache: false,
+				type: 'POST',
+				error: function(){
+					
+				}
+			});
+		});
+	});
+</script>

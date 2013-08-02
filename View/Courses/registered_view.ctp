@@ -23,6 +23,17 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 		);
 	}
 	?>
+		
+	<?php 
+	
+	if (!empty($courseUsers[$this->Session->read('Auth.User.id')]['CourseUser']['is_complete'])) {
+		echo $this->Rating->display(array(
+			'item' => $course['Course']['id'],
+			'type' => 'radio',
+			'stars' => 5,
+			'value' => $item['rating'],
+			'createForm' => array('url' => array(/*$this->passedArgs, */'rate' => $course['Course']['id'], 'redirect' => true))));
+	} ?>
 
 	<table>
 		<tr>
@@ -36,8 +47,20 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	</table>
 	<p>
 		<?php
-		if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
-			echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+		if ( !empty($course['CourseSeries']) && ($course['CourseSeries']['is_sequential'] === true) ) {
+			// (un)register from a sequential Series
+			if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+				echo $this->Html->link('Register for ' . $course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'register', $course['CourseSeries']['id']), array('class' => 'btn btn-primary'));
+			} else {
+				echo $this->Html->link('Drop ' . $course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'unregister', $course['CourseSeries']['id']), array('class' => 'btn btn-danger'));
+			}
+		} else {
+			// (un)register from a normal Course
+			if ( !isset($courseUsers[$this->Session->read('Auth.User.id')]) ) {
+				echo $this->Html->link('Register', array('action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'));
+			} else {
+				echo $this->Html->link('Drop Course', array('action' => 'unregister', $course['Course']['id']), array('class' => 'btn btn-danger'));
+			}
 		}
 		?>
 	</p>
@@ -45,7 +68,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 
 	<div class="related row span12">
 		<h4><?php echo __('Lessons');?></h4>
-		<?php if (!empty($course['Lesson'])):?>
+		<?php if (!empty($course['CourseLesson'])):?>
 			<table cellpadding = "0" cellspacing = "0">
 			<tr>
 				<th></th>
@@ -54,7 +77,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			</tr>
 			<?php
 				$i = 0;
-				foreach ($course['Lesson'] as $childCourse): ?>
+				foreach ($course['CourseLesson'] as $childCourse): ?>
 				<tr>
 					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
 					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>

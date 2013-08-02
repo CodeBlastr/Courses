@@ -14,7 +14,7 @@ if ( !$isOwner ) {
 	if ( !$isEnrolled ) {
 		echo $this->Html->link('Register', array('action' => 'register', $series['CourseSeries']['id']), array('class' => 'btn btn-primary'));
 	} else {
-		echo $this->Html->link('Unregister', array('action' => 'unregister', $series['CourseSeries']['id']), array('class' => 'btn btn-danger'));
+		echo $this->Html->link('Drop ' . $series['CourseSeries']['name'], array('action' => 'unregister', $series['CourseSeries']['id']), array('class' => 'btn btn-danger'));
 	}
 }
 

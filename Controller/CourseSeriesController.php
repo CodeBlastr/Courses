@@ -100,8 +100,10 @@ class CourseSeriesController extends CoursesAppController {
 		$newRegistrations = array();
 		foreach ( $seriesCourses as $seriesCourse ) {
 			$newRegistrations[] = array(
+				'CourseUser' => array(
 					'user_id' => $this->userId,
 					'course_id' => $seriesCourse['Course']['id']
+				)
 			);
 		}
 
@@ -117,12 +119,13 @@ class CourseSeriesController extends CoursesAppController {
 			throw new NotFoundException(__('Invalid series'));
 		}
 		// find all courses in this series
-		$seriesCourses = $this->CourseSeries->Course->find('list', array(
+		$seriesCourses = $this->CourseSeries->Course->find('all', array(
 			'conditions' => array(
 				'parent_id' => $this->CourseSeries->id
 			),
 			'fields' => array('id')
 		));
+		$seriesCourses = Set::extract('/Course/id', $seriesCourses);
 		// remove this user from course_users
 		$unregistered = $this->CourseSeries->Course->CourseUser->deleteAll(array(
 			'CourseUser.user_id' => $this->userId,

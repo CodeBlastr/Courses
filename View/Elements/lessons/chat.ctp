@@ -1,0 +1,1 @@
+<?php echo $this->Element('Chats.chat', array('room' => $lesson['CourseLesson']['name'])); ?>

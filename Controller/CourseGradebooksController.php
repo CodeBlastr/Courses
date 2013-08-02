@@ -27,12 +27,12 @@ class CourseGradebooksController extends CoursesAppController {
 		}
 		if ( $courseId ) {
 			$course = $this->CourseUser->Course->find('first', array(
-				'condtions' => array(
+				'conditions' => array(
 					'Course.id' => $courseId
 					),
 				'contain' => array(
 					'Answer',
-					'Grade',
+					'CourseGrade',
 					'Task' => array(
 						'conditions' => array('Task.parent_id' => ''),
 						'ChildTask'
@@ -41,14 +41,15 @@ class CourseGradebooksController extends CoursesAppController {
 			));
 
 			// gimmie a nice grade array
-			foreach ( $course['Grade'] as $grade ) {
+			foreach ( $course['CourseGrade'] as $grade ) {
 				$grades[ $grade['student_id'] ][ $grade['foreign_key'] ] = $grade['grade'];
 			}
 		}
 
 		$myCourses = $this->CourseUser->Course->find('list', array(
 			'conditions' => array(
-				'Course.creator_id' => $this->Auth->user('id')
+				'Course.creator_id' => $this->Auth->user('id'),
+				'Course.type' => 'course'
 				),
 			'fields' => array('Course.id', 'Course.name')
 			));

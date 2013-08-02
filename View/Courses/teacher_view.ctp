@@ -18,7 +18,6 @@
 			);
 		}
 		?>
-		
 		<table>
 			<tr>
 				<td><b>Starts: </b><?php echo $this->Time->niceShort($course['Course']['start']) ?> (<?php echo $lengthOfCourse ?> weeks long)</td>
@@ -33,7 +32,7 @@
 		<hr />
 
 			<div class="related">
-				<?php if (!empty($course['Lesson'])):?>
+				<?php if (!empty($course['CourseLesson'])):?>
 					<h4><?php echo __('Lessons'); ?></h4>
 					<table cellpadding = "0" cellspacing = "0">
 					<tr>
@@ -44,7 +43,7 @@
 					</tr>
 					<?php
 						$i = 0;
-						foreach ($course['Lesson'] as $childCourse): ?>
+						foreach ($course['CourseLesson'] as $childCourse): ?>
 						<tr>
 							<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
 							<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
@@ -131,10 +130,11 @@
 		if ( !empty($courseUsers) ) {
 			foreach ( $courseUsers as $user ) {
 				$userCells[] = array(
-					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id']))
+					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id'])),
+					$this->Form->checkbox('CourseUser.is_complete', array('checked' => $user['CourseUser']['is_complete'], 'data-userid' => $user['User']['id'], 'class' => 'passFailCheckbox')),
 				);
 			}
-			echo $this->Html->tag('table', $this->Html->tableCells($userCells));
+			echo $this->Html->tag('table', $this->Html->tableHeaders(array('name', 'pass / fail')) . $this->Html->tableCells($userCells));
 		} else {
 			echo '<i>no students</i>';
 		}
@@ -142,6 +142,21 @@
 	</div>
 </div>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".passFailCheckbox").change(function(){
+			$.ajax({
+				url: '<?php echo Router::url(array('controller' => 'courses', 'action' => 'passFail', $course['Course']['id'])) ?>' + '/' + $(this).attr('data-userid'),
+				data: {data:{isComplete:$(this).is(":checked")}},
+				cache: false,
+				type: 'POST',
+				error: function(){
+
+				}
+			});
+		});
+	});
+</script>
 
 <?php
 $this->set('context_menu', array('menus' => array(

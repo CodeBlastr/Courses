@@ -16,6 +16,20 @@ class _CoursesController extends CoursesAppController {
 	public $helpers = array('Calendar');
 
 /**
+ * Constructor method
+ * 
+ * @param
+ * @param
+ */
+	public function __construct($request = null, $response = null) {
+		if (in_array('Ratings', CakePlugin::loaded())) {
+			$this->components[] = 'Ratings.Ratings';
+			$this->helpers[] = 'Ratings.Rating';
+		}
+		parent::__construct($request, $response);
+	}
+
+/**
  * index method
  *
  * @return void
@@ -136,6 +150,8 @@ class _CoursesController extends CoursesAppController {
 /**
  * view method
  *
+ * @todo might need to have different view upon course completion
+ * 
  * @param string $id
  * @return void
  */
@@ -155,7 +171,10 @@ class _CoursesController extends CoursesAppController {
 					'ChildTask'
 				),
 				'CourseSeries' => array(
-					'fields' => array('CourseSeries.id', 'CourseSeries.name', 'CourseSeries.is_sequential')
+					'fields' => array('CourseSeries.id', 'CourseSeries.name', 'CourseSeries.is_sequential'),
+					'Course' => array(
+						'fields' => array('Course.order'),
+					)
 				),
 				'Teacher' => array(
 					'fields' => array('Teacher.id', 'Teacher.full_name')
@@ -165,14 +184,21 @@ class _CoursesController extends CoursesAppController {
 				)
 			)
 		));
-				
+		
+		// list of all students so we can display the Roster
 		$courseUsers = $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $this->Course->id),
 			'contain' => array('User'),
 			'order' => array('User.last_name ASC')
 		));
 		$courseUsers = Set::combine($courseUsers, '{n}.User.id', '{n}');
-		
+
+		// get all Course Completion data for this user
+		$completion = $this->Course->CourseUser->find('all', array(
+			'conditions' => array('CourseUser.user_id' => $this->userId)
+		));
+
+		// Decide between: Teacher | Guest | Student
 		if ( $course['Course']['creator_id'] == $this->Session->read('Auth.User.id') ) {
 			$this->view = 'teacher_view';
 			$isOwner = true;
@@ -180,6 +206,27 @@ class _CoursesController extends CoursesAppController {
 			$this->view = 'guest_view';
 			$isOwner = false;
 		} else {
+			// If this course is in a sequence, we need to check to see if the Student passed the previous course..
+			$canTakeCourse = true; // 
+
+			$completedCourses = array();
+			foreach ( $completion as $mightBeCompleted ) {
+				if ( $mightBeCompleted['CourseUser']['is_complete'] == true ) {
+					$completedCourses[] = $mightBeCompleted['CourseUser']['course_id'];
+				}
+			}
+
+			if ( $course['CourseSeries']['is_sequential'] == 1 && $course['Course']['order'] !== 0 ) {
+				for ( $index = 0; $index < $course['Course']['order']; $index++ ) {
+					if ( in_array($course['CourseSeries']['Course'][$index]['id'], $completedCourses) ) {
+						$canTakeCourse = true;
+					} else {
+						$canTakeCourse = false;
+						break;
+					}
+				}
+			}
+			$this->set('canTakeCourse', $canTakeCourse);
 			$this->view = 'registered_view';
 			$isOwner = false;
 		}
@@ -491,6 +538,35 @@ class _CoursesController extends CoursesAppController {
 		}
 	    exit;
 	}
+
+
+/**
+ * AJAX handler for a pass/fail checbox
+ * @param string $courseId
+ * @param string $studentId
+ * @return boolean
+ */
+	public function passFail($courseId = null, $studentId = null) {
+
+		if ( $this->request->isAjax() && $courseId && $studentId ) {
+			$this->autoRender = $this->layout = false;
+			
+			$updated = $this->Course->CourseUser->updateAll(
+				array('CourseUser.is_complete' => $this->request->data['isComplete']),
+				array('CourseUser.user_id' => $studentId, 'CourseUser.course_id' => $courseId)
+			);
+
+			if ( $updated ) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			$this->Session->setFlash('Invalid request');
+			$this->redirect($this->referer());
+		}
+	}
+
 }
 
 if (!isset($refuseInit)) {

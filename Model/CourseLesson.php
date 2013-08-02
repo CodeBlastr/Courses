@@ -9,7 +9,7 @@ class CourseLesson extends CoursesAppModel {
 	
 	public $name = 'CourseLesson';
 	
-	public $alias = 'Lesson';
+	//public $alias = 'Lesson';
 	
 	public $useTable = 'courses';
 
@@ -60,5 +60,13 @@ class CourseLesson extends CoursesAppModel {
 		$this->data[$this->alias]['type'] = 'lesson';
 		return true;
 	}
-	
+
+	public function afterFind(array $results, $primary = false) {
+		parent::afterFind($results, $primary);
+
+		foreach ($results as $key => $val) {
+			   $results[$key]['CourseLesson']['lengthOfCourse'] = round( abs( strtotime($results[$key]['CourseLesson']['end']) - strtotime($results[$key]['CourseLesson']['start']) ) / 60 / 60 / 24 / 7 );
+		}
+		return $results;
+	}
 }
