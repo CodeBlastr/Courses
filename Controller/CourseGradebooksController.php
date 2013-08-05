@@ -31,7 +31,6 @@ class CourseGradebooksController extends CoursesAppController {
 					'Course.id' => $courseId
 					),
 				'contain' => array(
-					//'Answer',
 					'CourseGrade',
 					'CourseGradeDetail' => array(
 						'fields' => array('id', 'foreign_key')
@@ -88,14 +87,34 @@ class CourseGradebooksController extends CoursesAppController {
 			$updated = $this->CourseGrade->save(array(
 				'id' => $this->request->data['CourseGrade']['id'],
 				'course_grade_detail_id' => $this->request->data['CourseGrade']['course_grade_detail_id'],
-				//'model' => $this->request->data['CourseGrade']['model'],
-				//'foreign_key' => $this->request->data['CourseGrade']['foreign_key'],
+				'model' => $this->request->data['CourseGrade']['model'],
+				'foreign_key' => $this->request->data['CourseGrade']['foreign_key'],
 				'course_id' => $this->request->data['CourseGrade']['course_id'],
 				'student_id' => $this->request->data['CourseGrade']['student_id'],
 				'grade' => $this->request->data['CourseGrade']['grade'],
 			));
 
 			if ( $updated ) {
+				$Task = ClassRegistry::init('Tasks.Task');
+				// check to see if this task is marked as complete
+				$Task->find('first', array(
+					'conditions' => array(
+						'assignee_id' => $this->request->data['CourseGrade']['student_id'],
+						'parent_id' => $this->request->data['CourseGrade']['foreign_key']
+					),
+					'fields' => array('id')
+				));
+
+				// mark this task as complete
+				$Task->save(array(
+					'Task' => array(
+						'id' => $Task->id,
+						'parent_id' => $this->request->data['CourseGrade']['foreign_key'],
+						'assignee_id' => $this->request->data['CourseGrade']['student_id'],
+						'is_completed' => 1,
+						'completed_date' => date('Y-m-d h:i:s')
+						)
+					));
 				return $this->CourseGrade->id;
 			} else {
 				return false;

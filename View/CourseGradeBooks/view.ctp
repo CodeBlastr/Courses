@@ -67,8 +67,8 @@ if ( !empty($course) ) {
 				'label' => false, 'div' => false,
 				'data-coursegrade-id' => $grades[$student['User']['id']][$courseGradeDetails[$gradeForeignKey]]['id'],
 				'data-coursegradedetail-id' => $courseGradeDetails[$gradeForeignKey],
-				//'data-coursegrade-model' => $model,
-				//'data-coursegrade-foreignkey' => $gradeForeignKey,
+				'data-coursegrade-model' => $model,
+				'data-coursegrade-foreignkey' => $gradeForeignKey,
 				'data-coursegrade-studentid' => $student['User']['id']
 				));
 		}
@@ -120,8 +120,8 @@ if ( !empty($course) ) {
 								CourseGrade:{
 									id: $(this).attr('data-coursegrade-id'),
 									course_grade_detail_id: $(this).attr('data-coursegradedetail-id'),
-									//model: $(this).attr('data-coursegrade-model'),
-									//foreign_key: $(this).attr('data-coursegrade-foreignkey'),
+									model: $(this).attr('data-coursegrade-model'),
+									foreign_key: $(this).attr('data-coursegrade-foreignkey'),
 									course_id: '<?php echo $course['Course']['id'] ?>',
 									student_id: $(this).attr('data-coursegrade-studentid'),
 									grade: $(this).val()
