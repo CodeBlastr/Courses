@@ -10,7 +10,7 @@ echo $this->Form->end();
 if ( !empty($course) ) {
 
 	// display some stuff above the table
-	echo $this->Html->tag('h1', $course['Course']['name']);
+	echo $this->Html->link('<h1>'.$course['Course']['name'].'</h1>', array('controller' => 'courses', 'action' => 'view', $course['Course']['id']), array('escape' => false));
 	echo $this->Html->tag('p', '<b>Session: </b>'. $this->Time->niceShort($course['Course']['start']) . ' to ' . $this->Time->niceShort($course['Course']['end']));
 
 	// initiate the table headings array
