@@ -47,7 +47,11 @@ class _CoursesController extends CoursesAppController {
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
 		if(CakePlugin::loaded('Categories')) {
-			$this->set('categories', $this->Course->Category->find('list'));
+			$this->set('categories', $this->Course->Category->find('list', array(
+				'conditions' => array(
+					'model' => 'Course'
+				)
+			)));
 		}
 		
 	}
@@ -142,7 +146,11 @@ class _CoursesController extends CoursesAppController {
 		)));
 		
 		if(CakePlugin::loaded('Categories')) {
-			$this->set('categories', $this->Course->Category->find('list'));
+			$this->set('categories', $this->Course->Category->find('list', array(
+				'conditions' => array(
+					'model' => 'Course'
+				)
+			)));
 		}
 		
 	}
@@ -241,7 +249,11 @@ class _CoursesController extends CoursesAppController {
 		)));
 		
 		if (in_array('Categories', CakePlugin::loaded())) {
-			$this->set('categories', $this->Course->Category->find('list'));
+			$this->set('categories', $this->Course->Category->find('list', array(
+				'conditions' => array(
+					'model' => 'Course'
+				)
+			)));
 		}
 		$this->render('add');
 	}
@@ -272,7 +284,11 @@ class _CoursesController extends CoursesAppController {
 		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
 		$this->set(compact('parentCourses'));
 		if (in_array('Categories', CakePlugin::loaded())) {
-			$this->set('categories', $this->Course->Category->find('list'));
+			$this->set('categories', $this->Course->Category->find('list', array(
+				'conditions' => array(
+					'model' => 'Course'
+				)
+			)));
 		}
 	}
 
