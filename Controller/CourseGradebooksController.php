@@ -9,7 +9,7 @@ class CourseGradebooksController extends CoursesAppController {
 
 	
 	public $name = 'CourseGradebooks';
-	public $uses = 'Courses.CourseUser';
+	public $uses = array('Courses.CourseUser', 'Courses.CourseGrade');
 
 	public function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
@@ -31,10 +31,13 @@ class CourseGradebooksController extends CoursesAppController {
 					'Course.id' => $courseId
 					),
 				'contain' => array(
-					'Answer',
+					//'Answer',
 					'CourseGrade',
+					'CourseGradeDetail' => array(
+						'fields' => array('id', 'foreign_key')
+					),
 					'Task' => array(
-						'conditions' => array('Task.parent_id' => ''),
+						'conditions' => array('Task.parent_id' => null),
 						'ChildTask'
 					)
 				)
@@ -42,7 +45,10 @@ class CourseGradebooksController extends CoursesAppController {
 
 			// gimmie a nice grade array
 			foreach ( $course['CourseGrade'] as $grade ) {
-				$grades[ $grade['student_id'] ][ $grade['foreign_key'] ] = $grade['grade'];
+				$grades[ $grade['student_id'] ][ $grade['course_grade_detail_id'] ] = array(
+					'id' => $grade['id'],
+					'grade' => $grade['grade']
+					);
 			}
 		}
 
@@ -64,12 +70,40 @@ class CourseGradebooksController extends CoursesAppController {
 			$cleanCourses[$cas['Course']['id']] = $cas['Course']['name'];
 		}
 
+		// need all of My CourseGradeDetails so we can change grades
+		$courseGradeDetails = Set::combine($course['CourseGradeDetail'], '{n}.foreign_key', '{n}.id');
+
 		$this->set('courseSelectOptions', array_unique( Set::merge($cleanCourses, $myCourses) ));
 
 		// pass the varz !
-		$this->set('course', $course);
-		$this->set('grades', $grades);
+		$this->set(compact('course', 'grades', 'courseGradeDetails'));
 		$this->set('courseUsers', $this->CourseUser->getCourseUsers($courseId));
 	}
-	
+
+
+	public function modifyGrade() {
+		if ( $this->request->isAjax() ) {
+			$this->autoRender = $this->layout = false;
+
+			$updated = $this->CourseGrade->save(array(
+				'id' => $this->request->data['CourseGrade']['id'],
+				'course_grade_detail_id' => $this->request->data['CourseGrade']['course_grade_detail_id'],
+				//'model' => $this->request->data['CourseGrade']['model'],
+				//'foreign_key' => $this->request->data['CourseGrade']['foreign_key'],
+				'course_id' => $this->request->data['CourseGrade']['course_id'],
+				'student_id' => $this->request->data['CourseGrade']['student_id'],
+				'grade' => $this->request->data['CourseGrade']['grade'],
+			));
+
+			if ( $updated ) {
+				return $this->CourseGrade->id;
+			} else {
+				return false;
+			}
+		} else {
+			$this->Session->setFlash('Invalid request');
+			$this->redirect($this->referer());
+		}
+	}
+
 }
