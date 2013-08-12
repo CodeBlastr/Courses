@@ -8,9 +8,11 @@
 		echo $this->Form->input('Task.due_date');
 
 		//echo $this->Form->input('Task.parent_id', array('empty' => true, 'label' => 'Which task list should this be on?'));
-
-		echo $this->Form->input('Task.foreign_key', array('options' => $parentCourses, 'empty' => '- Select Course -', 'label' => 'Course', 'class' => 'required'));
-
+		echo '<div class="row-fluid">';
+		echo $this->Form->input('Task.foreign_key', array('div' => array('class' => 'span4'), 'options' => $parentCourses, 'empty' => '- Select Course -', 'label' => 'Course', 'class' => 'required'));
+		echo $this->Form->input('Category', array('div' => array('class' => 'span5'), 'type' => 'select', 'label' => 'Assignment Category', 'empty' => '-- Choose Category --'));
+		echo '</div>';
+		
 		echo $this->Form->input('Task.description', array('type' => 'richtext'));
 
 //		echo $this->Form->input('Task.order');
@@ -26,16 +28,31 @@
 </div>
 
 <?php
-if ( !empty($this->request->data['ChildTask']) ) {
-	foreach ( $this->request->data['ChildTask'] as $childTask ) {
+debug($courseUsers);
+debug($this->request->data);
+if ( !empty($courseUsers) ) {
+	foreach ( $courseUsers as $courseUser ) {
 		//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
 		$childTaskCells[] = array(
-			$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
-			$childTask['completed_date'],
+			$courseUser['User']['last_name'] . ', ' . $courseUser['User']['first_name'],
+			//$childTask['completed_date'],
+			$courseUser['User']['CourseGrade'][0]['grade']
 		);
 	}
-	$this->assign('sidebar_afterMenu', '<h4>Completions</h4>'.$this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date Completed')) . $this->Html->tableCells($childTaskCells)) );
+	$this->assign('sidebar_afterMenu', '<h4>Completions</h4>'.$this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date', 'Grade')) . $this->Html->tableCells($childTaskCells)) );
 }
+//if ( !empty($this->request->data['ChildTask']) ) {
+//	foreach ( $this->request->data['ChildTask'] as $childTask ) {
+//		//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
+//		$childTaskCells[] = array(
+//			$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
+//			$childTask['completed_date'],
+//			'0'
+//		);
+//	}
+//	$this->assign('sidebar_afterMenu', '<h4>Completions</h4>'.$this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date', 'Grade')) . $this->Html->tableCells($childTaskCells)) );
+//}
+
 
 //debug($task);
 

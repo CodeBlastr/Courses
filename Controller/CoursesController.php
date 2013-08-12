@@ -400,7 +400,16 @@ class _CoursesController extends CoursesAppController {
 
 			$courseUsers = $this->Course->CourseUser->find('all', array(
 				'conditions' => array('CourseUser.course_id' => $this->request->data['Task']['foreign_key']),
-				'contain' => array('User'),
+				'contain' => array(
+					'User' => array(
+						//'contain' => array(
+							'CourseGrade' => array(
+								'conditions' => array('CourseGrade.foreign_key' => $id)
+							),
+						//),
+						'fields' => array('id', 'first_name', 'last_name')
+					),
+				),
 				'order' => array('User.last_name ASC')
 			));
 			$this->set('courseUsers', Set::combine($courseUsers, '{n}.User.id', '{n}'));
@@ -412,6 +421,14 @@ class _CoursesController extends CoursesAppController {
 					'type' => 'course'
 				)
 			)));
+
+			if (in_array('Categories', CakePlugin::loaded())) {
+				$this->set('categories', $this->Course->Category->find('list', array(
+					'conditions' => array(
+						'model' => 'Task'
+					)
+				)));
+			}
 
 			$this->view = 'teacher_assignment';
 		}
