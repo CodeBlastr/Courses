@@ -33,7 +33,7 @@ class CourseGrade extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
-		'Student' => array(
+		'User' => array(
 			'className' => 'Users.User',
 			'foreignKey' => 'student_id',
 			'conditions' => '',
