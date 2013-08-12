@@ -97,7 +97,6 @@ class _CoursesController extends CoursesAppController {
 		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
-				'Course.parent_id' => null,
 				#'Course.is_published' => 1
 				'Course.type' => 'course'
 			),
