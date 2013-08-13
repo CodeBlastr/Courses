@@ -102,25 +102,6 @@ class CourseGrade extends CoursesAppModel {
 	}
 	
 
-/**
- * Callback from Answer->process()
- *
- * saves an empty grade for the teacher to grade later
- */
-	public function afterAnswerProcess ( $form ) {
-			$grade['Grade'] = array(
-				'form_id' => $form['Answer']['id'],
-				'student_id' => CakeSession::read('Auth.User.id'),
-				'course_id' => $form['Answer']['foreign_key']
-			);
-
-			if ( $this->save($grade) ) {
-				return true;
-			} else {
-				throw new Exception('Grade did not initialize.');
-			}
-	}
-
 	/**
 	 * create a grade function, this creates a grade from the grade details
 	 * @param $details can be $id or CourseGradeDetail array
@@ -142,5 +123,7 @@ class CourseGrade extends CoursesAppModel {
 		$grade['total'] = $details['CourseGradeDetail']['total'];
 		
 	}
+	
+	
 	
 }

@@ -105,30 +105,7 @@ class CourseGradesController extends CoursesAppController {
  * 
  * @param int $id
  */
-	public function setup($id = null) {
-		if ( !$this->CourseGrade->Course->exists() ) {
-			//throw new NotFoundException(__('Invalid Course'));
-		}
-		if ( $this->request->is('post') || $this->request->is('put') ) {
-			if ($this->CourseGrade->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The Course\'s Gradebook has been saved'));
-				$this->redirect(array('controller' => 'courses', 'action' => 'index'));
-			} else {
-				$this->Session->setFlash(__('The Course\'s GradeBook could not be saved. Please, try again.'));
-			}
-		} else {
-			$this->request->data = $this->CourseGrade->Course->read(null, $id);
-		}
-		if ( empty($id) ) {
-			$courses = $this->CourseGrade->Course->find('list', array(
-				'conditions' => array(
-					'parent_id' => null,
-					'creator_id' => $this->Auth->user('id')
-				)
-			));
-			$this->set(compact('courses'));
-		}
-	}
+	
 	
 	public function grade($formId, $userId) {
 		if ( $this->request->is('post') || $this->request->is('put') ) {

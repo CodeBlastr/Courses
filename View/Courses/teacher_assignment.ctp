@@ -1,63 +1,121 @@
 <div class="tasks form">
 <?php echo $this->Form->create('Task', array('type' => 'file'));?>
 	<fieldset>
- 		<legend><?php echo __('Moderating Assignment');?></legend>
+ 		<legend><?php echo __('Create Task');?></legend>
 	<?php
+		//echo $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Assignment Category', 'empty' => '-- Choose Category --'));
 		echo $this->Form->input('Task.name');
-		echo $this->Form->input('Task.start_date');
-		echo $this->Form->input('Task.due_date');
-
+	?>
+	<div class="row-fluid">
+	<div class="span6">
+		<?php echo $this->Form->input('Task.start_date', array('type' => 'text', 'class' => 'datepicker')); ?>
+	</div>
+	<div class="span6">
+		<?php echo $this->Form->input('Task.due_date', array('type' => 'text', 'class' => 'datepicker')); ?>
+	</div>
+	</div>
+	
+<?php
 		//echo $this->Form->input('Task.parent_id', array('empty' => true, 'label' => 'Which task list should this be on?'));
-		echo '<div class="row-fluid">';
-		echo $this->Form->input('Task.foreign_key', array('div' => array('class' => 'span4'), 'options' => $parentCourses, 'empty' => '- Select Course -', 'label' => 'Course', 'class' => 'required'));
-		echo $this->Form->input('Category', array('div' => array('class' => 'span5'), 'type' => 'select', 'label' => 'Assignment Category', 'empty' => '-- Choose Category --'));
-		echo '</div>';
-		
+
+		echo $this->Form->input('Task.foreign_key', array('options' => $parentCourses, 'empty' => '- Select Course -', 'label' => 'Course Assingment Belongs to', 'class' => 'required'));
+
 		echo $this->Form->input('Task.description', array('type' => 'richtext'));
 
 //		echo $this->Form->input('Task.order');
 		echo $this->Form->input('Task.assignee_id', array('label' => 'Privacy', 'options' => array(0 => 'All Course Members', $this->userId => 'Just Me')));
-//		echo $this->Form->input('GalleryImage.filename', array('type' => 'file', 'label' => 'Upload your best image for this item.', 'after' => ' <p> You can add additional images after you save.</p>'));
-//	    echo $this->Form->input('GalleryImage.dir', array('type' => 'hidden'));
-//	    echo $this->Form->input('GalleryImage.mimetype', array('type' => 'hidden'));
-//	    echo $this->Form->input('GalleryImage.filesize', array('type' => 'hidden'));
+
 		echo $this->Form->hidden('Task.model', array('value' => 'Course'));
 	?>
 	</fieldset>
+	
+	<fieldset>
+		<div class="accordion" id="attachablesContainer">
+		<?php foreach($attachables as $name => $attachment): ?>
+		  <div class="accordion-group">
+		    <div class="accordion-heading">
+		      <a class="accordion-toggle" data-toggle="collapse" data-parent="#attachablesContainer" href="#collapse<?php echo $name; ?>">
+		        <h5>Attach a Test or Quiz</h5>
+		      </a>
+		    </div>
+		    <div id="collapse<?php echo $name; ?>" class="accordion-body collapse in">
+		      <div class="accordion-inner">
+		      	<div class="row-fluid">
+		        <?php 
+		        	$i = 0;
+					$j = 0;
+		        	foreach($attachment as $item): 
+		        	?>
+		        	
+		   			<?php 
+		   				if ($j == 0){
+		   					echo '<div class="span4">';
+						} ?>
+						
+					<label class="radio">
+					<input type="radio" name="data[TaskAttachment][0][foreign_key]" id="<?php echo $name.$i; ?>" value="<?php echo $item['id']; ?>">
+						<?php echo $item['title']; ?>
+					</label>
+    				
+    				<?php 
+    					echo $this->Form->hidden('TaskAttachment.0.model', array('value' => $name)); 
+    					$i++; 
+						$j++;
+						if($j > 3 && $i < count($attachment)) { 
+							$j = 0;
+							echo '</div>';
+						}
+    					?>
+		        	
+		        	
+		        <?php endforeach; ?>
+		        <label class="radio">
+					<input type="radio" name="data[TaskAttachment][foreign_key]" id="<?php echo $name.$i; ?>" value="">
+						None
+					</label>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		  <?php endforeach; ?>
+		  <div class="accordion-group">
+		    <div class="accordion-heading">
+		      <a class="accordion-toggle" data-toggle="collapse" data-parent="#attachablesContainer" href="#collapseGrading">
+		        <h5>Grading Options for this assignment</h5>
+		      </a>
+		    </div>
+		    <div id="collapseGrading" class="accordion-body collapse in">
+		      <div class="accordion-inner">
+		      	<div class="row-fluid">
+		        <div style="margin-bottom: 14px;">
+						<label>Will this be for a grade? <?php echo $this->Form->checkbox('Task.is_gradeable', array('style' => 'margin:3px 5px;')); ?></label>
+					</div>
+					
+					<div class="gradingOptions">
+						<?php echo $this->Element('Courses.gradingOptions'); ?>
+					</div>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
+	</fieldset>
+		
+		
+	
 <?php echo $this->Form->end('Submit');?>
 </div>
 
-<?php
-debug($courseUsers);
-debug($this->request->data);
-if ( !empty($courseUsers) ) {
-	foreach ( $courseUsers as $courseUser ) {
-		//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
-		$childTaskCells[] = array(
-			$courseUser['User']['last_name'] . ', ' . $courseUser['User']['first_name'],
-			//$childTask['completed_date'],
-			$courseUser['User']['CourseGrade'][0]['grade']
-		);
-	}
-	$this->assign('sidebar_afterMenu', '<h4>Completions</h4>'.$this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date', 'Grade')) . $this->Html->tableCells($childTaskCells)) );
-}
-//if ( !empty($this->request->data['ChildTask']) ) {
-//	foreach ( $this->request->data['ChildTask'] as $childTask ) {
-//		//echo '<li>'. $this->Html->link($childTask['name'], array('action' => 'assignment', $task['id'])) . '</li>';
-//		$childTaskCells[] = array(
-//			$courseUsers[$childTask['assignee_id']]['User']['last_name'] . ', ' . $courseUsers[$childTask['assignee_id']]['User']['first_name'],
-//			$childTask['completed_date'],
-//			'0'
-//		);
-//	}
-//	$this->assign('sidebar_afterMenu', '<h4>Completions</h4>'.$this->Html->tag('table', $this->Html->tableHeaders(array('Student', 'Date', 'Grade')) . $this->Html->tableCells($childTaskCells)) );
-//}
 
 
-//debug($task);
-
-//echo $this->Html->tag('h1', $task['Task']['name']);
-//echo $this->Html->tag('p', '<b>Due Date: </b>' . $this->Time->nice($task['Task']['due_date']));
-//echo $this->Html->tag('div', $task['Task']['description']);
-
-//echo $this->Html->link('Mark Complete', array($task['Task']['id'], 'completed'), array('class' => 'btn btn-primary'));
+<?php 
+// set the contextual menu items
+$this->set('context_menu', array('menus' => array(
+	array(
+		'heading' => 'Create a Task',
+		'items' => array(
+			  $this->Html->link('<i class="icon-backward"></i>'.__('Back to Course Dashboard', true), array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'dashboard'), array('escape' => false)),
+			  ),
+		),
+	)));

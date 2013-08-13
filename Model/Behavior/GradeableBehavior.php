@@ -48,7 +48,7 @@ class GradeableBehavior extends ModelBehavior {
 						'conditions' => array('CourseGradeDetail.model' => $Model->alias),
 	                	)
 	             	)
-	     		)
+	     		),false
 			);
 	}
 	
@@ -56,20 +56,16 @@ class GradeableBehavior extends ModelBehavior {
 	 * Before Save
 	 * 
 	 * Grabs data from model. This allows any associated models to be save on save command etc saveAll()
-	 * We wait till aftersave before actual grade gets saved. if save_self == true then it will also save
-	 * the $Model with its default save method
+	 * We wait till aftersave before actual grade gets saved. 
 	 */
 	
 	public function beforeSave(Model $Model) {
 		parent::beforeSave($Model);
+		debug($this->data);
+		break;
 		if(isset($Model->data[$Model->alias]) && isset($Model->data['CourseGradeDetail'])) {
-			$this->detailId = $Model->data['CourseGradeDetail']['foreign_key'];
-			$this->detailModel = isset($Model->data['CourseGradeDetail']['model']) ? $Model->data['CourseGradeDetail']['model'] : $Model->alias;
+			$this->data['CourseGradeDetail'] = $Model->data['CourseGradeDetail'];
 			unset($Model->data['CourseGradeDetail']);
-			$this->data[$Model->alias] = is_array($Model->data[$Model->alias]) ? $Model->data[$Model->alias] : array($Model->data[$Model->alias]);
-			if(!$this->settings[$Model->alias]['save_self']) {
-				unset($Model->data[$Model->alias]);
-			}
 		}
 		
 		return true;
@@ -77,42 +73,16 @@ class GradeableBehavior extends ModelBehavior {
 	}
 	
 	public function afterSave(Model $Model, $created) {
-
-		//If Model isn't saved or is not new, create the grades
-		if ( isset($Model->data) && !empty($Model->data) ) {
 		
-			//Get the grading details
-			$GradeDetail = new CourseGradeDetail;
-			
-			$gradedetails = $GradeDetail->find('first', array(
-				'foreign_key' => $this->detailId,
-				'model' => $this->detailModel,
-			));
+		$CourseGradeDetail = new CourseGradeDetail();
+		
+		if($created) {
+			$this->data['CourseGradeDetail']['model'] = $Model->alias;
+			$this->data['CourseGradeDetail']['foreign_key'] = $Model->data[$Model->alias]['id'];
+		}
 
-			if ( $created ) {
-				if ( $Model->data[$Model->alias]['is_gradeable'] ) {
-					// This newly created Gradeable thing needs a row in CourseGradeDetails
-					$newGradeDetail = $GradeDetail->create(array(
-						'course_id' => $Model->data[$Model->alias]['foreign_key'],
-						'model' => $Model->alias,
-						'foreign_key' => $Model->id
-					));
-					$GradeDetail->save($newGradeDetail);
-				}
-			}
-
-			if(empty($gradedetails)) {
-				
-			}else {
-				$CourseGrade = new CourseGrade;
-				$data['CouseGrade'] = $CourseGrade->createGradeFromDetails($gradedetails);
-				
-				$answers = $this->_createGradeAnswers($gradedetails);
-				if(!empty($answers)) {
-					$data['CourseGradeAnswer'] = $answers;
-				}
-			}
-			
+		if (empty($this->data['CourseGradeDetail']['name'])) {
+			$this->data['CourseGradeDetail']['name'] = $Model->data[$Model->alias][$Model->displayField];
 		}
 		
 		return true;
