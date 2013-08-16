@@ -9,15 +9,14 @@
 		echo $this->Form->input('CourseGradeDetail.id');
 	}
 	
-	echo $this->Form->select('CourseGradeDetail.method', $methods, array('empty' => 'Choose a grading method...'));
-	//echo $this->Form->input('CourseGradeDetail.name');
-	
-	
 	//You must have a custom method action in Grade Model
 	$methods = array(
 		'weighted' => 'Weighted Grade',
 		'total_points' => 'Total Points',
 	);
+	
+	echo $this->Form->select('CourseGradeDetail.method', $methods, array('empty' => 'Choose a grading method...'));
+	//echo $this->Form->input('CourseGradeDetail.name');
 	
 ?>
 

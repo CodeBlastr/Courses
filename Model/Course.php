@@ -26,7 +26,7 @@ class Course extends CoursesAppModel {
 		'Tree',
 		'Users.UserGroupable' => array(
 			'hasMany' => 'CourseUser'
-		)
+		),
 	);
 
 

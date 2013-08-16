@@ -390,15 +390,38 @@ class _CoursesController extends CoursesAppController {
 		
 	}
 
-	public function editAssignment($id) {
-		if ( $id ) {
-			$this->request->data = $this->Course->Task->find('first', array(
-				'conditions' => array('Task.id' => $id),
-				'contain' => array('ChildTask')
-			));
+	public function editAssignment($courseid, $id = null) {
+			
+			if(!$courseid) {
+				throw new MethodNotAllowedException('No Course Id');
+			}
+			
+			if(!empty($this->request->data)) {
+				if(isset($this->request->data['TaskAttachment']['model']) && $this->request->data['TaskAttachment']['model'] == 'Answer' && !empty($this->request->data['CourseGradeDetail']['method'])) {
+					 $this->loadModel('Answers.Answer');
+					  $Answer = $this->Answer->read('data', $this->request->data['TaskAttachment']['foreign_key']);
+					  if(!empty($Answer['Answer']['data'])) {
+					  	 $this->request->data['CourseGradeDetail']['right_answers'] = $Answer['Answer']['data'];
+					  }
+				}
+				if($this->Course->Task->save($this->request->data)) {
+					$this->Session->setFlash('Assigment Saved');
+					$this->redirect(array('action' => 'assignment', $id));
+				}else{
+					$this->Session->setFlash('Assignment not saved');
+					$this->redirect($this->referer());
+				}
+			}
+			
+			if ( !empty($id) ) {
+				$this->request->data = $this->Course->Task->find('first', array(
+					'conditions' => array('Task.id' => $id),
+					'contain' => array('ChildTask')
+				));
+			}
 
 			$courseUsers = $this->Course->CourseUser->find('all', array(
-				'conditions' => array('CourseUser.course_id' => $this->request->data['Task']['foreign_key']),
+				'conditions' => array('CourseUser.course_id' => $courseid),
 				'contain' => array(
 					'User' => array(
 						//'contain' => array(
@@ -421,16 +444,17 @@ class _CoursesController extends CoursesAppController {
 				)
 			)));
 
-			if (in_array('Categories', CakePlugin::loaded())) {
+			if (CakePlugin::loaded('Categories')) {
 				$this->set('categories', $this->Course->Category->find('list', array(
 					'conditions' => array(
 						'model' => 'Task'
 					)
 				)));
 			}
+			
+			$this->set('attachables', $this->Course->Task->getAttachablesByUser());
 
 			$this->view = 'teacher_assignment';
-		}
 	}
 	
 	/**

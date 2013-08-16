@@ -61,8 +61,6 @@ class GradeableBehavior extends ModelBehavior {
 	
 	public function beforeSave(Model $Model) {
 		parent::beforeSave($Model);
-		debug($this->data);
-		break;
 		if(isset($Model->data[$Model->alias]) && isset($Model->data['CourseGradeDetail'])) {
 			$this->data['CourseGradeDetail'] = $Model->data['CourseGradeDetail'];
 			unset($Model->data['CourseGradeDetail']);
@@ -85,7 +83,7 @@ class GradeableBehavior extends ModelBehavior {
 			$this->data['CourseGradeDetail']['name'] = $Model->data[$Model->alias][$Model->displayField];
 		}
 		
-		return true;
+		return $CourseGradeDetail->save($this->data);
 		
 	}
 	

@@ -1,10 +1,13 @@
 <div class="tasks form">
 <?php echo $this->Form->create('Task', array('type' => 'file'));?>
 	<fieldset>
- 		<legend><?php echo __('Create Task');?></legend>
+ 		<legend><?php echo __('Edit Assignment');?></legend>
 	<?php
 		//echo $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Assignment Category', 'empty' => '-- Choose Category --'));
 		echo $this->Form->input('Task.name');
+		if(isset($this->request->data['Task']['id'])) {
+			echo $this->Form->input('Task.id');
+		}
 	?>
 	<div class="row-fluid">
 	<div class="span6">
@@ -38,9 +41,13 @@
 		        <h5>Attach a Test or Quiz</h5>
 		      </a>
 		    </div>
-		    <div id="collapse<?php echo $name; ?>" class="accordion-body collapse in">
+		    <div id="collapse<?php echo $name; ?>" class="accordion-body collapse">
 		      <div class="accordion-inner">
 		      	<div class="row-fluid">
+		      		
+		      		<div class="control-group">
+					  <div class="controls">
+					
 		        <?php 
 		        	$i = 0;
 					$j = 0;
@@ -52,13 +59,13 @@
 		   					echo '<div class="span4">';
 						} ?>
 						
-					<label class="radio">
-					<input type="radio" name="data[TaskAttachment][0][foreign_key]" id="<?php echo $name.$i; ?>" value="<?php echo $item['id']; ?>">
+					<label class="radio" label for='<?php echo $name.'-'.$i; ?>'>
+					<input type="radio" name="data[TaskAttachment][foreign_key]" id="<?php echo  $name.'-'.$i; ?>" value="<?php echo $item['id']; ?>">
 						<?php echo $item['title']; ?>
 					</label>
     				
     				<?php 
-    					echo $this->Form->hidden('TaskAttachment.0.model', array('value' => $name)); 
+    					echo $this->Form->hidden('TaskAttachment.model', array('value' => $name));
     					$i++; 
 						$j++;
 						if($j > 3 && $i < count($attachment)) { 
@@ -69,10 +76,12 @@
 		        	
 		        	
 		        <?php endforeach; ?>
-		        <label class="radio">
-					<input type="radio" name="data[TaskAttachment][foreign_key]" id="<?php echo $name.$i; ?>" value="">
-						None
+			        <label class="radio" for='<?php echo $name.'-'.$i; ?>'>
+						<input type="radio" name="data[TaskAttachment][foreign_key]" id="<?php echo $name.'-'.$i; ?>" value="">
+							None
 					</label>
+				  </div>
+				 </div>
 		        </div>
 		      </div>
 		    </div>
@@ -84,7 +93,7 @@
 		        <h5>Grading Options for this assignment</h5>
 		      </a>
 		    </div>
-		    <div id="collapseGrading" class="accordion-body collapse in">
+		    <div id="collapseGrading" class="accordion-body collapse">
 		      <div class="accordion-inner">
 		      	<div class="row-fluid">
 		        <div style="margin-bottom: 14px;">
@@ -105,9 +114,10 @@
 		
 	
 <?php echo $this->Form->end('Submit');?>
+
 </div>
 
-
+<div class="clearfix"></div>
 
 <?php 
 // set the contextual menu items
