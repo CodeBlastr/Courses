@@ -1,12 +1,12 @@
 <?php
 	
-	if (!isset($course) && isset($this->request->data['CourseGradeDetail'])) {
-		$course = $this->request->data['CourseGradeDetail'];
+	if (isset($this->request->data['CourseGradeDetail'][0])) {
+		$this->request->data['CourseGradeDetail'] = $this->request->data['CourseGradeDetail'][0];
 	}
 	
 	
-	if(isset($course['id'])) {
-		echo $this->Form->input('CourseGradeDetail.id');
+	if(isset($this->request->data['CourseGradeDetail']['id'])) {
+		echo $this->Form->hidden('CourseGradeDetail.id');
 	}
 	
 	//You must have a custom method action in Grade Model
@@ -15,8 +15,11 @@
 		'total_points' => 'Total Points',
 	);
 	
-	echo $this->Form->select('CourseGradeDetail.method', $methods, array('empty' => 'Choose a grading method...'));
-	//echo $this->Form->input('CourseGradeDetail.name');
+	echo $this->Form->select('CourseGradeDetail.grading_method', $methods, array('empty' => 'No Grade Given'));
+	
+	if(isset($course_id)) {
+		echo $this->Form->hidden('CourseGradeDetail.course_id', array('value' => $course_id));
+	}
 	
 ?>
 

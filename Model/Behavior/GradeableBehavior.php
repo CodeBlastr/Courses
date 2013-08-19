@@ -37,20 +37,13 @@ class GradeableBehavior extends ModelBehavior {
 		
 	    $this->settings[$Model->alias] = array_merge($this->defaults, $settings);
 		
-		//This attaches the Grade Details Model to the $model so whens its created it saves the grade
-		//Details
-		
-		$Model->bindModel(
-	        array('hasMany' => array(
-	                'CourseGradeDetails' => array(
-						'className' => 'Courses.CourseGradeDetail',
-						'foreignKey' => 'foreign_key',
-						'conditions' => array('CourseGradeDetail.model' => $Model->alias),
-	                	)
-	             	)
-	     		),false
-			);
 	}
+	
+	public function beforeValidate(Model $Model) {
+		
+		return true;
+	}
+
 	
 	/**
 	 * Before Save
@@ -60,7 +53,7 @@ class GradeableBehavior extends ModelBehavior {
 	 */
 	
 	public function beforeSave(Model $Model) {
-		parent::beforeSave($Model);
+		
 		if(isset($Model->data[$Model->alias]) && isset($Model->data['CourseGradeDetail'])) {
 			$this->data['CourseGradeDetail'] = $Model->data['CourseGradeDetail'];
 			unset($Model->data['CourseGradeDetail']);
@@ -74,17 +67,46 @@ class GradeableBehavior extends ModelBehavior {
 		
 		$CourseGradeDetail = new CourseGradeDetail();
 		
-		if($created) {
-			$this->data['CourseGradeDetail']['model'] = $Model->alias;
-			$this->data['CourseGradeDetail']['foreign_key'] = $Model->data[$Model->alias]['id'];
+		//Removes the Grade Detail if Grading Options are Removed or not there
+		if(empty($this->data['CourseGradeDetail']['grading_method'])) {
+			
+			//Deletes the Grade Detail
+			if(isset($this->data['CourseGradeDetail']['id'])) {
+				return $CourseGradeDetail->delete($this->data['CourseGradeDetail']['id']);
+			}
+			
+			return true; //returns true if the grading method is not set
+			
 		}
+		
+		$this->data['CourseGradeDetail']['model'] = $Model->alias;
+		$this->data['CourseGradeDetail']['foreign_key'] = $Model->data[$Model->alias]['id'];
 
 		if (empty($this->data['CourseGradeDetail']['name'])) {
 			$this->data['CourseGradeDetail']['name'] = $Model->data[$Model->alias][$Model->displayField];
 		}
 		
-		return $CourseGradeDetail->save($this->data);
+		$result = $CourseGradeDetail->save($this->data);
 		
+		return $result !== false ? true : false;
+		
+	}
+	
+	public function beforeFind(Model $Model, $query) {
+		//This attaches the Grade Details Model to the $model so whens its created it saves the grade
+		//Details
+		$Model->bindModel(
+	        array('hasMany' => array(
+	                'CourseGradeDetail' => array(
+						'className' => 'Courses.CourseGradeDetail',
+						'foreignKey' => 'foreign_key',
+						'conditions' => array('model' => $Model->alias),
+	                	)
+	             	)
+	     		),false
+			);
+		$Model->contain('CourseGradeDetail');
+		return true;
 	}
 	
 	private function _createGradeAnswers($gradedetails) {

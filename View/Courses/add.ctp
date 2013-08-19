@@ -37,6 +37,11 @@
 		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('type' => 'radio'))) : null;
 	?>
 	</fieldset>
+	<fieldset>
+		<div class="gradingOptions">
+			<?php //echo $this->Element('Courses.gradingOptions', array('course_id' => $this->request->course['Course']['id'])); ?>
+		</div>
+	</fieldset>
 <?php
 echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
 echo $this->Form->end();

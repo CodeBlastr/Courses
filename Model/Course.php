@@ -27,6 +27,7 @@ class Course extends CoursesAppModel {
 		'Users.UserGroupable' => array(
 			'hasMany' => 'CourseUser'
 		),
+		'Courses.Gradeable',
 	);
 
 
@@ -62,10 +63,6 @@ class Course extends CoursesAppModel {
 		),
 		'CourseGrade' => array(
 			'className' => 'Courses.CourseGrade',
-			'foreignKey' => 'course_id'
-		),
-		'CourseGradeDetail' => array(
-			'className' => 'Courses.CourseGradeDetail',
 			'foreignKey' => 'course_id'
 		),
 		'Message' => array(
@@ -126,7 +123,8 @@ class Course extends CoursesAppModel {
 		
 		parent::__construct($id, $table, $ds);
 	}
-	
+
+
 /**
  * before save method
  * 

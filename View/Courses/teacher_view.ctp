@@ -46,9 +46,9 @@
 						foreach ($course['CourseLesson'] as $childCourse): ?>
 						<tr>
 							<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
-							<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
+							<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'course_lessons', 'action' => 'view', $childCourse['id']));?></td>
 							<td><?php echo strip_tags($childCourse['description']);?></td>
-							<td><?php echo $this->Html->link(__('Edit'), array('controller' => 'lessons', 'action' => 'edit', $childCourse['id'])); ?></td>
+							<td><?php echo $this->Html->link(__('Edit'), array('controller' => 'course_lessons', 'action' => 'edit', $childCourse['id'])); ?></td>
 						</tr>
 					<?php endforeach; ?>
 					</table>
@@ -167,7 +167,7 @@ $this->set('context_menu', array('menus' => array(
 				//$this->Html->link('<i class="icon-list"></i>' . __('Create Quiz'), array('plugin' => 'answers', 'controller' => 'answers', 'action' => 'add', 'Course', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-folder-open"></i>' . __('Add Course Materials'), array('plugin' => 'media', 'controller' => 'media', 'action' => 'add_resource'), array('escape' => false)),
 				//$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('action' => 'assign', 'thing', $course['Course']['id']), array('escape' => false)),
-				$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'editAssignment', $course['Course']['id']), array('escape' => false)),
+				$this->Html->link('<i class="icon-calendar"></i>' . __('Create Assignment'), array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'editAssignment', '?' => array('course_id' => $course['Course']['id'])), array('escape' => false)),
 				$this->Html->link('<i class="icon-pencil"></i>' . __('Send Message to Students'), array('action' => 'message', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-envelope"></i>' . __('Invite Students'), array('plugin' => 'invites', 'controller' => 'invites', 'action' => 'invitation', $course['Course']['id']), array('escape' => false)),
 				$this->Html->link('<i class="icon-edit"></i>' . __('Edit Course'), array('action' => 'edit', $course['Course']['id']), array('escape' => false)),

@@ -33,15 +33,11 @@ class CourseSeries extends CoursesAppModel {
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
 			'conditions' => array('type' => 'course'),
-			'fields' => '',
-			'order' => ''
 		),
 		'Lesson' => array(
 			'className' => 'Courses.Course',
 			'foreignKey' => 'parent_id',
 			'conditions' => array('type' => 'lesson'),
-			'fields' => '',
-			'order' => ''
 		)
 	);
 	

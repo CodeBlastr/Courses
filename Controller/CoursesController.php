@@ -268,10 +268,11 @@ class _CoursesController extends CoursesAppController {
 		if (!$this->Course->exists()) {
 			throw new NotFoundException(__('Invalid course'));
 		}
+		
 		if ($this->request->is('post') || $this->request->is('put')) {
 			if ($this->Course->save($this->request->data)) {
 				$this->Session->setFlash(__('The course has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->redirect(array('action' => 'view', $this->Course->id));
 			} else {
 				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
 			}
@@ -279,7 +280,9 @@ class _CoursesController extends CoursesAppController {
 			$this->Course->contain(array('Category'));
 			$this->request->data = $this->Course->read(null, $id);
 		}
+		
 		$parentCourses = $this->Course->CourseLesson->find('list');
+		$this->set('title_for_layout', 'Editing' . $this->request->data['Course']['name'] . '   | ' . __SYSTEM_SITE_NAME);
 		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
 		$this->set(compact('parentCourses'));
 		if (in_array('Categories', CakePlugin::loaded())) {
@@ -349,64 +352,29 @@ class _CoursesController extends CoursesAppController {
 		}
 	}
 	
-	public function gradebook($id = null) {
-		$this->Course->id = $id;
-		if (!$this->Course->exists()) {
-			throw new NotFoundException(__('Invalid course'));
-		}
-		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The gradebook has been saved'));
-				$this->redirect(array('action' => 'index'));
-			}
-		} else {
-			$this->request->data = $this->Course->read(null, $id);
-		}
-		$parentCourses = $this->Course->Lesson->find('list');
-		$this->set(compact('parentCourses'));
-	}
-	
-	/**
-	 * select what type of thing to assign
-	 * 
-	 * @param type $param
-	 */
-	public function assign($param = null, $foreignKey = null) {
-//		if ( !empty($param) ) {
-//			$function = '_assign_' . $param;
-//			return $this->{$function};
-//		}
-		if ( $this->request->is('post') ) {
-			$this->request->data['Task']['model'] = 'Course';
-			$this->request->data['Task']['foreign_key'] = $foreignKey;
-			if ( $this->Course->Task->save($this->request->data) ) {
-				$this->Session->setFlash(__('The assignment has been saved.'));
-				$this->redirect(array('action' => 'view', $foreignKey));
-			}
-		}
-	}
-	
-	protected function _assign_quiz() {
-		
-	}
 
-	public function editAssignment($courseid, $id = null) {
+	public function editAssignment($id = null) {
 			
-			if(!$courseid) {
-				throw new MethodNotAllowedException('No Course Id');
-			}
+			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
 			
 			if(!empty($this->request->data)) {
-				if(isset($this->request->data['TaskAttachment']['model']) && $this->request->data['TaskAttachment']['model'] == 'Answer' && !empty($this->request->data['CourseGradeDetail']['method'])) {
+				
+				if(isset($this->request->data['TaskAttachment'][0]['model']) && $this->request->data['TaskAttachment'][0]['model'] == 'Answer' && !empty($this->request->data['CourseGradeDetail']['grading_method'])) {
 					 $this->loadModel('Answers.Answer');
-					  $Answer = $this->Answer->read('data', $this->request->data['TaskAttachment']['foreign_key']);
+					  $Answer = $this->Answer->read('data', $this->request->data['TaskAttachment'][0]['foreign_key']);
 					  if(!empty($Answer['Answer']['data'])) {
 					  	 $this->request->data['CourseGradeDetail']['right_answers'] = $Answer['Answer']['data'];
 					  }
 				}
-				if($this->Course->Task->save($this->request->data)) {
+				
+				if(isset($this->request->data['TaskAttachment'][0]['id']) && empty($this->request->data['TaskAttachment'][0]['foreign_key'])) {
+					$this->Course->Task->TaskAttachment->delete($this->request->data['TaskAttachment'][0]['id']);
+					unset($this->request->data['TaskAttachment']);
+				}
+	
+				if($this->Course->Task->saveAll($this->request->data)) {
 					$this->Session->setFlash('Assigment Saved');
-					$this->redirect(array('action' => 'assignment', $id));
+					$this->redirect(array('action' => 'assignment', $this->Course->Task->id));
 				}else{
 					$this->Session->setFlash('Assignment not saved');
 					$this->redirect($this->referer());
@@ -416,8 +384,9 @@ class _CoursesController extends CoursesAppController {
 			if ( !empty($id) ) {
 				$this->request->data = $this->Course->Task->find('first', array(
 					'conditions' => array('Task.id' => $id),
-					'contain' => array('ChildTask')
+					'contain' => array('TaskAttachment')
 				));
+				$courseid = $this->request->data['Task']['model'] == 'Course' ? $this->request->data['Task']['foreign_key'] : $courseid;
 			}
 
 			$courseUsers = $this->Course->CourseUser->find('all', array(
@@ -452,6 +421,7 @@ class _CoursesController extends CoursesAppController {
 				)));
 			}
 			
+			$this->set('course_id', $courseid);
 			$this->set('attachables', $this->Course->Task->getAttachablesByUser());
 
 			$this->view = 'teacher_assignment';
