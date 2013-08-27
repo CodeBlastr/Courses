@@ -65,7 +65,7 @@
 					$completionCount = count($task['ChildTask']);
 					// build tr for this Assignment
 					$assignmentCells[] = array(
-						$this->Html->link($task['name'], array('action' => 'editAssignment', $task['id'])),
+						$this->Html->link($task['name'], array('action' => 'assignment', $task['id'])),
 						$this->Time->niceShort($task['due_date']),
 						$completionCount
 					);

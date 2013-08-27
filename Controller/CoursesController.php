@@ -435,31 +435,81 @@ class _CoursesController extends CoursesAppController {
 	public function assignment($id, $completed = null) {
 		if ( $id ) {
 			
-			$task = $this->Course->Task->find('first', array(
+			$this->request->data = $this->Course->Task->find('first', array(
 				'conditions' => array('Task.id' => $id),
-				//'contain' => 'Course'
+				'contain' => array(
+					'ChildTask' => 'Assignee', 
+					'TaskAttachment'
+				),
 			));
 			
-			if ( $completed === 'completed' ) {
-				// create a child task of this task, assigned to current user, marked complete
-				$completedAssignment = $this->Course->Task->create();
-				$completedAssignment['Task']['parent_id'] = $id;
-				$completedAssignment['Task']['model'] = $task['Task']['model'];
-				$completedAssignment['Task']['foreign_key'] = $task['Task']['foreign_key'];
-				$completedAssignment['Task']['is_completed'] = '1';
-				$completedAssignment['Task']['assignee_id'] = $this->Auth->user('id');
-				$completedAssignment['Task']['completed_date'] = date("Y-m-d");
-				// save & redirect
-				if ( $this->Course->Task->save($completedAssignment) ) {
-					$this->Session->setFlash(__('The assignment has been saved.'));
-					$this->redirect(array('action' => 'view', $task['Task']['foreign_key']));
-				}
+			//Set view depending on person viewing it.
+			if($this->request->data['Task']['creator_id'] == $this->userId) {
+				$this->view = 'teacher_assignment_view';
+				$this->request->data = array_merge($this->request->data, $this->Course->find('first', array(
+					'condtions' => array('id' => 'foreign_key'),
+					'contain' => array(
+						'CourseUser' => 'User',
+					),
+				)));
 			}
 			
-			$this->set(compact('task'));
-			$this->set('title_for_layout', $task['Task']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+			$this->set('title_for_layout', $this->request->data['Task']['name'] . ' | ' . __SYSTEM_SITE_NAME);
+			
 		} else {
 			$this->Session->setFlash(__('Assignment ID not specified.'));
+			$this->redirect($this->referer());
+		}
+	}
+	
+	public function completeAssignment() {
+		
+		$userid = isset($this->request->data['Task']['assignee_id']) ? $this->request->data['Task']['assignee_id'] : $this->userId;
+		
+		if($this->Course->Task->find('first', array('conditions' => array('assignee_id' => $userid, 'parent_id' => $this->request->data['Task']['parent_id'])))) {
+			$this->Session->setFlash('This assignment has already been completed by this user');
+			$this->response->statusCode(500);
+			return;
+		}
+		// create a child task of this task, assigned to current user, marked complete
+		$completedAssignment = $this->Course->Task->create();
+		$completedAssignment['Task']['parent_id'] = $this->request->data['Task']['parent_id'];
+		$completedAssignment['Task']['model'] = $this->request->data['Task']['model'];
+		$completedAssignment['Task']['foreign_key'] = $this->request->data['Task']['foreign_key'];
+		$completedAssignment['Task']['is_completed'] = '1';
+		$completedAssignment['Task']['assignee_id'] = $userid;
+		$completedAssignment['Task']['completed_date'] = date("Y-m-d");
+		// save & redirect
+		if ( $this->Course->Task->save($completedAssignment) ) {
+			$this->response->statusCode(200);
+		}else {
+			$this->response->statusCode(500);
+		}
+		
+		if($this->request->isAjax()) {
+			$this->layout = null;
+			$this->autoRender = false;
+		}else {
+			$this->Session->setFlash('Assignment Completed!');
+			$this->redirect($this->referer());
+		}
+	}
+
+	public function incompleteAssignment() {
+		$userid = isset($this->request->data['Task']['assignee_id']) ? $this->request->data['Task']['assignee_id'] : $this->userId;
+		$id = $this->Course->Task->field('id', array('assignee_id' => $userid, 'parent_id' => $this->request->data['Task']['id']));
+		
+		if ( $this->Course->Task->delete($id) ) {
+			$this->response->statusCode(200);
+		}else {
+			$this->response->statusCode(500);
+		}
+		
+		if($this->request->isAjax()) {
+			$this->layout = null;
+			$this->autoRender = false;
+		}else {
+			$this->Session->setFlash('Completed Status has been removed!');
 			$this->redirect($this->referer());
 		}
 	}
