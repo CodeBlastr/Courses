@@ -64,11 +64,10 @@ class GradeableBehavior extends ModelBehavior {
 	}
 	
 	public function afterSave(Model $Model, $created) {
-		
 		$CourseGradeDetail = new CourseGradeDetail();
 		
-		//Removes the Grade Detail if Grading Options are Removed or not there
-		if(empty($this->data['CourseGradeDetail']['grading_method'])) {
+		//Removes the Grade Detail if Grading Total Worth are Removed or not there
+		if(empty($this->data['CourseGradeDetail']['total_worth'])) {
 			
 			//Deletes the Grade Detail
 			if(isset($this->data['CourseGradeDetail']['id'])) {
@@ -96,16 +95,17 @@ class GradeableBehavior extends ModelBehavior {
 		//This attaches the Grade Details Model to the $model so whens its created it saves the grade
 		//Details
 		$Model->bindModel(
-	        array('hasMany' => array(
+	        array('hasOne' => array(
 	                'CourseGradeDetail' => array(
 						'className' => 'Courses.CourseGradeDetail',
 						'foreignKey' => 'foreign_key',
-						'conditions' => array('model' => $Model->alias),
+						//'conditions' => array('CourseGradeDetail.model' => $Model->alias),
 	                	)
 	             	)
 	     		),false
 			);
 		$Model->contain('CourseGradeDetail');
+		
 		return true;
 	}
 	

@@ -26,13 +26,24 @@ $this->set('context_menu', array('menus' => array(
 <script type="text/javascript">
 	
 	(function($) {
-		var answers = $.parseJSON('<?php echo $answers_json; ?>');
-		
+		<?php if(!empty($answers_json)): ?>
+			var answers = $.parseJSON('<?php echo $answers_json; ?>');
+		<?php else: ?>
+			var answers = '';
+		<?php endif; ?>
 		$.each(answers, function(input, value) {
-			console.log(input);
-			console.log(value);
-			$('#'+input).val(value);
-    		$('[for='+input+']').after('<p><span class="label label-info">Current Answer: '+value+'</span><p>');
+			el = $('#'+input);
+			$('input:radio[name="data[Answer]['+input+']"]').filter('[value="'+value.answer+'"]').prop('checked', true);
+			el.val(value.answer);
+    		$('[for='+input+']').after('<p><span class="label label-info">Current Answer: '+value.answer+'</span><p>');
+		});
+		
+		$(document).ready(function() {
+			$('.control-label').each(function(i, el) {
+				var inputName = $(el).attr('for');
+				$(el).after('<label style="float:right;">Points ('+inputName+'): <input type="text" required="" class="input-small" name="data[Points]['+inputName+']" id="points-'+inputName+'"></label>');
+				$('#points-'+inputName).val(answers[inputName].points);
+			})
 		});
 		
 	})(jQuery);

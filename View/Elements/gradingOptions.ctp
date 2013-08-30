@@ -9,13 +9,18 @@
 		echo $this->Form->hidden('CourseGradeDetail.id');
 	}
 	
-	//You must have a custom method action in Grade Model
-	$methods = array(
-		'weighted' => 'Weighted Grade',
-		'total_points' => 'Total Points',
-	);
+	if(isset($this->request->data['CourseGradeDetail']['total_worth'])) {
+		$this->request->data['CourseGradeDetail']['total_worth'] = $this->request->data['CourseGradeDetail']['total_worth']*100;
+	}
 	
-	echo $this->Form->select('CourseGradeDetail.grading_method', $methods, array('empty' => 'No Grade Given'));
+	//You must have a custom method action in Grade Model
+	// $methods = array(
+		// 'weighted' => 'Weighted Grade',
+		// 'total_points' => 'Total Points',
+		// 'manual' => 'Manual Entry'
+	// );
+	
+	//echo $this->Form->select('CourseGradeDetail.grading_method', $methods, array('empty' => 'No Grade Given'));
 	
 	if(isset($course_id)) {
 		echo $this->Form->hidden('CourseGradeDetail.course_id', array('value' => $course_id));

@@ -103,31 +103,39 @@ class CourseGradesController extends CoursesAppController {
 	
 /**
  * 
- * @param int $id
+ * function for grading assignments with forms attached to them
+ * 
  */
 	
+
 	
-	public function grade($formId, $userId) {
-		if ( $this->request->is('post') || $this->request->is('put') ) {
-			if ($this->CourseGrade->save($this->request->data)) {
-				$this->Session->setFlash(__('Grade Saved.'));
-				$this->redirect(array('controller' => 'courses', 'action' => 'view', $this->request->data['CourseGrade']['course_id']));
-			} else {
-				$this->Session->setFlash(__('Grade could not be saved.'));
+	public function grade() {
+		try{
+			if(!$this->request->is('post') && isset($this->request->data['CourseGradeDetail']['id'])) {
+				throw new MethodNotAllowedException('Error - No Grading Details');
 			}
-		}
-		$this->request->data = $this->CourseGrade->find('first', array(
-			'conditions' => array( 'CourseGrade.foreign_key' => $formId ),
-			'contain' => array(
-				'Form' => array(
-					'FormInput' => array(
-						'FormAnswer' => array(
-							'conditions' => array( 'FormAnswer.user_id' => $userId )
-						)
-					)
+			
+			//Check to see if a grade already exists
+			if($this->CourseGrade->find('first', array(
+				'condtions' => array(
+					'course_grade_detail_id' => $this->request->data['CourseGradeDetail']['id'],
+					'student_id' => $this->userId,
 				)
-			)
-		));
+			))) { throw new Exception('You already took this test.'); }
+			
+			$gradeid = $this->CourseGrade->grade($this->request->data['CourseGradeDetail']['id'], $this->request->data['Answer']);
+			
+			$this->redirect(array('action' => 'show_grade', $gradeid));
+				
+		}catch (Exception $e){
+			$this->Session->setFlash($e->getMessage());
+			if($this->request->is('ajax')) {
+				$this->response->statusCode(500);
+				$this->layout = null;
+			}else{
+				$this->redirect($this->referer());
+			}	
+		}
 
 	}
 	
@@ -148,7 +156,8 @@ class CourseGradesController extends CoursesAppController {
 			$data['Answer']['id'] = $this->request->data['Answer']['id'];
 			unset($this->request->data['Answer']['id']);
 			foreach ($this->request->data['Answer'] as $inputid => $correct) {
-				$data['Answer']['data'][$inputid] = $correct;
+				$data['Answer']['data'][$inputid]['answer'] = $correct;
+				$data['Answer']['data'][$inputid]['points'] = $this->request->data['Points'][$inputid];
 			}
 			$data['Answer']['data'] = json_encode($data['Answer']['data']);
 			$this->Answer->save($data, true, array('data'));
@@ -169,6 +178,20 @@ class CourseGradesController extends CoursesAppController {
 		
 		$this->set('answers_json', $answers);
 	 	$this->set('answer', $answer);
+	}
+
+	public function show_grade ($gradeid = false) {
+		try{
+			if(!$gradeid) {
+				throw new MethodNotAllowedException('No Grade Id Given');
+			}
+				
+			$this->request->data = $this->CourseGrade->findById($gradeid);
+			
+		}catch(Exception $e) {
+			$this->Session->setFlash('Error: '.$e->getMessage());
+			$this->redirect($this->referer());
+		}
 	}
 		
 	

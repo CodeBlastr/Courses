@@ -358,15 +358,17 @@ class _CoursesController extends CoursesAppController {
 			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
 			
 			if(!empty($this->request->data)) {
-				
-				if(isset($this->request->data['TaskAttachment'][0]['model']) && $this->request->data['TaskAttachment'][0]['model'] == 'Answer' && !empty($this->request->data['CourseGradeDetail']['grading_method'])) {
+			
+				if(isset($this->request->data['TaskAttachment'][0]['model']) && $this->request->data['TaskAttachment'][0]['model'] == 'Answer') {
 					 $this->loadModel('Answers.Answer');
 					  $Answer = $this->Answer->read('data', $this->request->data['TaskAttachment'][0]['foreign_key']);
 					  if(!empty($Answer['Answer']['data'])) {
 					  	 $this->request->data['CourseGradeDetail']['right_answers'] = $Answer['Answer']['data'];
 					  }
 				}
-				
+
+				$this->request->data['CourseGradeDetail']['total_worth'] = !empty($this->request->data['CourseGradeDetail']['total_worth']) ? ($this->request->data['CourseGradeDetail']['total_worth'] / 100) : 0;
+
 				if(isset($this->request->data['TaskAttachment'][0]['id']) && empty($this->request->data['TaskAttachment'][0]['foreign_key'])) {
 					$this->Course->Task->TaskAttachment->delete($this->request->data['TaskAttachment'][0]['id']);
 					unset($this->request->data['TaskAttachment']);
@@ -386,9 +388,10 @@ class _CoursesController extends CoursesAppController {
 					'conditions' => array('Task.id' => $id),
 					'contain' => array('TaskAttachment')
 				));
+				
 				$courseid = $this->request->data['Task']['model'] == 'Course' ? $this->request->data['Task']['foreign_key'] : $courseid;
 			}
-
+			
 			$courseUsers = $this->Course->CourseUser->find('all', array(
 				'conditions' => array('CourseUser.course_id' => $courseid),
 				'contain' => array(
