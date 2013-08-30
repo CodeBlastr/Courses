@@ -68,8 +68,8 @@ class CourseGrade extends CoursesAppModel {
 			'className' => 'Courses.CourseGrade',
 			'conditions' => array(
 				'SubGrades.model NOT' => 'Course',
-				'course_id' => 'CourseGrade.foreign_key',
-				'student_id' => 'CourseGrade.student_id',
+				'SubGrades.course_id' => 'CourseGrade.foreign_key',
+				'SubGrades.student_id' => 'CourseGrade.student_id',
 				),
 			'fields' => '',
 			'order' => ''
@@ -233,13 +233,13 @@ class CourseGrade extends CoursesAppModel {
 	 	  $settings = !empty($details['GradeDetail']['data']) ? json_decode($details['GradeDetail']['data']) : array();
 		  $totalpoints = 0;
 		  $score = 0;
-		  
+		 
 		  foreach($subgrades as $grade) {
 		  	$score += $grade['CourseGrade']['grade'];
-			$total += $grade['CourseGrade']['total'];
+			$totalpoints += $grade['CourseGrade']['total'];
 		  }
-
-		  return array('score' => $score/$total * 100, 'total' => $total);
+		  
+		  return array('score' => $score/$totalpoints, 'total' => $totalpoints);
 		  
 	 }
 	 

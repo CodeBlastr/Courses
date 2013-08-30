@@ -186,8 +186,15 @@ class CourseGradesController extends CoursesAppController {
 				throw new MethodNotAllowedException('No Grade Id Given');
 			}
 				
-			$this->request->data = $this->CourseGrade->findById($gradeid);
-			
+			$this->request->data = $this->CourseGrade->find('first', array(
+				'conditions' => array(
+					'CourseGrade.id' => $gradeid,
+					),
+				'contain' => array(
+					'User', 
+					'GradeAnswers',
+					'GradeDetail'
+				)));
 		}catch(Exception $e) {
 			$this->Session->setFlash('Error: '.$e->getMessage());
 			$this->redirect($this->referer());
