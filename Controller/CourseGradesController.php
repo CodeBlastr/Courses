@@ -199,6 +199,15 @@ class CourseGradesController extends CoursesAppController {
 			$this->Session->setFlash('Error: '.$e->getMessage());
 			$this->redirect($this->referer());
 		}
+
+		if($this->request->data['GradeDetail']['creator_id'] == $this->userId) {
+			$this->view = 'show_grade_teacher';
+		}
+	
+	}
+	
+	public function changeAnswer($gradeanswerid) {
+		
 	}
 		
 	

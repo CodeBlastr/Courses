@@ -189,7 +189,8 @@ class _CoursesController extends CoursesAppController {
 				'UserGroup' => array(
 					'fields' => array('UserGroup.id')
 				)
-			)
+			)	
+			
 		));
 		
 		// list of all students so we can display the Roster

@@ -17,7 +17,7 @@
 //		echo $this->Form->input('Lesson.is_persistant', array('label' => 'Allow access when Inactive'));
 //		echo $this->Form->input('Lesson.is_private', array('label' => 'Public / Private'));
 //		echo $this->Form->input('Lesson.is_sequential', array('label' => 'Require members to go only through the defined sequence'));
-
+		echo $this->Element('Media.media_selector');
 		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('type' => 'radio'))) : null;
 
 	?>

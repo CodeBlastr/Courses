@@ -59,11 +59,18 @@ class Course extends CoursesAppModel {
 		),
 		'Task' => array(
 			'className' => 'Tasks.Task',
-			'foreignKey' => 'foreign_key'
+			'foreignKey' => 'foreign_key',
+			'sort' => 'created',
 		),
 		'CourseGrade' => array(
 			'className' => 'Courses.CourseGrade',
-			'foreignKey' => 'course_id'
+			'foreignKey' => 'foreign_key',
+			'conditions' => array('model' => 'Course'),
+		),
+		'AssignmentGrade' => array(
+			'className' => 'Courses.CourseGrade',
+			'foreignKey' => 'course_id',
+			'conditions' => array('model NOT' => 'Course'),
 		),
 		'Message' => array(
 			'className' => 'Messages.Message',

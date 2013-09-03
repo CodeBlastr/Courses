@@ -66,6 +66,7 @@ class CourseGrade extends CoursesAppModel {
 		),
 		'SubGrades' => array(
 			'className' => 'Courses.CourseGrade',
+			'foreignKey' => 'CourseGrade.course_id',
 			'conditions' => array(
 				'SubGrades.model NOT' => 'Course',
 				'SubGrades.course_id' => 'CourseGrade.foreign_key',
@@ -74,6 +75,14 @@ class CourseGrade extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
+		'SubDetails' => array(
+				'className' => 'Courses.CourseGradeDetail',
+				'foreignKey' => 'course_id',
+				'conditions' => array(
+					'SubDetails.model NOT' => 'Course',
+					'SubDetails.course_id' => 'Course.id',
+				),
+			)
 	);
 	
 	public $studentId = ''; //User Id of grades being saved

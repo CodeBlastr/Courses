@@ -9,7 +9,7 @@ class CourseGradebooksController extends CoursesAppController {
 
 	
 	public $name = 'CourseGradebooks';
-	public $uses = array('Courses.CourseUser', 'Courses.CourseGrade');
+	public $uses = array('Courses.CourseUser', 'Courses.CourseGrade', 'Courses.Course');
 
 	public function __construct($request = null, $response = null) {
 		parent::__construct($request, $response);
@@ -25,58 +25,50 @@ class CourseGradebooksController extends CoursesAppController {
 		if ( $this->request->is('post') && !empty($this->request->data['Course']['id']) ) {
 			$courseId = $this->request->data['Course']['id'];
 		}
+		
+		$this->Course->Task->bindModel(array(
+			'hasOne' => array(
+				'TaskGradeDetail' => array(
+					'className' => 'Courses.CourseGradeDetail',
+					'foreignKey' => 'foreign_key',
+					'conditions' => array('model' => 'Task', 'course_id' => $courseId)
+				)
+			)
+		));
+		
 		if ( $courseId ) {
-			$course = $this->CourseUser->Course->find('first', array(
-				'conditions' => array(
-					'Course.id' => $courseId
-					),
+			$this->request->data = $this->Course->find('first', array(
+				'conditions' => array('Course.id' => $courseId),
 				'contain' => array(
 					'CourseGrade',
-					'CourseGradeDetail' => array(
-						'fields' => array('id', 'foreign_key')
-					),
-					'Task' => array(
-						'conditions' => array('Task.parent_id' => null),
-						'ChildTask'
-					)
+					'AssignmentGrade',
+					'CourseUser' => array('User'),
+					'Task' => array('TaskGradeDetail')
 				)
 			));
-
-			// gimmie a nice grade array
-			foreach ( $course['CourseGrade'] as $grade ) {
-				$grades[ $grade['student_id'] ][ $grade['course_grade_detail_id'] ] = array(
-					'id' => $grade['id'],
-					'grade' => $grade['grade']
-					);
+			
+			//Loop Through Users and Attach Proper Grades
+			foreach($this->request->data['CourseUser'] as $index => $value) {
+				$this->request->data['CourseUser'][$index]['Grades'] = array();
+				$this->request->data['CourseUser'][$index]['CourseGrade'] = '';
+				foreach($this->request->data['AssignmentGrade'] as $grade) {
+					if($value['user_id'] == $grade['student_id']) {
+						$this->request->data['CourseUser'][$index]['Grades'][] = $grade;
+					}
+				}
+				
+				foreach($this->request->data['CourseGrade'] as $grade) {
+					if($value['user_id'] == $grade['student_id']) {
+						$this->request->data['CourseUser'][$index]['CourseGrade'] = $grade;
+					}
+				}
 			}
-		}
-
-		$myCourses = $this->CourseUser->Course->find('list', array(
-			'conditions' => array(
-				'Course.creator_id' => $this->Auth->user('id'),
-				'Course.type' => 'course'
-				),
-			'fields' => array('Course.id', 'Course.name')
-			));
-
-		$coursesAsStudent = $this->CourseUser->find('all', array(
-			'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),
-			'contain' => array('Course'),
-			'fields' => array('Course.id', 'Course.name')
-		));
-
-		foreach ( $coursesAsStudent as $cas ) {
-			$cleanCourses[$cas['Course']['id']] = $cas['Course']['name'];
+			
 		}
 
 		// need all of My CourseGradeDetails so we can change grades
 		$courseGradeDetails = Set::combine($course['CourseGradeDetail'], '{n}.foreign_key', '{n}.id');
 
-		$this->set('courseSelectOptions', array_unique( Set::merge($cleanCourses, $myCourses) ));
-
-		// pass the varz !
-		$this->set(compact('course', 'grades', 'courseGradeDetails'));
-		$this->set('courseUsers', $this->CourseUser->getCourseUsers($courseId));
 	}
 
 

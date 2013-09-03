@@ -102,7 +102,7 @@
 				
 			}
 			?>
-
+			
 	</div>
 
 	<div class="span4 pull-right">
