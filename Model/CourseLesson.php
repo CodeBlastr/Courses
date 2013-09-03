@@ -13,7 +13,7 @@ class CourseLesson extends CoursesAppModel {
 	
 	public $useTable = 'courses';
 
-	public $actsAs = array('Tree');
+	public $actsAs = array('Tree', 'Media.MediaAttachable');
 	
 /**
  * Display field

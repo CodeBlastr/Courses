@@ -28,6 +28,7 @@ class Course extends CoursesAppModel {
 			'hasMany' => 'CourseUser'
 		),
 		'Courses.Gradeable',
+		'Media.MediaAttachable'
 	);
 
 

@@ -464,6 +464,7 @@ class _CoursesController extends CoursesAppController {
 			$this->Session->setFlash(__('Assignment ID not specified.'));
 			$this->redirect($this->referer());
 		}
+		
 	}
 	
 	public function completeAssignment() {
