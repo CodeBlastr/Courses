@@ -3,10 +3,10 @@
 $course = $this->request->data['Course'];
 $assingments = $this->request->data['Task'];
 $courseUsers = $this->request->data['CourseUser'];
-//debug($courseUsers);debug($assingments);break;
+
 // show a dropdown to flip between this user's courses
 echo $this->Form->create();
-echo $this->Form->select('Course.id', $courseSelectOptions, array('empty' => '- Choose a course -'));
+echo $this->Form->select('Course.id', $courseSelectOptions, array('empty' => '- Choose a course -', 'class' =>  'pull-left'));
 echo $this->Form->submit('View Gradebook');
 echo $this->Form->end();
 
@@ -59,6 +59,8 @@ if ( !empty($course) ) {
 	// and we're done.
 	echo $this->Html->tag('table', $tableHeaders . $tableCells, array('class' => 'table-bordered'));
 
+}else {
+	echo $this->Html->tag('div', 'Choose a Course to view a gradebook', array('class' => 'well'));
 }
 
 ?>

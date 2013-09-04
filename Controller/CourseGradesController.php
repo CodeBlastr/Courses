@@ -189,12 +189,14 @@ class CourseGradesController extends CoursesAppController {
 			$this->request->data = $this->CourseGrade->find('first', array(
 				'conditions' => array(
 					'CourseGrade.id' => $gradeid,
+					'CourseGrade.model' => 'Task'
 					),
 				'contain' => array(
 					'User', 
 					'GradeAnswers',
 					'GradeDetail'
 				)));
+				
 		}catch(Exception $e) {
 			$this->Session->setFlash('Error: '.$e->getMessage());
 			$this->redirect($this->referer());

@@ -60,9 +60,6 @@ class CourseGrade extends CoursesAppModel {
 		'GradeAnswers' => array(
 			'className' => 'Courses.CourseGradeAnswer',
 			'foreignKey' => 'course_grade_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
 		),
 		'SubGrades' => array(
 			'className' => 'Courses.CourseGrade',

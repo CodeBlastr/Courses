@@ -16,7 +16,9 @@ if(isset($this->request->data['TaskAttachment'])) {
 		}
 	}
 	
-	if(!empty($quizzes)) {
+	if(!empty($quizzes) && empty($this->request->data['CourseGrade'])) {
 		echo $this->Html->link('Take Quizz', array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'takeQuiz', $this->request->data['Task']['id']), array('class' => 'btn btn-success'));
+	}elseif (!empty($this->request->data['CourseGrade'])) {
+		echo $this->Html->tag('h3', 'Your Score: '.$this->request->data['CourseGrade']['grade']);
 	}
 }

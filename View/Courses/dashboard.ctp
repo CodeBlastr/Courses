@@ -287,7 +287,7 @@
 					if ( !empty($coursesAsTeacher) || !empty($seriesAsTeacher) ) {
 						echo $this->Html->link(
 								$this->Html->image('/courses/img/1372452108_korganizer.png'),
-								array('controller' => 'gradebooks', 'action' => 'view'),
+								array('controller' => 'course_gradebooks', 'action' => 'view'),
 								array('escape' => false, 'title' => 'View')
 								);
 					} else {

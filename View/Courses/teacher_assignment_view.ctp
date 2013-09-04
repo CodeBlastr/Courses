@@ -2,10 +2,22 @@
 	//debug($this->request->data);
 	//Set up some variables
 	$task = $this->request->data['Task'];
-	$gradeDetails = $this->request->data['CourseGradeDetail'][0];
+	$gradeDetails = $this->request->data['CourseGradeDetail'];
 	$completedTask = $this->request->data['ChildTask'];
-	$courseUsers = $this->request->data['CourseUser'];
+	//Array for table body
+	$courseUsers = array();
+	foreach($this->request->data['CourseUser'] as $k => $student) {
+		$courseUsers[$student['User']['id']]['student_name'] = $student['User']['full_name'];
+		$courseUsers[$student['User']['id']]['grade'] = !empty($student['User']['Grade']) ? $student['User']['Grade']['grade'] : '';
+		$courseUsers[$student['User']['id']]['completed'] = !empty($student['User']['Grade']) ? true : false;
+	}
 	$completedCheck = Set::extract('/assignee_id', $completedTask);
+	$taskattachment = $this->request->data['TaskAttachment'];
+	$quizzes = array();
+	foreach($taskattachment as $q) {
+		if($q['model'] == 'Answer') { $quizzes[] = $q; }
+	}
+
 ?>
 
 <div id="Task-<?php echo $task['id']; ?> class="row-fluid">
@@ -26,36 +38,49 @@
 		</div>
 	</div>
 	
-	</div>
+</div>
+	
+<?php if(!empty($quizzes)): ?>
+	<?php foreach ($quizzes as $quiz): ?>
+		<hr />
+		<div class="quiz">
+			<p>Create and answer key for <?php echo $task['name']; ?> : <?php echo $this->Html->link('Create', array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'answerkey', $quiz['foreign_key']), array('class' => 'btn')); ?></p>
+		</div>
+		<hr />
+	<?php endforeach; ?>
+<?php endif; ?>
+	
 </div>
 
 <div id="studentDetails" class="row-fluid">
-	<div class="span4 offset1">
-		<h6>Completed</h6>
-		<ul id="StudentsCompleted">
-			<?php foreach($completedTask as $comp): ?>
-				<li>
-					<a href="<?php echo $this->Html->url(array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $comp['Assignee']['id'])); ?>"><?php echo $comp['Assignee']['full_name']; ?></a>
-					<a href="#markIncomplete" data-assignee_id="<?php echo $comp['Assignee']['id']; ?>"" style="margin-left: 5px;"><i class="icon-remove-sign"></i></a>
-				</li>
-					
-			<?php endforeach; ?>
-		</ul>
+	<div class="span12">
+	   <div class="container" style="padding:30px;">
+	   		<table>
+				<thead>
+					<?php echo $this->Html->tableHeaders(
+					    array('Student Name','Grade','Completed', 'Change Status')
+					); ?>
+				</thead>
+				<tbody>
+					<?php foreach($courseUsers as $id => $courseUser): ?>
+						<tr>
+							<td class="padtop"><?php echo $courseUser['student_name']; ?></td>
+							<td class="padtop"><?php echo $courseUser['grade']; ?></td>
+							<?php if($courseUser['completed']): ?>
+								<td><div class="right"></div></td>
+								<td class="padtop"><a href="#markIncomplete" data-assignee_id="<?php echo $id; ?>"" style="margin-left: 5px;">Mark Incomplete</a></td>
+							<?php else: ?>
+								<td><div class="wrong"></div></td>
+								<td class="padtop"><a class="complete" href="#markcomplete" data-assignee_id="<?php echo $id; ?>"" style="margin-left: 5px;">Mark Complete</a></td>
+							<?php endif; ?>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+	   </div>
+		
 	</div>
-	<div class="span4 offset1">
-		<h6>Not Completed</h6>
-		<ul id='StudentsUncompleted'>
-			<?php foreach($courseUsers as $CourseUser): ?>
-				<?php if(!in_array($CourseUser['user_id'], $completedCheck)): ?>
-				<li>
-					<a href="<?php echo $this->Html->url(array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $CourseUser['user_id'])); ?>"><?php echo $CourseUser['User']['full_name']; ?></a>
-					<a class="complete" href="#markcomplete" data-assignee_id="<?php echo $CourseUser['user_id']; ?>"" style="margin-left: 5px;"><i class="icon-thumbs-up"></i></a>
-				</li>
-				<?php endif; ?>
-			<?php endforeach; ?>
-		</ul>
-	</div>
-</div>
+
 
 <script type="text/javascript">
 	
@@ -65,29 +90,28 @@
 		
 		function bindhandlers() {
 			
-			$('#StudentsUncompleted').off('click');
-			$('#StudentsCompleted').off('click');
+			$('#studentDetails').off('click');
 			
-			$('#StudentsUncompleted').on('click', 'a[href=#markcomplete]', (function(e) {
+			$('#studentDetails').on('click', 'a[href=#markcomplete]', (function(e) {
 				var tar = $(e.currentTarget);
 				var data = {Task: { assignee_id: tar.data('assignee_id'), parent_id: '<?php echo $task['id']; ?>', model: '<?php echo $task['model']; ?>', foreign_key: '<?php echo $task['foreign_key']; ?>'} };
 				$.post('<?php echo $this->Html->url(array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'completeAssignment')); ?>', data)
 					.success(function() {
-						var comp = tar.closest('li');
-						comp.find('.complete').attr("href", "#markIncomplete").find('i').removeClass( "icon-thumbs-up" ).addClass( "icon-remove-sign" );
-						comp.appendTo('#StudentsCompleted');
+						var comp = tar.closest('tr');
+						comp.find('.complete').attr("href", "#markIncomplete").html('Mark Incomplete');
+						comp.find('.wrong').removeClass('wrong').addClass('right');
 						bindhandlers();
 					});	
 			}));
 	
-			$('#StudentsCompleted').on('click', 'a[href=#markIncomplete]', (function(e) {
+			$('#studentDetails').on('click', 'a[href=#markIncomplete]', (function(e) {
 				var tar = $(e.currentTarget);
 				var data = { Task: { id: '<?php echo $task['id']; ?>', assignee_id: tar.data('assignee_id') } };
 				$.post('<?php echo $this->Html->url(array('plugin' => 'courses', 'controller' => 'courses', 'action' => 'incompleteAssignment')); ?>', data)
 					.success(function() {
-						var comp = tar.closest('li');
-						comp.find('a').attr("href", "#markcomplete").find('i').removeClass( "icon-remove-sign" ).addClass( "icon-thumbs-up" );
-						comp.appendTo('#StudentsUncompleted');
+						var comp = tar.closest('tr');
+						comp.find('a').attr("href", "#markcomplete").html('Mark Complete');
+						comp.find('.right').removeClass('right').addClass('wrong');
 						bindhandlers();
 					});	
 			}));
@@ -98,4 +122,22 @@
 	
 	
 </script>
+
+<style type="text/css">
+	#studentDetails .wrong {
+		background: url(/Courses/img/right_wrong_small.png) no-repeat -28px 0;
+		background-size:cover;
+		width: 25px;
+		height: 25px;
+	}
+	#studentDetails .right {
+		background: url(/Courses/img/right_wrong_small.png) no-repeat 0 0;
+		background-size:cover;
+		width: 25px;
+		height: 25px;
+	}
+	#studentDetails .padtop {
+		padding-top:14px;
+	}
+</style>
 

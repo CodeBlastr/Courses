@@ -1,11 +1,16 @@
 <?php
 App::uses('CoursesAppController', 'Courses.Controller');
 /**
+ * Extension Code
+ * $refuseInit = true; require_once(ROOT.DS.'app'.DS.'Plugin'.DS.'Courses'.DS.'Controller'.DS.'CourseLessonsController.php');
+ */
+
+/**
  * Lessons Controller
  *
  * @property Lesson $Lesson
  */
-class CourseLessonsController extends CoursesAppController {
+class _CourseLessonsController extends CoursesAppController {
 
 	public $name = 'CourseLessons';
 	public $uses = 'Courses.CourseLesson';
@@ -41,7 +46,11 @@ class CourseLessonsController extends CoursesAppController {
 			'conditions' => array('CourseLesson.id' => $id),
 			'contain' => array('Media', 'Course')
 		));
-
+		
+		if($lesson['CourseLesson']['creator_id'] == $this->userId) {
+			$this->view = 'view_teacher';
+		}
+		
 		$this->set(compact('lesson'));
 		$this->set('title_for_layout', $lesson['CourseLesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
@@ -138,4 +147,8 @@ class CourseLessonsController extends CoursesAppController {
 		$this->set('title_for_layout', $lesson['CourseLesson']['name'] . ' < ' . $lesson['Course']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 	}
 
+}
+
+if (!isset($refuseInit)) {
+	class CourseLessonsController extends _CourseLessonsController {}
 }

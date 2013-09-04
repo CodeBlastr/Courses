@@ -31,6 +31,10 @@ class CourseGradeAnswer extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
+		'CourseGrade' => array(
+			'className' => 'Courses.CourseGrade',
+			'foreignKey' => 'course_grade_id'
+		),
 	);
 	
 	public function beforeSave($options = array()) {

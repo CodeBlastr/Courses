@@ -442,24 +442,38 @@ class _CoursesController extends CoursesAppController {
 			$this->request->data = $this->Course->Task->find('first', array(
 				'conditions' => array('Task.id' => $id),
 				'contain' => array(
-					'ChildTask' => 'Assignee', 
-					'TaskAttachment'
+					'TaskAttachment',
 				),
 			));
 			
 			//Set view depending on person viewing it.
 			if($this->request->data['Task']['creator_id'] == $this->userId) {
 				$this->view = 'teacher_assignment_view';
+				$this->Course->CourseUser->User->bindModel(array(
+					'hasOne' => array(
+						'Grade' => array(
+							'className' => 'Courses.CourseGrade',
+							'foreignKey' => 'student_id',
+							'conditions' => array('Grade.model' => 'Task', 'Grade.foreign_key' => $id)
+						),
+						'Complete' => array(
+							'className' => 'Tasks.Task',
+							'foreignKey' => 'assignee_id',
+							'conditions' => array('Complete.parent_id' => $id)
+						)
+					)
+				));
 				$this->request->data = array_merge($this->request->data, $this->Course->find('first', array(
-					'condtions' => array('id' => 'foreign_key'),
+					'conditions' => array('Course.id' => $this->request->data['Task']['foreign_key']),
 					'contain' => array(
-						'CourseUser' => 'User',
+						'CourseUser' => array('User' => array('Grade', 'Complete')),
 					),
 				)));
+			}else {
+				$this->request->data = array_merge($this->request->data, $this->Course->CourseGrade->find('first', array('CourseGrade.model' => 'Task', 'CourseGrade.foreign_key' => $id)));
 			}
 			
 			$this->set('title_for_layout', $this->request->data['Task']['name'] . ' | ' . __SYSTEM_SITE_NAME);
-			
 		} else {
 			$this->Session->setFlash(__('Assignment ID not specified.'));
 			$this->redirect($this->referer());

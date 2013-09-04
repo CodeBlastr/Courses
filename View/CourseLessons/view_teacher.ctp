@@ -18,8 +18,10 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p>
 		<b>Language: </b><?php echo $lesson['CourseLesson']['language'] ?>
 	</p>
-	<p><a href="#" class="btn btn-primary">Join</a></p>
 	<hr />
+	
+	<?php echo $this->Html->link('Create an Educast', array('plugin' => 'educasts', 'controller' => 'educasts', 'action' => 'add', 'CourseLesson', $lesson['CourseLesson']['id'] ), array('class' => 'btn btn-primary')); ?>
+	
 	<?php
 	if ( !empty($lesson['Form']) ) {
 		echo '<h4>Quizzes / Tests</h4>';
@@ -32,9 +34,11 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	
 	if ( !empty($lesson['Media']) ) {
 		echo '<h4>Lesson Materials</h4>';
-		echo '<ul>';
-		echo '<li>'. $this->element('Courses.displayMaterialsThumbs', array('media' => $lesson['Media'])) . '</li>';
-		echo '<ul>';
+		echo '<ul class="thumbnails">';
+		foreach($lesson['Media'] as $media) {
+			echo '<li class="span2">' . $this->Media->display($media, array('width' => 150, 'height' => 150, 'class' => 'thumbnail')) . '</li>';	
+		}
+		echo '</ul>';
 	}
 	?>
 </div>
