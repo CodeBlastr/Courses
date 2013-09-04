@@ -18,18 +18,9 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<p>
 		<b>Language: </b><?php echo $lesson['CourseLesson']['language'] ?>
 	</p>
-	<p><a href="#" class="btn btn-primary">Join</a></p>
+
 	<hr />
 	<?php
-	if ( !empty($lesson['Form']) ) {
-		echo '<h4>Quizzes / Tests</h4>';
-		echo '<ul>';
-		foreach ( $lesson['Form'] as $form ) {
-			echo '<li>'. $this->Html->link($form['name'], array('plugin' => 'forms', 'controller' => 'forms', 'action' => 'view', $form['id'])) . '</li>';
-		}
-		echo '<ul>';
-	}
-	
 	if ( !empty($lesson['Media']) ) {
 		echo '<h4>Lesson Materials</h4>';
 		echo '<ul>';

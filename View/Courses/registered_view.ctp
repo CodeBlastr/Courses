@@ -65,7 +65,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 				foreach ($course['CourseLesson'] as $childCourse): ?>
 				<tr>
 					<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
-					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'lessons', 'action' => 'view', $childCourse['id']));?></td>
+					<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'course_lessons', 'action' => 'view', $childCourse['id']));?></td>
 					<td><?php echo strip_tags($childCourse['description']);?></td>
 				</tr>
 			<?php endforeach; ?>
