@@ -117,7 +117,7 @@ class CourseGradesController extends CoursesAppController {
 			
 			//Check to see if a grade already exists
 			if($this->CourseGrade->find('first', array(
-				'condtions' => array(
+				'conditions' => array(
 					'course_grade_detail_id' => $this->request->data['CourseGradeDetail']['id'],
 					'student_id' => $this->userId,
 				)

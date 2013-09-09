@@ -117,13 +117,14 @@ class CourseGrade extends CoursesAppModel {
 				if(isset($scores['answers'])) {
 					$grades['GradeAnswers'] = $scores['answers'];
 				}
+				$gradeid = '';
 				if($this->saveAll($grades)) {
+					$gradeid = $this->id;
 					if(!$this->_updateCourseGrade($this->gradeDetails['GradeDetail']['course_id'])) {
 						throw new Exception('Course grade was not updated, you will need to update manually');
 					}
 				}
-				
-				return $this->id;
+				return $gradeid;
 				
 			}
 			

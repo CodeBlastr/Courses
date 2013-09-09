@@ -470,7 +470,10 @@ class _CoursesController extends CoursesAppController {
 					),
 				)));
 			}else {
-				$this->request->data = array_merge($this->request->data, $this->Course->CourseGrade->find('first', array('CourseGrade.model' => 'Task', 'CourseGrade.foreign_key' => $id)));
+				$grade = $this->Course->CourseGrade->find('first', array('conditions' => array('CourseGrade.model' => 'Task', 'CourseGrade.foreign_key' => $id, 'CourseGrade.student_id' => $this->userId)));
+				if(is_array($grade)) {
+					$this->request->data = array_merge($this->request->data, $grade);	
+				}
 			}
 			
 			$this->set('title_for_layout', $this->request->data['Task']['name'] . ' | ' . __SYSTEM_SITE_NAME);
