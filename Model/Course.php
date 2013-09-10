@@ -1,12 +1,18 @@
 <?php
 App::uses('CoursesAppModel', 'Courses.Model');
 /**
+ * Extension Code
+ * $refuseInit = true; require_once(ROOT.DS.'app'.DS.'Plugin'.DS.'Courses'.DS.'Model'.DS.'Course.php');
+ */
+
+
+/**
  * Course Model
  *
  * @property Course $ParentCourse
  * @property Course $ChildCourse
  */
-class Course extends CoursesAppModel {
+class _Course extends CoursesAppModel {
 	
 	public $name = 'Course';
 	
@@ -212,4 +218,8 @@ class Course extends CoursesAppModel {
 		return $canTakeCourse;
 	}
 
+}
+
+if (!isset($refuseInit)) {
+	class Course extends _Course {}
 }
