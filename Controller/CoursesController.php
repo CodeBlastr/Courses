@@ -175,6 +175,7 @@ class _CoursesController extends CoursesAppController {
 				'CourseGrade',
 				'Task' => array(
 					'conditions' => array('Task.parent_id' => null),
+					'order' => 'Task.order',
 					'ChildTask'
 				),
 				'CourseSeries' => array(
@@ -271,15 +272,20 @@ class _CoursesController extends CoursesAppController {
 		}
 		
 		if ($this->request->is('post') || $this->request->is('put')) {
-			if ($this->Course->save($this->request->data)) {
+			
+			if ($this->Course->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The course has been saved'));
 				$this->redirect(array('action' => 'view', $this->Course->id));
 			} else {
 				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
 			}
 		} else {
-			$this->Course->contain(array('Category'));
-			$this->request->data = $this->Course->read(null, $id);
+			$this->request->data = $this->Course->find('first', array(
+				'conditions' => array(
+					'Course.id' => $id
+				),
+				'contain' => array('Category', 'Task'),
+			));
 		}
 		
 		$parentCourses = $this->Course->CourseLesson->find('list');
