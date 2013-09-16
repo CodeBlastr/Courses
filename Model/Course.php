@@ -30,9 +30,6 @@ class _Course extends CoursesAppModel {
  */
 	public $actsAs = array(
 		'Tree',
-		'Users.UserGroupable' => array(
-			'hasMany' => 'CourseUser'
-		),
 		'Courses.Gradeable',
 		'Media.MediaAttachable'
 	);
@@ -50,7 +47,7 @@ class _Course extends CoursesAppModel {
 			'dependent' => false,
 			'conditions' => array('CourseLesson.type' => 'lesson'),
 			'fields' => '',
-			'order' => '',
+			'order' => 'CourseLesson.order',
 			'limit' => '',
 			'offset' => '',
 			'exclusive' => '',
