@@ -31,7 +31,6 @@ class _Course extends CoursesAppModel {
 	public $actsAs = array(
 		'Tree',
 		'Courses.Gradeable',
-		'Media.MediaAttachable'
 	);
 
 

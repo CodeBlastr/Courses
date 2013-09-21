@@ -79,6 +79,7 @@ class CoursesSchema extends CakeSchema {
 		'user_id' => array('type' => 'string', 'length' => 36, 'null' => false, 'default' => NULL),
 		'course_id' => array('type' => 'string', 'length' => 36, 'null' => false, 'default' => NULL),
 		'is_complete' => array('type' => 'boolean', 'null' => false, 'default' => 0),
+		'data' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1)),
 		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'MyISAM')
 	);
