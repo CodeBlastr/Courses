@@ -44,6 +44,7 @@ class _CoursesController extends CoursesAppController {
 		$this->paginate['contain'][] = 'Category';
 		$this->paginate['contain'][] = 'CourseSeries';
 		$this->paginate['contain'][] = 'Teacher';
+		$this->paginate['contain'][] = 'Media';
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->set('courses', $this->paginate());
 		if(CakePlugin::loaded('Categories')) {
