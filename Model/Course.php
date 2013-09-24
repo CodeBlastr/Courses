@@ -107,28 +107,14 @@ class _Course extends CoursesAppModel {
 	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
 		}
-		if (in_array('Subscribers', CakePlugin::loaded())) {
+		if (CakePlugin::loaded('Subscribers')) {
 			$this->actsAs['Subscribers.Subscribable'] = array('modelAlias' => 'Course');
 		}
-		if (in_array('Ratings', CakePlugin::loaded())) {
+		if (CakePlugin::loaded('Ratings')) {
 			$this->actsAs[] = 'Ratings.Ratable';
 		}
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs[] = 'Media.MediaAttachable';
-			
-			// $this->hasMany['Media'] = array(
-				// 'className' => 'Media.Media',
-				// 'foreignKey' => 'foreign_key',
-				// 'dependent' => false, // Incase Media is attached to more that one model
-				// 'conditions' => '',
-				// 'fields' => '',
-				// 'order' => '',
-				// 'limit' => '',
-				// 'offset' => '',
-				// 'exclusive' => '',
-				// 'finderQuery' => '',
-				// 'counterQuery' => ''
-			// );
 		}
 		
 		parent::__construct($id, $table, $ds);
