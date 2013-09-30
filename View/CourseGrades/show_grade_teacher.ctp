@@ -42,7 +42,7 @@
 						</div>
 						
 						<div class="span1">
-							<?php echo $this->Form->postLink('Change Grade', array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'change_answer', $ga['id'] ), $options = array (), _('Are you sure you want to change this grade?')); ?>
+							<?php echo $this->Form->postLink('Change Grade', array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'change_answer', $ga['id'] ), $options = array (), __('Are you sure you want to change this grade?')); ?>
 						</div>
 						
 						<div class="span1">

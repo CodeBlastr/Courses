@@ -1,12 +1,14 @@
 <div class="courses index">
+<?php $courses = $this->request->data; ?>
 	<h2><?php echo $page_title_for_layout;?></h2>
 	<ul class="nav nav-pills">
-		<?php 
-		$active = empty($this->params->pass[0]) ? 'active' : 'inactive';
+		<?php
+		debug($this->request->query);
+		$active = isset($this->request->query['category']) ? 'inactive' : 'active';
 		echo __('<li class="%s">%s</li>', $active, $this->Html->link('All', array('action' => 'index')));
 		foreach ($categories as $id => $category) {
-			$active = $this->params->pass[0] == $id ? 'active' : 'inactive';
-			echo __('<li class="%s">%s</li>', $active, $this->Html->link($category, array('action' => 'index', $id)));
+			$active = $this->request->query['category'] == $id || $this->request->query['category'] == $category ? 'active' : 'inactive';
+			echo __('<li class="%s">%s</li>', $active, $this->Html->link($category, array('action' => 'index', '?' => array('category' => urlencode($category)))));
 		} ?>
 	</ul>
 	<?php

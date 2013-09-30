@@ -26,6 +26,11 @@ class _CoursesController extends CoursesAppController {
 			$this->components[] = 'Ratings.Ratings';
 			$this->helpers[] = 'Ratings.Rating';
 		}
+		
+		if (CakePlugin::loaded('Categories')) {
+			$this->components[] = 'Categories.Categories';
+		}
+		
 		parent::__construct($request, $response);
 	}
 
@@ -34,27 +39,16 @@ class _CoursesController extends CoursesAppController {
  *
  * @return void
  */
-	public function index($categoryId = null) {
+	public function index() {
 		$this->set('page_title_for_layout', 'Courses');
-		if (!empty($categoryId)) {
-			$this->paginate['conditions']['Course.id'] = $this->_categoryIndex($categoryId);
-		}
 		$this->paginate['conditions']['Course.type'] = 'course';
 		$this->Course->recursive = 0;
-		$this->paginate['contain'][] = 'Category';
 		$this->paginate['contain'][] = 'CourseSeries';
 		$this->paginate['contain'][] = 'Teacher';
 		$this->paginate['contain'][] = 'Media';
+		$this->paginate['contain'][] = 'Category';
 		$this->paginate['order']['Course.start'] = 'ASC';
-		$this->set('courses', $this->paginate());
-		if(CakePlugin::loaded('Categories')) {
-			$this->set('categories', $this->Course->Category->find('list', array(
-				'conditions' => array(
-					'model' => 'Course'
-				)
-			)));
-		}
-		
+		$this->request->data = $this->paginate();
 	}
 	
 	public function _categoryIndex($categoryId = null) {
@@ -232,6 +226,7 @@ class _CoursesController extends CoursesAppController {
  */
 	public function add() {
 		$this->set('title_for_layout', 'Create a New Course | ' . __SYSTEM_SITE_NAME);
+		
 		if ($this->request->is('post')) {
 			//$this->Course->create();
 			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
@@ -250,14 +245,6 @@ class _CoursesController extends CoursesAppController {
 			)
 		)));
 		
-		if (in_array('Categories', CakePlugin::loaded())) {
-			$this->set('categories', $this->Course->Category->find('list', array(
-				'conditions' => array(
-					'model' => 'Course'
-				)
-			)));
-		}
-		$this->render('add');
 	}
 
 /**

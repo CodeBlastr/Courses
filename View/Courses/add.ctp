@@ -1,4 +1,4 @@
-
+<?php debug($categories); debug($this->request->data); ?>
 <div class="courses form">
 <?php echo $this->Form->create('Course', array('type' => 'file'));?>
 	<fieldset>
