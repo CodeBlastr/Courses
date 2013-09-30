@@ -11,7 +11,7 @@ echo $this->Form->submit('View Gradebook');
 echo $this->Form->end();
 
 // if we have course data, show the gradebook
-if ( !empty($course) ) {
+if ( !empty($course)) {
 
 	// display some stuff above the table
 	echo $this->Html->link('<h1>'.$course['Course']['name'].'</h1>', array('controller' => 'courses', 'action' => 'view', $course['Course']['id']), array('escape' => false));
@@ -20,44 +20,52 @@ if ( !empty($course) ) {
 	// initiate the table headings array
 	$tableHeaders = array('Student');
 	
-	//merge assingments
-	foreach($assingments as $a) {
-		$tableHeaders[] = $a['name'];
-	}
-	
-	$tableHeaders[] = 'Overall';
-
-	// time to build the data rows !
-	$tablerows = '';
-	foreach ( $courseUsers as $student ) {
-		
-		$row = array();
-		$row[] = $student['User']['full_name'];
+	if(!empty($assingments)) {
+		//merge assingments
 		foreach($assingments as $a) {
-			$ex = false;
-			foreach($student['Grades'] as $grade) {
-				if($a['id'] == $grade['foreign_key']) {
-					$row[] = $this->Html->link($grade['grade'], array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'show_grade', $grade['id']));
-					$ex = true;
-					break;
-				}
-			}
-			if(!$ex) {
-				$row[]= '';
-			}
+			$tableHeaders[] = $a['name'];
 		}
 		
-		$row[] = empty($student['CourseGrade']) ? '' : $this->Number->toPercentage($student['CourseGrade']['grade'] * 100, 2);
+		$tableHeaders[] = 'Overall';
+	
+		// time to build the data rows !
+		$tablerows = '';
+		foreach ( $courseUsers as $student ) {
+			
+			$row = array();
+			$row[] = $student['User']['full_name'];
+			foreach($assingments as $a) {
+				$ex = false;
+				foreach($student['Grades'] as $grade) {
+					if($a['id'] == $grade['foreign_key']) {
+						$row[] = $this->Html->link($grade['grade'], array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'show_grade', $grade['id']));
+						$ex = true;
+						break;
+					}
+				}
+				if(!$ex) {
+					$row[]= '';
+				}
+			}
+			
+			$row[] = empty($student['CourseGrade']) ? '' : $this->Number->toPercentage($student['CourseGrade']['grade'] * 100, 2);
+			
+			$tablerows[] = $row;
+		}
+	
+		$tableHeaders = $this->Html->tableHeaders($tableHeaders);
+		$tableCells = $this->Html->tableCells($tablerows);
 		
-		$tablerows[] = $row;
+		// and we're done.
+		echo $this->Html->tag('table', $tableHeaders . $tableCells, array('class' => 'table-bordered'));
+		
+		
+	}else {
+		echo $this->Html->tag('div', 'No Grades available', array('class' => 'well'));
 	}
 	
-	$tableHeaders = $this->Html->tableHeaders($tableHeaders);
-	$tableCells = $this->Html->tableCells($tablerows);
-	
 
-	// and we're done.
-	echo $this->Html->tag('table', $tableHeaders . $tableCells, array('class' => 'table-bordered'));
+	
 
 }else {
 	echo $this->Html->tag('div', 'Choose a Course to view a gradebook', array('class' => 'well'));

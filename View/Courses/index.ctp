@@ -3,7 +3,6 @@
 	<h2><?php echo $page_title_for_layout;?></h2>
 	<ul class="nav nav-pills">
 		<?php
-		debug($this->request->query);
 		$active = isset($this->request->query['category']) ? 'inactive' : 'active';
 		echo __('<li class="%s">%s</li>', $active, $this->Html->link('All', array('action' => 'index')));
 		foreach ($categories as $id => $category) {
