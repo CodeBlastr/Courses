@@ -38,7 +38,7 @@
 	
 	<fieldset>
 		<div class="gradingOptions">
-			<?php echo $this->Element('Courses.gradingOptions', array('course_id' => $this->request->course['Course']['id'])); ?>
+			<?php echo $this->Element('Courses.courseGradingOptions', array('course_id' => $this->request->course['Course']['id'])); ?>
 		</div>
 	</fieldset>
 

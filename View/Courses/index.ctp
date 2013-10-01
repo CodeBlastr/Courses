@@ -19,10 +19,11 @@
 		<div class="span9">
 			<?php echo __('<b>%s</b> from %s<br /><p class="truncate">%s</p>', $this->Html->link($course['Course']['name'], array('action' => 'view', $course['Course']['id'])), $course['Course']['school'], $course['Course']['description']); ?>
 		</div>
-		<div class="span3">
+		<div class="span3 well">
 			<?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', $course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse); ?>
 		</div>
 	</div>	
+	<hr />
 	<?php endforeach; ?>
 	
 	<p>
