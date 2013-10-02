@@ -296,9 +296,6 @@ class _CoursesController extends CoursesAppController {
  * @return void
  */
 	public function delete($id = null) {
-		if (!$this->request->is('post')) {
-			throw new MethodNotAllowedException();
-		}
 		$this->Course->id = $id;
 		if (!$this->Course->exists()) {
 			throw new NotFoundException(__('Invalid course'));
