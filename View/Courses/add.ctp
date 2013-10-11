@@ -1,4 +1,3 @@
-<?php debug($categories); debug($this->request->data); ?>
 <div class="courses form">
 <?php echo $this->Form->create('Course', array('type' => 'file'));?>
 	<fieldset>
@@ -60,7 +59,7 @@ echo $this->Form->end();
 		echo $this->Form->input('CourseSeries.description', array('label' => 'Description'));
 		echo $this->Js->submit('Save', array(
 			'update' => '#content',
-			'url'=>'/courses/courseSeries/add',
+			'url'=>'/courses/course_series/add',
 			'success' => 'setNewSeries(data);'
 			));
 		echo '<a href="#toggleSeriesAdd" class="toggleSeriesAdd close">cancel</a>';
@@ -87,8 +86,8 @@ $this->set('context_menu', array('menus' => array(
 	array(
 		'heading' => 'Series',
 		'items' => array(
-			$this->Html->link(__('View All Series'), array('controller' => 'series', 'action' => 'index')),
-			$this->Html->link(__('Create New Series'), array('controller' => 'series', 'action' => 'add'))
+			$this->Html->link(__('View All Series'), array('controller' => 'course_series', 'action' => 'index')),
+			$this->Html->link(__('Create New Series'), array('controller' => 'course_series', 'action' => 'add'))
 			),
 		),
 	array(

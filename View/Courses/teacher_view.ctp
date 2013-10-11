@@ -48,7 +48,7 @@
 							<td><i class="icon-time" title="<?php echo $this->Time->niceShort($childCourse['start']);?> to <?php echo $this->Time->niceShort($childCourse['end']);?>"></i></td>
 							<td><?php echo $this->Html->link($childCourse['name'], array('controller' => 'course_lessons', 'action' => 'view', $childCourse['id']));?></td>
 							<td><?php echo strip_tags($childCourse['description']);?></td>
-							<td><?php echo $this->Html->link(__('Edit'), array('controller' => 'course_lessons', 'action' => 'edit', $childCourse['id'])); ?></td>
+							<td><?php echo $this->Html->link('<i class="icon-edit"></i>', array('controller' => 'course_lessons', 'action' => 'edit', $childCourse['id']), array('escape' => false)); ?></td>
 						</tr>
 					<?php endforeach; ?>
 					</table>
@@ -67,10 +67,14 @@
 					$assignmentCells[] = array(
 						$this->Html->link($task['name'], array('action' => 'assignment', $task['id'])),
 						$this->Time->niceShort($task['due_date']),
-						$completionCount
+						$completionCount,
+						$this->Html->tag('ul', 
+							'<li>' . $this->Html->link('<i class="icon-edit"></i>', array('controller' => 'courses', 'action' => 'editAssignment', $task['id']), array('escape' => false)) . '</li>'
+							.'<li>' . $this->Html->link('<i class="icon-eye-open"></i>', array('controller' => 'courses', 'action' => 'assignment', $task['id']), array('escape' => false)) . '</li>'
+						, array('class' => 'nav nav-pills')),
 					);
 				}
-				echo $this->Html->tag('table', $this->Html->tableHeaders(array('Name', 'Due Date', 'Completions')) . $this->Html->tableCells($assignmentCells));
+				echo $this->Html->tag('table', $this->Html->tableHeaders(array('Name', 'Due Date', 'Completions','Actions')) . $this->Html->tableCells($assignmentCells));
 			}
 
 
@@ -116,25 +120,31 @@
 			'header' => array('left' => 'title', 'center' => false, 'right' => 'today prev next')
 		));
 		?>
-
+		<hr />
 		<h5><?php echo $this->Html->link('Group Wall', array('plugin' => 'users', 'controller' => 'userGroups', 'action' => 'view', $course['UserGroup']['id'])) ?></h5>
 		<?php echo $this->element('groupActivity', array('id' => $course['UserGroup']['id']), array('plugin' => 'Users')); ?>
-
+		<hr />
 		<h5>Course Messages</h5>
 		<?php
 		echo $this->element('inbox', array('model' => 'Course', 'foreignKey' => $course['Course']['id']), array('plugin' => 'Messages'));
 		?>
-
-		<h5>Roster</h5>
+		<hr />
+		<div class="title" class="clearfix">
+		<h5 class="pull-left">Roster</h5> 
+			<div class="pull-right title-actions">
+				<?php echo $this->Html->link('<i class="icon-book"></i>' . __('View Gradebook'), array('controller' => 'course_gradebooks', 'action' => 'view', $course['Course']['id']), array('escape' => false)); ?>
+			</div>
+		</div>
+		
 		<?php
 		if ( !empty($courseUsers) ) {
 			foreach ( $courseUsers as $user ) {
 				$userCells[] = array(
 					$this->Html->link($user['User']['last_name'] . ', ' . $user['User']['first_name'], array('plugin' => 'users', 'controller' => 'users', 'action' => 'view', $user['User']['id'])),
-					$this->Form->checkbox('CourseUser.is_complete', array('checked' => $user['CourseUser']['is_complete'], 'data-userid' => $user['User']['id'], 'class' => 'passFailCheckbox')),
+					$this->Element('Messages.quick_message', array('userId' => $user['User']['id'], 'name' => $user['User']['full_name']))
 				);
 			}
-			echo $this->Html->tag('table', $this->Html->tableHeaders(array('name', 'pass / fail')) . $this->Html->tableCells($userCells));
+			echo $this->Html->tag('table', $this->Html->tableCells($userCells));
 		} else {
 			echo '<i>no students</i>';
 		}
@@ -142,21 +152,7 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".passFailCheckbox").change(function(){
-			$.ajax({
-				url: '<?php echo Router::url(array('controller' => 'courses', 'action' => 'passFail', $course['Course']['id'])) ?>' + '/' + $(this).attr('data-userid'),
-				data: {data:{isComplete:$(this).is(":checked")}},
-				cache: false,
-				type: 'POST',
-				error: function(){
 
-				}
-			});
-		});
-	});
-</script>
 
 <?php
 $this->set('context_menu', array('menus' => array(

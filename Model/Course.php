@@ -78,6 +78,12 @@ class _Course extends CoursesAppModel {
 		'Message' => array(
 			'className' => 'Messages.Message',
 			'foreignKey' => 'foreign_key'
+		),
+		'SubCourse' => array(
+			'className' => 'Courses.Course',
+			'foreignKey' => 'parent_id',
+			'order' => 'SubCourse.start',
+			'conditions' => array('SubCourse.type' => 'course')
 		)
 	);
 	
@@ -92,6 +98,17 @@ class _Course extends CoursesAppModel {
 			'foreignKey' => 'creator_id'
 		)
 	);
+	
+	public $hasAndBelongsToMany = array(
+        'Users' =>
+            array(
+                'className' => 'Users.User',
+                'joinTable' => 'course_users',
+                'foreignKey' => 'course_id',
+                'associationForeignKey' => 'user_id',
+                'unique' => true,
+            )
+    );
 
 
     
@@ -144,7 +161,6 @@ class _Course extends CoursesAppModel {
  */
 	public function afterSave($created) {
 		parent::afterSave($created);
-	
 		if ( $created ) {	
 			// we say in the model when people get subscribed
 			if (in_array('Subscribers', CakePlugin::loaded())) {
@@ -199,7 +215,29 @@ class _Course extends CoursesAppModel {
 
 		return $canTakeCourse;
 	}
-
+	
+	public function afterFind($results, $primary = false) {
+		parent::afterFind($results, $primary);
+		
+		if(isset($results['Course'])) {
+			if($results['Course']['creator_id'] == $this->userId) {
+				$results['Course']['is_teacher'] = true;
+			}else {
+				$results['Course']['is_teacher'] = false;
+			}
+		}else {
+			foreach ($results as $i => $result) {
+				if($result['Course']['creator_id'] == $this->userId) {
+					$result['Course']['is_teacher'] = true;
+				}else {
+					$result['Course']['is_teacher'] = false;
+				}
+				$results[$i] = $result;
+			}
+		}
+		
+		return $results;
+	}
 }
 
 if (!isset($refuseInit)) {

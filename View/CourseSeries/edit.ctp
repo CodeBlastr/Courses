@@ -18,7 +18,8 @@
 		)
 		, array('class' => 'row-fluid')
 	);
-	
+		echo $this->Form->input('CourseSeries.start', array('label' => 'Start Date'));
+		echo $this->Form->input('CourseSeries.end', array('label' => 'End Date'));
 		echo $this->Form->input('CourseSeries.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
 		echo $this->Form->input('CourseSeries.is_private', array('label' => 'Private (public won\'t be able to view the series)', 'value' => '1', 'checked' => false));
 	?>
@@ -67,6 +68,8 @@
 	</div>
 	<hr />
 <?php echo $this->Form->end(__('Save'));?>
+<?php echo  $this->Form->postlink(__('Delete'), array('contoller' => 'course_series', 'action' => 'delete', $this->request->data['CourseSeries']['id'], '?' => array('destination' => $this->Html->url(array('controller' => 'courses', 'action' => 'dashboard')))), array('class' => 'btn btn-xs'), __('Are you sure you want to delete %s', array($this->request->data['CourseSeries']['name']))); ?>
+
 </div>
 
 <script type="text/javascript">

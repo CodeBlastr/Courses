@@ -11,7 +11,7 @@ class _CoursesController extends CoursesAppController {
 
 	public $uses = array('Courses.Course', 'Courses.CourseSeries');
 	
-	public $components = array('RequestHandler', 'Template');
+	public $components = array('RequestHandler', 'Template', 'Categories');
 	
 	public $helpers = array('Calendar');
 
@@ -40,15 +40,29 @@ class _CoursesController extends CoursesAppController {
  * @return void
  */
 	public function index() {
-		$this->set('page_title_for_layout', 'Courses');
-		$this->paginate['conditions']['Course.type'] = 'course';
-		$this->Course->recursive = 0;
-		$this->paginate['contain'][] = 'CourseSeries';
-		$this->paginate['contain'][] = 'Teacher';
-		$this->paginate['contain'][] = 'Media';
-		$this->paginate['contain'][] = 'Category';
+		$this->set('page_title_for_layout', __('Available Courses'));
+		
+		$conditions = array(
+			'Course.type' => array('course', 'series'),
+			'Course.parent_id' => null,
+			'Course.is_private' => false,
+			'Course.is_published' => true
+		);
+		
+		$contain = array(
+			'Teacher',
+			'Category',
+			'SubCourse',
+			'CourseUser' => array('conditions' => array('user_id' => $this->userId))
+		);
+		$this->paginate['conditions'] += $conditions;
+		$this->paginate += array(
+			'contain' => $contain,
+		);
+		
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->request->data = $this->paginate();
+		//debug($this->request->data);
 	}
 	
 	public function _categoryIndex($categoryId = null) {
@@ -69,7 +83,7 @@ class _CoursesController extends CoursesAppController {
 	public function dashboard() {
 		
 		$this->set('title_for_layout', 'Courses Dashboard' . ' | ' . __SYSTEM_SITE_NAME);
-
+		
 		$this->set('upcomingCourses', $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.start > NOW()',
@@ -78,6 +92,7 @@ class _CoursesController extends CoursesAppController {
 			),
 			'order' => array('Course.start' => 'ASC')
 		)));
+		
 		// teachers
 		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->CourseSeries->find('all', array(
 			'conditions' => array(
@@ -85,26 +100,31 @@ class _CoursesController extends CoursesAppController {
 				#'CourseSeries.is_published' => 1,
 				'CourseSeries.type' => 'series'
 			),
-			'contain' => array('Course'),
+			'contain' => array('Course' => array('order' => 'Course.order')),
 			'order' => array('CourseSeries.end' => 'ASC')
 		)));
 		
 		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
-				#'Course.is_published' => 1
-				'Course.type' => 'course'
+				'Course.type' => 'course',
+				'Course.parent_id' => NULL,
 			),
 			'order' => array('Course.end' => 'ASC')
 		)));
 		
-		$this->set('teaches', $teaches = !empty($seriesAsTeacher) || !empty($coursesAsTeacher) ? true : false);
 		
 		// students
 		$this->set('coursesAsStudent', $this->Course->CourseUser->find('all', array(
-			'conditions' => array('CourseUser.user_id' => $this->Auth->user('id')),
+			'conditions' => array(
+					'CourseUser.user_id' => $this->Auth->user('id')
+			),
 			'contain' => array('Course')
 		)));
+		
+		//debug($this->viewVars['coursesAsStudent']);break;
+		
+		
 
 		// get an array of all Course.id this user is related to
 		$courseIdsAsTeacher = array_unique(
@@ -619,11 +639,15 @@ class _CoursesController extends CoursesAppController {
 
 		if ( $this->request->isAjax() && $courseId && $studentId ) {
 			$this->autoRender = $this->layout = false;
-			
-			$updated = $this->Course->CourseUser->updateAll(
-				array('CourseUser.is_complete' => $this->request->data['isComplete']),
-				array('CourseUser.user_id' => $studentId, 'CourseUser.course_id' => $courseId)
-			);
+			if($this->Course->read('creator_id', $courseId) != $this->userId) {
+				$updated = false;
+				$this->response->statusCode(401);
+			}else {
+				$updated = $this->Course->CourseUser->updateAll(
+					array('CourseUser.is_complete' => $this->request->data['isComplete']),
+					array('CourseUser.user_id' => $studentId, 'CourseUser.course_id' => $courseId)
+				);
+			}
 
 			if ( $updated ) {
 				return true;

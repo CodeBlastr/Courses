@@ -4,7 +4,6 @@
 		<legend><?php echo __('Edit Course'); ?></legend>
 	<?php
 		echo $this->Form->input('id');
-		echo $this->Element('Media.media_selector', array('media' => $this->request->data['Media']));
 		echo $this->Html->tag('div',
 			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array(null => 'None'), 'label' => 'Part of a Series? <a href="#toggleSeriesAdd" class="toggleSeriesAdd">(create new series)</a>'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
@@ -34,6 +33,11 @@
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
 		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('legend' => false, 'type' => 'radio'))) : null;
 	?>
+	</fieldset>
+	<fieldset>
+	<legend>Choose Course Resources</legend>
+	<?php echo $this->Element('Media.media_selector', array('media' => $this->request->data['Media'])); ?>
+	
 	</fieldset>
 	
 	<fieldset>

@@ -1,6 +1,5 @@
 <?php
 	
-	debug($this->request->data);
 	if (isset($this->request->data['CourseGradeDetail'][0])) {
 		$this->request->data['CourseGradeDetail'] = $this->request->data['CourseGradeDetail'][0];
 	}

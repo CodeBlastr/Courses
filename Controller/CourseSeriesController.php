@@ -35,7 +35,7 @@ class CourseSeriesController extends CoursesAppController {
 		$this->CourseSeries->recursive = 0;
 		$this->paginate = array(
 			'conditions' => array('CourseSeries.type' => 'series',
-			'creator_id' => $this->Auth->user('id'),
+			'CourseSeries.creator_id' => $this->Auth->user('id'),
 			)
 		);
 		$this->view = 'index';
@@ -210,7 +210,7 @@ class CourseSeriesController extends CoursesAppController {
 			$this->request->data = $this->CourseSeries->read(null, $id);
 		}
 		$availablecourses = $this->CourseSeries->Course->find('all', array(
-			'conditions' => array('creator_id' => $this->userId,
+			'conditions' => array('Course.creator_id' => $this->userId,
 				'Course.parent_id' => NULL, //Not attached to a Series Yet
 				'Course.type' => 'course'
 			),

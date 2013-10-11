@@ -6,6 +6,8 @@
 //		echo $this->Form->input('CourseSeries.parent_id', array('options' => $parentCourses, 'label' => 'Parent Course'));
 		echo $this->Form->input('CourseSeries.name');
 		echo $this->Form->input('CourseSeries.description', array('label' => 'Description'));
+		echo $this->Form->input('CourseSeries.start', array('label' => 'Start Date'));
+		echo $this->Form->input('CourseSeries.end', array('label' => 'End Date'));
 		echo $this->Form->input('CourseSeries.is_sequential', array('label' => 'Require members to go only through the defined sequence', 'value' => '1', 'checked' => true));
 		echo $this->Form->input('CourseSeries.is_private', array('label' => 'Private (public won\'t be able to view the series)', 'value' => '1', 'checked' => false));
 	?>

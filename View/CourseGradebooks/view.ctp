@@ -27,6 +27,7 @@ if ( !empty($course)) {
 		}
 		
 		$tableHeaders[] = 'Overall';
+		$tableHeaders[] = 'Pass/Fail';
 	
 		// time to build the data rows !
 		$tablerows = '';
@@ -49,7 +50,7 @@ if ( !empty($course)) {
 			}
 			
 			$row[] = empty($student['CourseGrade']) ? '' : $this->Number->toPercentage($student['CourseGrade']['grade'] * 100, 2);
-			
+			$row[] = $this->Form->checkbox('CourseUser.is_complete', array('checked' => $student['is_complete'], 'data-userid' => $student['User']['id'], 'class' => 'passFailCheckbox'));
 			$tablerows[] = $row;
 		}
 	
@@ -75,51 +76,17 @@ if ( !empty($course)) {
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".passFailCheckbox").change(function(){
+			var that = this;
 			$.ajax({
 				url: '<?php echo Router::url(array('controller' => 'courses', 'action' => 'passFail', $course['Course']['id'])) ?>' + '/' + $(this).attr('data-userid'),
 				data: {data:{isComplete:$(this).is(":checked")}},
 				cache: false,
 				type: 'POST',
 				error: function(){
-					
+					alert('failed to update grade');
+					$(that).attr('checked', false);
 				}
 			});
-		});
-		$(".gradeInput").change(function(){
-			var input = $(this);
-			setTimeout(
-					$.ajax({
-						url: '<?php echo Router::url(array('controller' => 'courseGradebooks', 'action' => 'modifyGrade')) ?>',
-						data: {
-							data: {
-								CourseGrade:{
-									id: $(this).attr('data-coursegrade-id'),
-									course_grade_detail_id: $(this).attr('data-coursegradedetail-id'),
-									model: $(this).attr('data-coursegrade-model'),
-									foreign_key: $(this).attr('data-coursegrade-foreignkey'),
-									course_id: '<?php echo $course['Course']['id'] ?>',
-									student_id: $(this).attr('data-coursegrade-studentid'),
-									grade: $(this).val()
-								}
-							}
-						},
-						cache: false,
-						type: 'POST',
-						beforeSend: function(jqXHR, settings) {
-							input.css('background-color', '#f0ad4e');
-						},
-						error: function(jqXHR, textStatus, errorThrown){
-							input.css('background-color', '#d9534f');
-						},
-						success: function(data, textStatus, jqXHR){
-							input.css('background-color', '#5cb85c');
-							input.attr('data-coursegrade-id', data);
-						},
-						complete: function(jqXHR, textStatus) {
-							input.css('background-color', '#ffffff');
-						}
-					})
-				,1500);
 		});
 	});
 </script>

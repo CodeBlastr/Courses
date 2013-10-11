@@ -215,10 +215,9 @@
 					}
 				}
 				if ( !empty($coursesAsTeacher) ) {
-					// debug($coursesAsTeacher);
 					echo '<div class="row-fluid">';
 					echo '<div class="course-row span12">';
-					echo $this->Html->tag('h4', 'My Courses');
+					echo $this->Html->tag('h4', 'My Courses (Not in a Series)');
 					foreach ( $coursesAsTeacher as $course ) {
 						echo $this->Html->tag('div',
 							// $this->Html->link(
