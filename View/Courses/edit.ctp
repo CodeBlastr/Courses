@@ -9,12 +9,14 @@
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
 			);
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
-		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
-		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
+		
+		echo $this->Form->label('Course.start', 'Start Date');
+		echo $this->Form->dateTimePicker('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
+		echo $this->Form->label('Course.end', 'End Date');
+		echo $this->Form->dateTimePicker('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
 		echo $this->Html->tag('div',
-			$this->Form->input('Course.location', array('div' => array('class' => 'span3'), 'class' => 'required', 'placeholder' => 'Location', 'label' => false))
-			. $this->Form->input('Course.school', array('div' => array('class' => 'span4'), 'class' => 'required span12', 'placeholder' => 'School', 'label' => false))
-			. $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => false, 'class' => 'input-small required', 'div' => array('class' => 'span5')))
+			$this->Form->input('Course.school', array('type' => 'select', 'options' => $schools, 'div' => array('class' => 'span4'), 'class' => 'required span12', 'label' => 'School'))
+			. $this->Form->input('Course.grade', array('options' => array('K','1','2','4','5','6','7','8','9','10','11','12'), 'empty' => 'Grade', 'label' => 'Grade', 'class' => 'input-small required', 'div' => array('class' => 'span5')))
 		);
 		echo $this->Form->input('Course.description', array('label' => 'Description', 'class' => 'input-xxlarge required', 'placeholder' => 'Description', 'label' => false));
 		
