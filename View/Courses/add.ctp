@@ -4,14 +4,13 @@
 		<legend><?php echo __('Add Course'); ?></legend>
 	<?php
 		//echo $this->Form->input('Course.parent_id');
-		echo $this->Element('Media.media_selector');
 		echo $this->Html->tag('div',
-			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'empty' => array(null => '- existing series -'), 'label' => 'Part of a Series? <a href="#toggleSeriesAdd" class="toggleSeriesAdd">(create new series)</a>'))
+			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'selected' => $this->request->query['series'], 'empty' => array(null => '- existing series -'), 'label' => 'Part of a Series? <a href="'.$this->Html->url(array('controller' => 'course_series', 'action' => 'add')).'" class="toggleSeriesAdd">(create new series)</a>'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
 			);			
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
-		echo $this->Form->input('Course.start', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'Start Date'));
-		echo $this->Form->input('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
+		echo $this->Form->dateTimePicker('Course.start', array('type' => 'datetimepicker', 'class' => 'input-small required', 'label' => 'Start Date'));
+		echo $this->Form->dateTimePicker('Course.end', array('type' => 'datetime', 'class' => 'input-small required', 'label' => 'End Date'));
 		echo $this->Html->tag('div',
 			$this->Form->input('Course.location', array('div' => array('class' => 'span3'), 'class' => 'required', 'placeholder' => 'Location', 'label' => false))
 			. $this->Form->input('Course.school', array('div' => array('class' => 'span4'), 'class' => 'required span12', 'placeholder' => 'School', 'label' => false))
@@ -21,33 +20,40 @@
 
 		echo '<span>Course Availability</span>';
 		echo $this->Form->input('Course.is_published', array('label' => false, 'class' => 'checkboxToggle', 'data-yes' => 'Active', 'data-no' => 'Inactive', 'data-width' => 105));
-
+		
 		echo '<span>Allow access after End Date?</span>';
 		echo $this->Form->input('Course.is_persistant', array('label' => false, 'class' => 'checkboxToggle'));
-
+		
 		echo '<span>Course Visibility</span>';
 		echo $this->Form->input('Course.is_private', array('label' => false, 'class' => 'checkboxToggle', 'data-yes' => 'Private', 'data-no' => 'Public', 'data-width' => 105));
-
+		
 		echo '<span>Require members to go only through the defined sequence?</span>';
 		echo $this->Form->input('Course.is_sequential', array('label' => false, 'class' => 'checkboxToggle'));
 		
 		echo $this->Form->input('Course.language', array('options' => array('English', 'Spanish')));
-
-		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('type' => 'radio'))) : null;
+		echo !empty($layouts) ? __('<h5>Choose a theme</h5> %s', $this->Form->input('Template.layout', array('legend' => false, 'type' => 'radio'))) : null;
 	?>
 	</fieldset>
+	
+	<fieldset>
+	<legend>Choose Course Resources</legend>
+	<?php echo $this->Element('Media.media_selector', array('media' => $this->request->data['Media'])); ?>
+	
+	</fieldset>
+	
 	<fieldset>
 		<div class="gradingOptions">
 			<?php //echo $this->Element('Courses.gradingOptions', array('course_id' => $this->request->course['Course']['id'])); ?>
 		</div>
 	</fieldset>
+	<hr>
 <?php
 echo $this->Form->submit(__('Save'), array('class' => 'btn-primary'));
 echo $this->Form->end();
 ?>
 </div>
 
-
+<!-- 
 <div class="courses form" id="seriesAdd" style="display:none; background: #fff; position: fixed; top: 33%; padding: 25px 50px; box-shadow: 5px 5px 10px #999; border: 1px solid #999; border-radius: 5px;">
 	<?php
 	echo $this->Form->create('Series', array('url' => '/courses/series/add'));
@@ -68,6 +74,7 @@ echo $this->Form->end();
 		?>
 	</fieldset>
 </div>
+ -->
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -79,8 +86,10 @@ echo $this->Form->end();
 			$("#MediaForeignKey").val(data);
 			$("#seriesAdd").hide();
 		}
+		applyCheckboxToggles();
 	});
 </script>
+
 <?php
 $this->set('context_menu', array('menus' => array(
 	array(

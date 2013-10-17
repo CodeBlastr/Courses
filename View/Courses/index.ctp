@@ -80,11 +80,11 @@
 			</div>
 			<div class="span2">
 				<div class="actions">
-					<ul class="nav nav-tabs nav-stacked">
+				<ul class="nav nav-tabs nav-stacked">
 						<?php if(empty($course['CourseUser'])): ?>
 						<li><?php echo $this->Html->link('Register', array('controller' => 'courses', 'action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'))?></li>
 						<?php else: ?>
-						<li><small>You are already Registered</small> <br /><?php echo $this->Html->link('View Course', array('controller' => 'courses', 'action' => 'view', $course['Course']['id']), array('class' => 'btn btn-mini'))?></li>
+						<li><span class="label label-info">Already Registered</span> <br /><?php echo $this->Html->link('View Course', array('controller' => 'courses', 'action' => 'view', $course['Course']['id']), array('class' => 'btn btn-small'))?></li>
 						<?php endif; ?>
 					</ul>
 				</div>

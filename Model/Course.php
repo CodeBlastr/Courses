@@ -150,6 +150,14 @@ class _Course extends CoursesAppModel {
 	public function beforeSave(array $options = array()) {
 		parent::beforeSave($options);
 		
+		if(!empty($this->data)) {
+			if(isset($this->data['Course']['start'])) {
+				$this->data['Course']['start'] = date('Y-m-d G:i:s', strtotime($this->data['Course']['start']));
+			}
+			if(isset($this->data['Course']['end'])) {
+				$this->data['Course']['end'] = date('Y-m-d G:i:s', strtotime($this->data['Course']['end']));
+			}
+		}
 		if(!isset($this->data[$this->alias]['type'])) {
 			$this->data[$this->alias]['type'] = 'course';
 		}
@@ -241,6 +249,7 @@ class _Course extends CoursesAppModel {
 		
 		return $results;
 	}
+	
 }
 
 if (!isset($refuseInit)) {
