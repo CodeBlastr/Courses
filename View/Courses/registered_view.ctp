@@ -121,7 +121,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 	<div class="span4 pull-right">
 		
 		<?php 
-		// ratings
+		// deprecated, convert to the element Ratings.ratable
 		if ($course['Course']['_user_rated'] == 'false' && !empty($courseUsers[$this->Session->read('Auth.User.id')]['CourseUser']['is_complete'])) {
 			echo __('<h5>Rate the Course</h5><div class="ratingsForm clearfix">%s</div><hr />', $this->Rating->display(array(
 				'item' => $course['Course']['id'],

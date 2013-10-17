@@ -127,9 +127,12 @@ class _Course extends CoursesAppModel {
 		if (CakePlugin::loaded('Subscribers')) {
 			$this->actsAs['Subscribers.Subscribable'] = array('modelAlias' => 'Course');
 		}
+		
+		// deprecated because we will pull ratings without the need for a behavior, use the element call Ratings.rating instead 
 		if (CakePlugin::loaded('Ratings')) {
 			$this->actsAs[] = 'Ratings.Ratable';
 		}
+
 		if(CakePlugin::loaded('Media')) {
 			$this->actsAs[] = 'Media.MediaAttachable';
 		}

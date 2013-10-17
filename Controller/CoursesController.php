@@ -22,7 +22,7 @@ class _CoursesController extends CoursesAppController {
  * @param
  */
 	public function __construct($request = null, $response = null) {
-		if (in_array('Ratings', CakePlugin::loaded())) {
+		if (CakePlugin::loaded('Ratings')) {
 			$this->components[] = 'Ratings.Ratings';
 			$this->helpers[] = 'Ratings.Rating';
 		}
