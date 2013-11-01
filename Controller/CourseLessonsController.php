@@ -10,7 +10,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
  *
  * @property Lesson $Lesson
  */
-class _CourseLessonsController extends CoursesAppController {
+class AppCourseLessonsController extends CoursesAppController {
 
 	public $name = 'CourseLessons';
 	public $uses = 'Courses.CourseLesson';
@@ -150,5 +150,5 @@ class _CourseLessonsController extends CoursesAppController {
 }
 
 if (!isset($refuseInit)) {
-	class CourseLessonsController extends _CourseLessonsController {}
+	class CourseLessonsController extends AppCourseLessonsController {}
 }

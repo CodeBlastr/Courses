@@ -12,7 +12,7 @@ App::uses('CoursesAppModel', 'Courses.Model');
  * @property Course $ParentCourse
  * @property Course $ChildCourse
  */
-class _Course extends CoursesAppModel {
+class AppCourse extends CoursesAppModel {
 	
 	public $name = 'Course';
 	
@@ -253,5 +253,5 @@ class _Course extends CoursesAppModel {
 }
 
 if (!isset($refuseInit)) {
-	class Course extends _Course {}
+	class Course extends AppCourse {}
 }
