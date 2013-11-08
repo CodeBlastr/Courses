@@ -324,6 +324,10 @@ class CourseGrade extends CoursesAppModel {
 			return $arr;
 			 
 		}
+		
+		public function updateGradeFromAnswers($course_grade_id, $coure_grade_detail) {
+			
+		}
 	 
 	 
 	

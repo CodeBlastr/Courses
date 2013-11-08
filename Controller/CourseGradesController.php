@@ -86,7 +86,8 @@ class CourseGradesController extends CoursesAppController {
 			}
 			
 			if ($this->CourseGradeAnswer->saveMany($this->request->data['GradeAnswers'])) {
-				$this->CourseGrade->updateCourseGrade($this->request->data['GradeDetail']['course_id']);
+				debug($this->request->data);exit;
+				$this->CourseGrade->updateGradeFromAnswers();
 				$this->Session->setFlash(__('The Grades have been saved'));
 				$this->redirect($this->referer());
 			} else {

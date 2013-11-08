@@ -1,10 +1,8 @@
 <?php
-	debug($this->request->data);
 	$gradeDetail = $this->request->data['GradeDetail'];
 	$grade = $this->request->data['CourseGrade'];
 	$gradeAnswers = $this->request->data['GradeAnswers'];
 	$student = $this->request->data['User'];
-	//debug($gradeAnswers);break;
 ?>
 <div id="showGrade" class="row-fluid">
 <div class="span12">
