@@ -2,7 +2,7 @@
 <?php
 
 echo $this->Html->tag('h1', $this->request->data['Task']['name']);
-echo $this->Html->tag('p', '<b>Due Date: </b>' . $this->Time->nice($this->request->data['Task']['due_date']));
+echo $this->Html->tag('p', '<b>Due Date: </b>' . $this->Time->format('F', $this->request->data['Task']['due_date']));
 echo $this->Html->tag('div', $this->request->data['Task']['description']);
 
 if(isset($this->request->data['TaskAttachment'])) {

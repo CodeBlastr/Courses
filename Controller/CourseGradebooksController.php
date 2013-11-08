@@ -68,7 +68,11 @@ class CourseGradebooksController extends CoursesAppController {
 
 		// need all of My CourseGradeDetails so we can change grades
 		$courseGradeDetails = Set::combine($course['CourseGradeDetail'], '{n}.foreign_key', '{n}.id');
-		$this->set('courseSelectOptions', $this->Course->find('list', array('conditions' => array('creator_id' => $this->userId))));
+		$this->set('courseSelectOptions', $this->Course->find('list', array(
+				'conditions' => array(
+						'Course.creator_id' => $this->userId,
+						'Course.type' => 'course'
+				))));
 	}
 
 

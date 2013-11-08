@@ -29,8 +29,7 @@ class AppCourse extends CoursesAppModel {
  * @var array 
  */
 	public $actsAs = array(
-		'Tree',
-		'Courses.Gradeable',
+		'Tree'
 	);
 
 
@@ -107,6 +106,14 @@ class AppCourse extends CoursesAppModel {
                 'foreignKey' => 'course_id',
                 'associationForeignKey' => 'user_id',
                 'unique' => true,
+            )
+    );
+	
+	public $hasOne = array(
+        'CourseGradeDetail' => array(
+			'className' => 'Courses.CourseGradeDetail',
+			'foreignKey' => 'course_id',
+			'conditions' => array('CourseGradeDetail.model' => 'Course'),
             )
     );
 

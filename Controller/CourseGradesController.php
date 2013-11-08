@@ -8,7 +8,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
 class CourseGradesController extends CoursesAppController {
 
 	public $name = 'CourseGrades';
-	public $uses = array('Courses.CourseGrade');
+	public $uses = array('Courses.CourseGrade', 'Courses.CourseGradeAnswer');
 
 /**
  * index method
@@ -76,6 +76,26 @@ class CourseGradesController extends CoursesAppController {
 		}
 		$parentCourses = $this->CourseGrade->Course->find('list');
 		$this->set(compact('parentCourses'));
+	}
+	
+	public function edit_answers() {
+		if ($this->request->is('post') || $this->request->is('put')) {
+			if($this->request->data['GradeDetail']['creator_id'] !== $this->userId || !isset($this->request->data['GradeDetail']['creator_id'])) {
+				$this->Session->setFlash(__('Only the teacher can change grades'));
+				$this->redirect($this->referer());
+			}
+			
+			if ($this->CourseGradeAnswer->saveMany($this->request->data['GradeAnswers'])) {
+				$this->CourseGrade->updateCourseGrade($this->request->data['GradeDetail']['course_id']);
+				$this->Session->setFlash(__('The Grades have been saved'));
+				$this->redirect($this->referer());
+			} else {
+				$this->Session->setFlash(__('The Grade could not be saved. Please, try again.'));
+			}
+		} else {
+			$this->Session->setFlash(__('The Grade could not be saved. Please, try again.'));
+			$this->redirect($this->referer());
+		}
 	}
 
 /**
@@ -179,6 +199,7 @@ class CourseGradesController extends CoursesAppController {
 		$this->set('answers_json', $answers);
 	 	$this->set('answer', $answer);
 	}
+	
 
 	public function show_grade ($gradeid = false) {
 		try{

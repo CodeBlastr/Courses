@@ -85,6 +85,17 @@ class CourseGrade extends CoursesAppModel {
 	public $studentId = ''; //User Id of grades being saved
 	
 	public $gradeDetails = ''; //Holder for grading information
+	
+	/**
+	 * Curve types 
+	 * [Method Name] => [Label]
+	 * @var unknown
+	 */
+	public $curveTypes = array(
+		'square_root' => 'Square Root',
+		'highest' => 'Highest Grade to 100',
+		'flat_scale' => 'Flat Scale'
+	);
 
 
 	/**
@@ -159,7 +170,7 @@ class CourseGrade extends CoursesAppModel {
 		return $grade;
 	 }
 	 
-	 protected function _updateCourseGrade($courseid) {
+	 public function updateCourseGrade($courseid) {
 	 	$CourseGrade = $this->find('all', array(
 	 		'conditions' => array(
 				'CourseGrade.model' => 'Course',
@@ -252,6 +263,7 @@ class CourseGrade extends CoursesAppModel {
 	 
 	 /**
 	  * Grade Answers
+	  * @param $answers - The graded answers array
 	  */
 	  
 	  protected function gradeAnswers($answers) {

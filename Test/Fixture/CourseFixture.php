@@ -20,22 +20,22 @@ class CourseFixture extends CakeTestFixture {
  */
 	public $records = array(
 		array(
-			'id' => 1,
-			'parent_id' => 1,
+			'id' => '1',
+			'parent_id' => null,
 			'lft' => 1,
-			'rght' => 1,
-			'name' => 'Lorem ipsum dolor sit amet',
-			'description' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-			'location' => 'Lorem ipsum dolor sit amet',
-			'school' => 'Lorem ipsum dolor sit amet',
-			'grade' => 'Lorem ipsum dolor sit amet',
-			'language' => 'Lorem ipsum dolor sit amet',
-			'start' => '2013-02-18 21:49:48',
-			'end' => '2013-02-18 21:49:48',
+			'rght' => 2,
+			'name' => 'Test Course',
+			'description' => 'Testing Courses',
+			'location' => 'Anywhere',
+			'school' => 'Anywhere University',
+			'grade' => 0,
+			'language' => 'English',
+			'start' => '2013-07-10 07:00:00',
+			'end' => '2013-12-25 17:00:00',
 			'is_published' => 1,
-			'is_private' => 1,
-			'is_persistant' => 1,
-			'is_sequential' => 1
+			'is_private' => 0,
+			'is_persistant' => 0,
+			'is_sequential' => 0
 		),
 	);
 }

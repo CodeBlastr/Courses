@@ -29,13 +29,19 @@ class TestCoursesController extends CoursesController {
  * CoursesController Test Case
  *
  */
-class CoursesControllerTestCase extends CakeTestCase {
+class CoursesControllerTestCase extends ControllerTestCase {
 /**
  * Fixtures
  *
  * @var array
  */
-	public $fixtures = array('courses.course');
+	public $fixtures = array(
+			'plugin.Courses.Course', 
+			'plugin.Courses.CourseGradeDetail', 
+			'plugin.Media.Media', 			
+			'plugin.Media.MediaAttachment',
+			'plugin.Ratings.Rating',
+	);
 
 /**
  * setUp method
@@ -60,43 +66,12 @@ class CoursesControllerTestCase extends CakeTestCase {
 	}
 
 /**
- * testIndex method
- *
- * @return void
+ * course grade settings method
+ * Testing to for proper course grade detail 
+ * data format and proper course settings
  */
-	public function testIndex() {
-
-	}
-/**
- * testView method
- *
- * @return void
- */
-	public function testView() {
-
-	}
-/**
- * testAdd method
- *
- * @return void
- */
-	public function testAdd() {
-
-	}
-/**
- * testEdit method
- *
- * @return void
- */
-	public function testEdit() {
-
-	}
-/**
- * testDelete method
- *
- * @return void
- */
-	public function testDelete() {
-
+	public function testCourseGradeSettings($id = 1) {
+		debug('test working');
+		debug($this->Courses->Course->find('all'));
 	}
 }

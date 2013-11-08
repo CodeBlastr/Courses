@@ -423,18 +423,20 @@ class AppCoursesController extends CoursesAppController {
 			// get my Courses to attach to
 			$this->set('parentCourses', $this->Course->find('list', array(
 				'conditions' => array(
-					'creator_id' => $this->userId,
-					'type' => 'course'
+					'Course.creator_id' => $this->userId,
+					'Course.type' => 'course'
 				)
 			)));
 
 			if (CakePlugin::loaded('Categories')) {
 				$this->set('categories', $this->Course->Category->find('list', array(
 					'conditions' => array(
-						'model' => 'Task'
+						'Category.model' => 'Task'
 					)
 				)));
 			}
+			
+			$this->set('assignmentTypes', $this->Course->CourseGradeDetail->gettypes($courseid));
 			
 			$this->set('course_id', $courseid);
 			$this->set('attachables', $this->Course->Task->getAttachablesByUser());
@@ -531,7 +533,6 @@ class AppCoursesController extends CoursesAppController {
 	public function incompleteAssignment() {
 		$userid = isset($this->request->data['Task']['assignee_id']) ? $this->request->data['Task']['assignee_id'] : $this->userId;
 		$id = $this->Course->Task->field('id', array('assignee_id' => $userid, 'parent_id' => $this->request->data['Task']['id']));
-		
 		if ( $this->Course->Task->delete($id) ) {
 			$this->response->statusCode(200);
 		}else {
@@ -658,6 +659,36 @@ class AppCoursesController extends CoursesAppController {
 			$this->Session->setFlash('Invalid request');
 			$this->redirect($this->referer());
 		}
+	}
+	
+	public function grade_settings($courseid=false) {
+		
+		if($this->request->is('post') && !empty($this->request->data)) {
+			$this->request->data['CourseGradeDetail']['model'] = 'Course';
+			$this->request->data['CourseGradeDetail']['foreign_key'] = $this->request->data['Course']['id'];
+			$this->request->data['CourseGradeDetail']['name'] = $this->request->data['Course']['name'];
+			//debug($this->request->data);exit;
+			if($this->Course->saveAll($this->request->data)) {
+				$this->Session->setFlash('Course Grade Settings Saved');
+				$this->redirect(array('action'=>'view', $this->request->data['Course']['id']));
+			}else {
+				$this->Session->setFlash('Settings not saved!');
+				$this->redirect(array('action'=>'view', $this->request->data['Course']['id']));
+			}
+			
+		}
+		
+		if($courseid) {
+			$this->request->data = $this->Course->findById($courseid);
+		}else{
+			throw new BadRequestException('No Course id');
+		}
+		
+		if(!$this->request->data) {
+			throw new NotFoundException();
+		}
+		//debug($this->request->data);exit;
+		$this->set('curveTypes', $this->Course->CourseGrade->curveTypes);
 	}
 
 }

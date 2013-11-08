@@ -79,7 +79,7 @@ class AppCourseLessonsController extends CoursesAppController {
 			}
 		}
 		$parentCourses = $this->CourseLesson->Course->find('list', array(
-			'conditions' => array('creator_id' => $this->userId, 'type' => 'course'),
+			'conditions' => array('Course.creator_id' => $this->userId, 'type' => 'course'),
 			'order' => array('name' => 'ASC')
 			));
 		$this->set(compact('parentCourses'));

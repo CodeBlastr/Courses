@@ -11,22 +11,25 @@
 	?>
 	<div class="row-fluid">
 	<div class="span6">
-		<?php echo $this->Form->input('Task.start_date', array('type' => 'text', 'class' => 'datepicker')); ?>
+		<label>Start Date</label>
+		<?php echo $this->Form->datetimepicker('Task.start_date'); ?>
 	</div>
 	<div class="span6">
-		<?php echo $this->Form->input('Task.due_date', array('type' => 'text', 'class' => 'datepicker')); ?>
+		<label>Due Date</label>
+		<?php echo $this->Form->datetimepicker('Task.due_date'); ?>
 	</div>
 	</div>
 	
 <?php
 		//echo $this->Form->input('Task.parent_id', array('empty' => true, 'label' => 'Which task list should this be on?'));
+		
+		echo $this->Form->input('Task.foreign_key', array('options' => $parentCourses, 'value' => $course_id, 'empty' => '- Select Course -', 'label' => 'Course Assignment Belongs to', 'class' => 'required'));
 
-		echo $this->Form->input('Task.foreign_key', array('options' => $parentCourses, 'value' => $course_id, 'empty' => '- Select Course -', 'label' => 'Course Assingment Belongs to', 'class' => 'required'));
-
+		echo $this->Form->input('Task.settings', array('type' => 'select', 'label' => 'Assignment Type', 'required' => true, 'options' => $assignmentTypes, 'empty' => '-- Choose a Category --'));
+		
 		echo $this->Form->input('Task.description', array('type' => 'richtext'));
 
-//		echo $this->Form->input('Task.order');
-		echo $this->Form->input('Task.assignee_id', array('label' => 'Privacy', 'options' => array(0 => 'All Course Members', $this->userId => 'Just Me')));
+		echo $this->Form->input('Task.assignee_id', array('label' => 'Privacy', 'options' => array(0 => 'All Course Members', $this->Session->read('Auth.User.id') => 'Just Me')));
 
 		echo $this->Form->hidden('Task.model', array('value' => 'Course'));
 	?>
@@ -96,24 +99,7 @@
 		    </div>
 		  </div>
 		  <?php endforeach; ?>
-		  <div class="accordion-group">
-		    <div class="accordion-heading">
-		      <a class="accordion-toggle" data-toggle="collapse" data-parent="#attachablesContainer" href="#collapseGrading">
-		        <h5>Grading Options for this assignment</h5>
-		      </a>
-		    </div>
-		    <div id="collapseGrading" class="accordion-body collapse">
-		      <div class="accordion-inner">
-		      	<div class="row-fluid">
-		        
-					
-					<div class="gradingOptions">
-						<?php echo $this->Element('Courses.gradingOptions', array('course_id' => $course_id)); ?>
-					</div>
-		        </div>
-		      </div>
-		    </div>
-		  </div>
+
 		</div>
 
 	</fieldset>
