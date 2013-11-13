@@ -86,9 +86,14 @@ class CourseGradesController extends CoursesAppController {
 			}
 			
 			if ($this->CourseGradeAnswer->saveMany($this->request->data['GradeAnswers'])) {
-				debug($this->request->data);exit;
-				$this->CourseGrade->updateGradeFromAnswers();
-				$this->Session->setFlash(__('The Grades have been saved'));
+				//debug($this->request->data);exit;
+				try{
+					$this->CourseGrade->updateGradeFromAnswers($this->request->data['CourseGrade']['id'], $this->request->data['CourseGrade']['student_id'], $this->request->data['GradeDetail']['course_id']);
+					$message = __('The Grades have been saved');
+				} catch (Exception $e) {
+					$message = $e->getMessage();
+				}
+				$this->Session->setFlash($message);
 				$this->redirect($this->referer());
 			} else {
 				$this->Session->setFlash(__('The Grade could not be saved. Please, try again.'));
@@ -132,10 +137,9 @@ class CourseGradesController extends CoursesAppController {
 	
 	public function grade() {
 		try{
-			if(!$this->request->is('post') && isset($this->request->data['CourseGradeDetail']['id'])) {
+			if(!$this->request->is('put') || !isset($this->request->data['CourseGradeDetail']['id'])) {
 				throw new MethodNotAllowedException('Error - No Grading Details');
 			}
-			
 			//Check to see if a grade already exists
 			if($this->CourseGrade->find('first', array(
 				'conditions' => array(
@@ -146,7 +150,7 @@ class CourseGradesController extends CoursesAppController {
 			
 			$gradeid = $this->CourseGrade->grade($this->request->data['CourseGradeDetail']['id'], $this->request->data['Answer']);
 			
-			$this->redirect(array('action' => 'show_grade', $gradeid));
+			$this->redirect(array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'show_grade', $gradeid));
 				
 		}catch (Exception $e){
 			$this->Session->setFlash($e->getMessage());

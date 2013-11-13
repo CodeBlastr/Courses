@@ -69,14 +69,14 @@ class CourseGradeDetailFixture extends CakeTestFixture {
 				array(
 					'type' => 'Tutorial',
 					'weight' => .2,
-					'droplowest' => true,
-					'allowcurve' => true
+					'droplowest' => false,
+					'allowcurve' => false
 				),
 				array(
 					'type' => 'Homework',
-					'weight' => .5,
+					'weight' => .8,
 					'droplowest' => true,
-					'allowcurve' => false
+					'allowcurve' => true
 				)
 			),
 			'gradebooksettings' => array(

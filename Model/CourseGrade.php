@@ -33,6 +33,13 @@ class CourseGrade extends CoursesAppModel {
 			'fields' => '',
 			'order' => ''
 		),
+		'MainCourse' => array(
+				'className' => 'Courses.Course',
+				'foreignKey' => 'foreign_key',
+				'conditions' => array('CourseGrade.model' => 'Course'),
+				'fields' => '',
+				'order' => ''
+		),
 		'User' => array(
 			'className' => 'Users.User',
 			'foreignKey' => 'student_id',
@@ -63,7 +70,7 @@ class CourseGrade extends CoursesAppModel {
 		),
 		'SubGrades' => array(
 			'className' => 'Courses.CourseGrade',
-			'foreignKey' => 'CourseGrade.course_id',
+			'foreignKey' => false,
 			'conditions' => array(
 				'SubGrades.model NOT' => 'Course',
 				'SubGrades.course_id' => 'CourseGrade.foreign_key',
@@ -128,10 +135,13 @@ class CourseGrade extends CoursesAppModel {
 				if(isset($scores['answers'])) {
 					$grades['GradeAnswers'] = $scores['answers'];
 				}
+				
+				$grades['CourseGrade']['type'] = $this->gradeDetails['GradeDetail']['type'];
+				
 				$gradeid = '';
 				if($this->saveAll($grades)) {
 					$gradeid = $this->id;
-					if(!$this->_updateCourseGrade($this->gradeDetails['GradeDetail']['course_id'])) {
+					if(!$this->updateCourseGrade($this->gradeDetails['GradeDetail']['course_id'])) {
 						throw new Exception('Course grade was not updated, you will need to update manually');
 					}
 				}
@@ -140,7 +150,7 @@ class CourseGrade extends CoursesAppModel {
 			}
 			
 		}else{
-			throw new Exception('No Grading Details Defines');
+			throw new Exception('No Grading Details Defined');
 		}
 	}
 	
@@ -163,7 +173,7 @@ class CourseGrade extends CoursesAppModel {
 		);
 		
 		if(!empty($answers)) {
-			$grade['CourseGrade']['grade'] = $answers['score'];
+			$grade['CourseGrade']['points_earned'] = $answers['score'];
 			$grade['CourseGrade']['total'] = $answers['total'];
 		}
 		
@@ -171,69 +181,112 @@ class CourseGrade extends CoursesAppModel {
 	 }
 	 
 	 public function updateCourseGrade($courseid) {
-	 	$CourseGrade = $this->find('all', array(
+	 	$course_grade = $this->find('first', array(
 	 		'conditions' => array(
 				'CourseGrade.model' => 'Course',
 				'CourseGrade.foreign_key' => $courseid,
 				'CourseGrade.student_id' => $this->studentId,
 				),
-			'contain' => array()
+			'contain' => array('GradeDetail')
 		));
-		
+	 	//debug(unserialize($course_grade['GradeDetail']['data']));exit;
 		//If grade doesn't exist yet, lets make one
-		if(empty($CourseGrade)) {
-			$CourseGrade = $this->create();
+		if(!$course_grade) {
+			throw new Exception('No Course Grading Settings Defined');
 		}
 		
+		$this->gradeSettings = unserialize($course_grade['GradeDetail']['data']);
+		
 		$subgrades = $this->find('all', array(
-			'joins' => array(
-				array('table' => 'categorized',
-			        'alias' => 'Categorized',
-			        'type' => 'LEFT',
-			        'conditions' => array(
-			            'Categorized.model = CourseGrade.model',
-			            'Categorized.foreign_key = CourseGrade.foreign_key' 
-			        )
-			    ),
-			),
 			'conditions' => array(
 				'CourseGrade.model NOT' => 'Course',
 				'CourseGrade.course_id' => $courseid,
 				'CourseGrade.student_id' => $this->studentId,
-				),
-			'fields' => array('CourseGrade.*','Categorized.id')
-			));
+				)
+		));
 		
 		if(!$subgrades) {
-			throw new Exception('Nothing to Grade', 1);
+			throw new Exception('Nothing to Grade', 0);
 		}
-			
-		$details = $this->GradeDetail->find('first', array(
-			'conditions' => array(
-				'GradeDetail.model' => 'Course',
-				'GradeDetail.foreign_key' => $courseid
-			)
-			));
-		
-		if(!isset($details['GradeDetail']['grading_method'])) {
-			throw new Exception('Grading Details are not defined', 1);
+		debug($subgrades);
+		if(empty($this->gradeSettings)) {
+			throw new Exception('Grading Details are not defined', 0);
 		}
-		
-		$method = $details['GradeDetail']['grading_method'].'_grading';
-		if(!method_exists($this, $method)) {
-			throw new Exception('Grading Method not available', 1);
+		debug($this->gradeSettings);
+		$subgrades = $this->formatSubGrades($subgrades);
+		try {
+			$grade = $this->gradeSubGrades($subgrades);
+		}catch (Exception $e) {
+			debug($e->getMessage());
 		}
-		
-		$CourseGrade = array_merge_recursive($this->_prepareGrade(null, $details), $CourseGrade);
-		$score = $this->$method($CourseGrade, $subgrades, $details);
-		$CourseGrade['CourseGrade']['grade'] = $score['score'];
-		$CourseGrade['CourseGrade']['total'] =  $score['total'];
+		exit;
+		$score = $this->$method($course_grade, $subgrades, $details);
+		$course_grade['CourseGrade']['grade'] = $score['score'];
+		$course_grade['CourseGrade']['total'] =  $score['total'];
 		
 		if($this->save($CourseGrade)) {
 			return true;
 		}else {
 			return false;
 		}
+	 }
+	 
+	 protected function gradeSubGrades($subgrades) {
+	 	$keys = Hash::extract($this->gradeSettings, 'assignmentcategory.{n}.type');
+	 	$total = 0;
+	 	foreach($subgrades as $type => $sub) {
+	 		$key = array_search($type, $keys);
+	 		$droplowest = $this->gradeSettings['assignmentcategory'][$key]['droplowest'];
+	 		//$allowcurve = $this->gradeSettings['assignmentcategory'][$key]['allowcurve'];
+	 		//$curvetype = $allowcurve ? $this->gradeSettings['curve_type'].'_grading' : false;
+	 		if($droplowest) {
+	 			$sub['grades'] = $this->_dropLowest($sub['grades']);
+	 		}
+	 		$sub['total_points'] = $this->_getTotal($sub['grades']);
+	 		$sub['points'] = $this->_getPoints($sub['grades']);
+	 		$sub['weight'] = $this->gradeSettings['assignmentcategory'][$key]['weight'];
+	 		$total += $sub['points']/$sub['total_points'] * $sub['weight'];
+	 		$subgrades[$type] = $sub;
+	 	}
+	 	debug($subgrades);
+	 	debug($total);exit;
+	 }
+	 
+	 private function _dropLowest($grades) {
+	 	$lowest = $grades[0]['grade'];
+	 	$recindex = 0;
+	 	foreach($grades as $key => $value) {
+	 		if($value['grade'] < $lowest) {
+	 			$recindex = $key;
+	 			$lowest = $value['grade'];
+	 		}
+	 	}
+	 	unset($grades[$recindex]);
+	 	return $grades;
+	 }
+	 
+	 private function _getPoints($grades) {
+	 	$points = 0;
+	 	foreach ($grades as $grade) {
+	 		if(isset($grade['CourseGrade'])) {
+	 			$grade = $grade['CourseGrade'];
+	 		}
+	 		
+	 		$points += $grade['points_earned'];
+	 	}
+	 	return $points;
+	 }
+	 
+	 private function _getTotal($grades) {
+	 	$total = 0;
+	 	foreach ($grades as $grade) {
+	 		if(isset($grade['CourseGrade'])) {
+	 			$grade = $grade['CourseGrade'];
+	 		}
+	 
+	 		$total += $grade['total'];
+	 	}
+	 	return $total;
 	 }
 	
 	/**
@@ -242,23 +295,16 @@ class CourseGrade extends CoursesAppModel {
 	 * @return int - grade
 	 */
 	 
+	 
 	 /**
-	  * @todo - setting will be available when editing the course and will need to add categories to the tasks
-	  * 		And will have a percentage value for grading assigned to them
+	  * Square Root Grading
+	  * Final Grade = (SQRT (Raw Score/100)) x 100
+	  * @param formated $subgrade
 	  */
 	 
-	 protected function weighted_grading($CourseGrade, $subgrades, $details) {	
-	 	  $settings = !empty($details['GradeDetail']['data']) ? json_decode($details['GradeDetail']['data']) : array();
-		  $totalpoints = 0;
-		  $score = 0;
-		 
-		  foreach($subgrades as $grade) {
-		  	$score += $grade['CourseGrade']['grade'];
-			$totalpoints += $grade['CourseGrade']['total'];
-		  }
-		  
-		  return array('score' => $score/$totalpoints, 'total' => $totalpoints);
-		  
+	 protected function square_root_grading($total, $points) {	
+	 	 $raw_grade = $points/$total;
+	 	 return sqrt($raw_grade)*100;
 	 }
 	 
 	 /**
@@ -289,15 +335,14 @@ class CourseGrade extends CoursesAppModel {
 	  
   /**
    * Grading for Individual Answers
-   * @TODO this could be expanded on to allow weighted grading etc.
    * 
-   * @return percentage of points
+   * @return points
    * 
    */
 	  
 	  protected function _gradeAnswer($ans, $rightans, $total = null) {
 	  		if($ans == $rightans) {
-	  			return !empty($total) ? $total : 100;
+	  			return $total;
 	  		}else {
 	  			return 0;
 	  		}
@@ -325,10 +370,44 @@ class CourseGrade extends CoursesAppModel {
 			 
 		}
 		
-		public function updateGradeFromAnswers($course_grade_id, $coure_grade_detail) {
+		public function updateGradeFromAnswers($course_grade_id, $studentid, $courseid = false) {
+			$gradedAnswers = $this->GradeAnswers->find('all', array('conditions' => array('course_grade_id' => $course_grade_id)));
+			$total = 0;
+			$grade = 0;
+			foreach($gradedAnswers as $answer) {
+				if(!$answer['GradeAnswers']['dropped']) {
+					$total += $answer['GradeAnswers']['total_worth'];
+					$grade += $answer['GradeAnswers']['grade'];
+				}
+			}
+			$coursegrade = $this->save(array(
+				'id' => $course_grade_id,
+				'points_earned' => $grade,
+				'total' => $total,
+			));
 			
+			if($courseid) {
+				$this->studentId = $studentid;
+				debug($this->updateCourseGrade($courseid));exit;
+			}
+			return $coursegrade;
 		}
+		
 	 
-	 
+	 	protected function formatSubGrades($subs) {
+	 		$result = array();
+	 		$total_points = 0;
+	 		$points = 0;
+	 		foreach ($subs as $sub) {
+	 			$type = $sub[$this->alias]['type'];
+	 			if(key_exists($type, $result)) {
+	 				$result[$type]['grades'][] = $sub[$this->alias];
+	 			}
+	 			else {
+	 				$result[$type]['grades'] = array($sub[$this->alias]);
+	 			}
+	 		}
+	 		return $result;
+	 	}
 	
 }

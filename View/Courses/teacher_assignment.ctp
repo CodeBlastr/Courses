@@ -6,8 +6,12 @@
 		//echo $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Assignment Category', 'empty' => '-- Choose Category --'));
 		echo $this->Form->input('Task.name');
 		if(isset($this->request->data['Task']['id'])) {
-			echo $this->Form->input('Task.id');
+			echo $this->Form->hidden('Task.id');
 		}
+		if(isset($this->request->data['CourseGradeDetail']['id'])) {
+			echo $this->Form->hidden('CourseGradeDetail.id');
+		}
+		echo $this->Form->hidden('CourseGradeDetail.course_id', array('value' => $course_id));
 	?>
 	<div class="row-fluid">
 	<div class="span6">

@@ -13,6 +13,7 @@ class CourseGradeTestCase extends CakeTestCase {
  */
 	public $fixtures = array(
 		'plugin.Courses.CourseGrade',
+		'plugin.Courses.CourseGradeDetail',
 		);
 
 /**
@@ -22,7 +23,7 @@ class CourseGradeTestCase extends CakeTestCase {
  */
 	public function setUp() {
 		parent::setUp();
-		$this->CourseGrade = ClassRegistry::init('CourseGrade');
+		$this->CourseGrade = ClassRegistry::init('Courses.CourseGrade');
 	}
 
 /**
@@ -35,17 +36,14 @@ class CourseGradeTestCase extends CakeTestCase {
 
 		parent::tearDown();
 	}
-	
-/**
- * save test
- */
- 	public function testSave() {
- 		$before = $this->CourseUser->find('count');
- 		$data['CourseUser']['user_id'] = 1;
-		$data['CourseUser']['course_id'] = 2;
- 		debug($this->CourseUser->save($data));
- 		$after = $this->CourseUser->find('count');
-		$this->assertTrue($after > $before);
+ 	
+ 	/**
+ 	 * Course Update Grading Method
+ 	 */
+ 	public function testupdateCourseGrade() {
+ 		$this->CourseGrade->studentId = 1;
+ 		$detail = $this->CourseGrade->GradeDetail->find('all');
+ 		$result = $this->CourseGrade->updateCourseGrade($detail[0]['GradeDetail']['course_id']);
  	}
 
 }

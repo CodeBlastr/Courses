@@ -208,7 +208,6 @@ class AppCoursesController extends CoursesAppController {
 			)	
 			
 		));
-		
 		// list of all students so we can display the Roster
 		$courseUsers = $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $this->Course->id),
@@ -370,7 +369,6 @@ class AppCoursesController extends CoursesAppController {
 			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
 			
 			if(!empty($this->request->data)) {
-			
 				if(isset($this->request->data['TaskAttachment'][0]['model']) && $this->request->data['TaskAttachment'][0]['model'] == 'Answer') {
 					 $this->loadModel('Answers.Answer');
 					  $Answer = $this->Answer->read('data', $this->request->data['TaskAttachment'][0]['foreign_key']);
@@ -378,14 +376,12 @@ class AppCoursesController extends CoursesAppController {
 					  	 $this->request->data['CourseGradeDetail']['right_answers'] = $Answer['Answer']['data'];
 					  }
 				}
-
-				$this->request->data['CourseGradeDetail']['total_worth'] = !empty($this->request->data['CourseGradeDetail']['total_worth']) ? ($this->request->data['CourseGradeDetail']['total_worth'] / 100) : 0;
-
+				//$this->request->data['CourseGradeDetail']['total_worth'] = !empty($this->request->data['CourseGradeDetail']['total_worth']) ? ($this->request->data['CourseGradeDetail']['total_worth'] / 100) : 0;
+				//$this->request->data['CourseGradeDetail']['type'] = $this->request->data['Task']['settings'];
 				if(isset($this->request->data['TaskAttachment'][0]['id']) && empty($this->request->data['TaskAttachment'][0]['foreign_key'])) {
 					$this->Course->Task->TaskAttachment->delete($this->request->data['TaskAttachment'][0]['id']);
 					unset($this->request->data['TaskAttachment']);
 				}
-	
 				if($this->Course->Task->saveAll($this->request->data)) {
 					$this->Session->setFlash('Assigment Saved');
 					$this->redirect(array('action' => 'assignment', $this->Course->Task->id));
@@ -398,7 +394,7 @@ class AppCoursesController extends CoursesAppController {
 			if ( !empty($id) ) {
 				$this->request->data = $this->Course->Task->find('first', array(
 					'conditions' => array('Task.id' => $id),
-					'contain' => array('TaskAttachment')
+					'contain' => array('TaskAttachment', 'CourseGradeDetail')
 				));
 				
 				$courseid = $this->request->data['Task']['model'] == 'Course' ? $this->request->data['Task']['foreign_key'] : $courseid;

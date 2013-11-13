@@ -6,36 +6,29 @@ app::uses('CourseGradeAnswer', 'Courses.Model');
 
 class GradeableBehavior extends ModelBehavior {
 		
-	/**
-	 * Settings array
-	 * 
-	 * field_map array of (field_name) => grade_field_names
-	 * This is for saving graded answers
-	 * available fields from grade table
-	 * 'model' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-	 * 'foreign_key' => array('type' => 'string', 'null' => false, 'default' => NULL, 'length' => 36, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-	 * 'answer' => array('type' => 'text', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-	 * 'grade' => array('type' => 'integer', 'null' => true, 'default' => NULL, 'length' => 3),
-	 * 'right_answer' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-	 * 'notes' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-	 * 'time' => array('type' => 'datetime', 'null' => true, 'default' => NULL),
-	 * 'dropped' => array('type' => 'boolean', 'null' => false, 'default' => false),
-	 * 'data' => array('type' => 'text', 'null' => true, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-	 */
 	public $defaults = array(
 		'answer_field_map' => array(),
 		'save_self' => true
 	);
 	
-	public $settings = array();
+	public $settings = array(
+		'typeField' => 'type',
+		
+	);
 	
 	public function setup(Model $Model, $settings = array()) {
 	    	
-	    if (!isset($this->settings[$Model->alias])) {
-	        
-	    }
-		
 	    $this->settings[$Model->alias] = array_merge($this->defaults, $settings);
+	    
+	    //Bind the grade detail Model
+	    $Model->bindModel(array(
+	    	'hasOne' => array(
+	    		'CourseGradeDetail' => array(
+		    		'className' => 'Courses.CourseGradeDetail',
+		    		'foreignKey' => 'foreign_key',
+		    		'conditions' => array('CourseGradeDetail.model' => $Model->alias)
+	    	))
+	    ), false);
 		
 	}
 	
@@ -54,9 +47,25 @@ class GradeableBehavior extends ModelBehavior {
 	
 	public function beforeSave(Model $Model) {
 		
-		if(isset($Model->data[$Model->alias]) && isset($Model->data['CourseGradeDetail'])) {
-			$this->data['CourseGradeDetail'] = $Model->data['CourseGradeDetail'];
-			unset($Model->data['CourseGradeDetail']);
+		//Check to see if grading detail exists
+		if(!isset($Model->data['CourseGradeDetail']['id']) && isset($Model->data[$Model->alias]['id'])) {
+			$this->gradedetail = $Model->CourseGradeDetail->find('first', array(
+				'conditions' => array(
+					'CourseGradeDetail.foreign_key' => $Model->data[$Model->alias]['id']),
+					'CourseGradeDetail.model' => $Model->alias
+			));
+			if(!$this->gradedetail) {
+				$this->gradedetail = $Model->CourseGradeDetail->create();
+				$this->gradedetail['CourseGradeDetail'] = array(
+					'type' => isset($Model->data[$Model->alias][$this->settings[$Model->alias]['typeField']]) ? $Model->data[$Model->alias][$this->settings[$Model->alias]['typeField']] : null,
+					'model' => $Model->alias,
+					'name' => isset($Model->data[$Model->alias][$Model->displayField]) ? $Model->data[$Model->alias][$Model->displayField] : '',
+				);
+			}
+			if(isset($Model->data['CourseGradeDetail'])) {
+				$this->gradedetail['CourseGradeDetail'] = array_merge($this->gradedetail['CourseGradeDetail'], $Model->data['CourseGradeDetail']);
+				unset($Model->data['CourseGradeDetail']);
+			}
 		}
 		
 		return true;
@@ -64,48 +73,22 @@ class GradeableBehavior extends ModelBehavior {
 	}
 	
 	public function afterSave(Model $Model, $created) {
-		$CourseGradeDetail = new CourseGradeDetail();
 		
-		//Removes the Grade Detail if Grading Total Worth are Removed or not there
-		if(empty($this->data['CourseGradeDetail']['total_worth'])) {
-			
-			//Deletes the Grade Detail
-			if(isset($this->data['CourseGradeDetail']['id'])) {
-				return $CourseGradeDetail->delete($this->data['CourseGradeDetail']['id']);
-			}
-			
-			return true; //returns true if the grading method is not set
-			
-		}
-		
-		$this->data['CourseGradeDetail']['model'] = $Model->alias;
-		$this->data['CourseGradeDetail']['foreign_key'] = $Model->data[$Model->alias]['id'];
+		$this->gradedetail['CourseGradeDetail']['foreign_key'] = $Model->data[$Model->alias]['id'];
 
-		if (empty($this->data['CourseGradeDetail']['name'])) {
+		if (empty($this->gradedetail['CourseGradeDetail']['name'])) {
 			$this->data['CourseGradeDetail']['name'] = $Model->data[$Model->alias][$Model->displayField];
 		}
 		
-		$result = $CourseGradeDetail->save($this->data);
+		$result = $Model->CourseGradeDetail->save($this->gradedetail);
 		
 		return $result !== false ? true : false;
 		
 	}
 	
 	public function beforeFind(Model $Model, $query) {
-		//This attaches the Grade Details Model to the $model so whens its created it saves the grade
-		//Details
-		$Model->bindModel(
-	        array('hasOne' => array(
-	                'CourseGradeDetail' => array(
-						'className' => 'Courses.CourseGradeDetail',
-						'foreignKey' => 'foreign_key',
-						//'conditions' => array('CourseGradeDetail.model' => $Model->alias),
-	                	)
-	             	)
-	     		),false
-			);
-		$Model->contain('CourseGradeDetail');
-		
+		parent::beforeFind($Model, $query);
+		$Model->contain[] = 'CourseGradeDetail';
 		return true;
 	}
 	

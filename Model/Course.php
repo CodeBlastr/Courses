@@ -207,11 +207,13 @@ class AppCourse extends CoursesAppModel {
 					'fields' => array('CourseSeries.id', 'CourseSeries.is_sequential'),
 					'Course' => array(
 						'fields' => array('Course.order'),
+						'media' => false
 					)
 				),
-			)
+			),
+			'media' => false
 		));
-
+		
 		$completedCourses = array();
 		foreach ( $completion as $mightBeCompleted ) {
 			if ( $mightBeCompleted['CourseUser']['is_complete'] == true ) {

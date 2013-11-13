@@ -1,4 +1,5 @@
 <?php
+	//debug($this->request->data);
 	$gradeDetail = $this->request->data['GradeDetail'];
 	$grade = $this->request->data['CourseGrade'];
 	$gradeAnswers = $this->request->data['GradeAnswers'];
@@ -7,7 +8,7 @@
 <div id="showGrade" class="row-fluid">
 <div class="span12">
 	<h2 style="text-align: center">Grade for <?php echo $student['full_name']; ?></h2>
-	
+	<?php echo $this->Html->link('Go Back to assignment', array('controller' => 'courses', 'action' => 'assignment', $grade['foreign_key'] )); ?>
 	<div class="row-fluid">
 		<div class="span12">
 			
@@ -30,6 +31,8 @@
 			<?php echo $this->Form->create(null, array('url' => array('action' => 'edit_answers'))); ?>
 			<?php echo $this->Form->hidden('GradeDetail.creator_id'); ?>
 			<?php echo $this->Form->hidden('GradeDetail.course_id'); ?>
+			<?php echo $this->Form->hidden('CourseGrade.id'); ?>
+			<?php echo $this->Form->hidden('CourseGrade.student_id'); ?>
 			<?php foreach($gradeAnswers as $num => $ga): ?>
 				<div class="row-fluid" style="border-top: #999 1px solid; padding: 10px 0;">
 						<div class="span2 padtop">Question <?php echo $num; ?>: </div>
