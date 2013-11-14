@@ -1,8 +1,4 @@
 <?php
-
-//debug($course);
-//debug($courseUsers);
-
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
 $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );

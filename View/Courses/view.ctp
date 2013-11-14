@@ -1,7 +1,4 @@
-asdfasdf<?php
-
-//debug($course);
-//debug($courseUsers);
+<?php
 
 $start = strtotime($course['Course']['start']);
 $end = strtotime($course['Course']['end']);
