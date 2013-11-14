@@ -42,6 +42,13 @@ class AppCoursesController extends CoursesAppController {
 	public function index() {
 		$this->set('page_title_for_layout', __('Available Courses'));
 		
+		// $channelData is used when calling as index.rss (/app/View/Layouts/rss/default.ctp)
+		$this->set('channelData', array(
+			'title' => __SYSTEM_SITE_NAME . ' Available Courses',
+			'link' => Router::url('/', true),
+			'description' => ''
+		));
+		
 		$conditions = array(
 			'Course.type' => array('course', 'series'),
 			'Course.parent_id' => null,
@@ -62,7 +69,6 @@ class AppCoursesController extends CoursesAppController {
 		
 		$this->paginate['order']['Course.start'] = 'ASC';
 		$this->request->data = $this->paginate();
-		//debug($this->request->data);
 	}
 	
 	public function _categoryIndex($categoryId = null) {
