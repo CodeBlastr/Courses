@@ -70,7 +70,7 @@
 			</div>
 			<div class="span8">
 				<div class="course-item">
-						<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'course_series', 'action' => 'view', $course['Course']['id']))); ?></h4>
+						<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'courses', 'action' => 'view', $course['Course']['id']))); ?></h4>
 						<h6><small><?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
 						<h6><small><?php echo __($course['Course']['school']); ?></small></h6>
 						<div class="description">
