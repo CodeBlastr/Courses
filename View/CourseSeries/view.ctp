@@ -1,24 +1,56 @@
 <?php
-echo $this->Html->tag('h1', $series['CourseSeries']['name']);
-echo $this->Html->tag('p', $series['CourseSeries']['description']);
-echo $this->Html->tag('hr');
+$start = strtotime($series['CourseSeries']['start']);
+$end = strtotime($series['CourseSeries']['end']);
+$lengthOfSeries = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
+?>
+<div class="courses view">
+	<h2><?php echo $series['CourseSeries']['name'] ?></h2>
+	<p><b><?php echo $series['CourseSeries']['school'] ?></b></p>
+	<div class="row-fluid">
+		<div class="span8">
+			<p><?php echo $series['CourseSeries']['description'] ?></p>
+			<table>
+				<tr>
+					<td><b>Starts: </b><?php echo $this->Time->niceShort($series['CourseSeries']['start']) ?> (<?php echo $lengthOfSeries ?> weeks long)</td>
+					<td><b>Language: </b><?php echo $series['CourseSeries']['language'] ?></td>
+				</tr>
+				<tr>
+					<td><b>Location: </b><?php echo $series['CourseSeries']['location'] ?></td>
+					<td><b>Grade Level: </b><?php echo $series['CourseSeries']['grade'] ?></td>
+				</tr>
+			</table>
+			<hr />
 
-echo $this->Html->tag('p', 'This series consists of the following courses:');
-$seriesCourses = '';
-foreach ( $series['Course'] as $course ) {
-	$seriesCourses .= $this->Html->tag('li', $this->Html->link($course['name'], array( 'controller' => 'courses', 'action' => 'view', $course['id'] )));
-}
-echo $this->Html->tag('ol', $seriesCourses);
+			<p>This series consists of the following courses:</p>
+			<?php
+			$seriesCourses = '';
+			foreach ( $series['Course'] as $course ) {
+				$seriesCourses .= $this->Html->tag('li', $this->Html->link($course['name'], array( 'controller' => 'courses', 'action' => 'view', $course['id'] )));
+			}
+			echo $this->Html->tag('ol', $seriesCourses);
+			?>
 
-if ( !$isOwner ) {
-	if ( !$isEnrolled ) {
-		echo $this->Html->link('Register', array('action' => 'register', $series['CourseSeries']['id']), array('class' => 'btn btn-primary'));
-	} else {
-		echo $this->Html->link('Drop ' . $series['CourseSeries']['name'], array('action' => 'unregister', $series['CourseSeries']['id']), array('class' => 'btn btn-danger'));
-	}
-}
+			<p>
+				<?php
+				if (!$isOwner) {
+					if (!$isEnrolled) {
+						echo $this->Html->link('Register for this series', array('action' => 'register', $series['CourseSeries']['id']), array('class' => 'btn btn-primary'));
+					} else {
+						echo $this->Html->link('Drop ' . $series['CourseSeries']['name'], array('action' => 'unregister', $series['CourseSeries']['id']), array('class' => 'btn btn-danger'));
+					}
+				}
+				?>
+			</p>
+		</div>
+		<div class="span4">
+			<h3>Instructed by:</h3>
+			<?php
+			echo $this->element('Users.snpsht', array('useGallery' => true, 'userId' => $series['Teacher']['id'], 'thumbSize' => 'medium', 'thumbLink' => 'default', 'showFirstName' => true, 'showLastName' => true));
+			?>
+		</div>
+	</div>
 
-
+<?php
 /**
  * Menus !
  */
