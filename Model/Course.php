@@ -120,7 +120,7 @@ class AppCourse extends CoursesAppModel {
 
     
 	public function __construct($id = null, $table = null, $ds = null) {
-		if (in_array('Categories', CakePlugin::loaded())) {
+		if (CakePlugin::loaded('Categories')) {
 			$this->hasAndBelongsToMany['Category'] = array(
 	            'className' => 'Categories.Category',
 	       		'joinTable' => 'categorized',
@@ -181,7 +181,7 @@ class AppCourse extends CoursesAppModel {
 		parent::afterSave($created);
 		if ( $created ) {	
 			// we say in the model when people get subscribed
-			if (in_array('Subscribers', CakePlugin::loaded())) {
+			if (CakePlugin::loaded('Subscribers')) {
 				$this->subscribe(CakeSession::read('Auth.User.id'));
 			}
 		}
