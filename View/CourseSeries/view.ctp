@@ -21,14 +21,6 @@ $lengthOfSeries = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			</table>
 			<hr />
 
-			<p>This series consists of the following courses:</p>
-			<?php
-			$seriesCourses = '';
-			foreach ( $series['Course'] as $course ) {
-				$seriesCourses .= $this->Html->tag('li', $this->Html->link($course['name'], array( 'controller' => 'courses', 'action' => 'view', $course['id'] )));
-			}
-			echo $this->Html->tag('ol', $seriesCourses);
-			?>
 
 			<p>
 				<?php
@@ -41,6 +33,33 @@ $lengthOfSeries = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 				}
 				?>
 			</p>
+
+			<p>This series consists of the following courses:</p>
+			<?php
+			foreach ( $series['Course'] as $course ) :
+				$start = strtotime($course['start']);
+				$end = strtotime($course['end']);
+				$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
+			?>
+			
+			<div class="row-fluid">
+				<div class="span2">
+					<img data-src="holder.js/100%x150" />
+				</div>
+				<div class="span10">
+					<div class="course-item">
+						<h4><?php echo __($this->Html->link($course['name'], array('controller' => 'courses', 'action' => 'view', $course['id']))); ?></h4>
+						<h6><small><?php echo __('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['start']), $lengthOfCourse)); ?></small></h6>
+						<h6><small><?php echo __($course['school']); ?></small></h6>
+						<div class="description">
+							<div class="truncate"><?php echo __( $course['description'] ); ?></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<?php endforeach; ?>
+
 		</div>
 		<div class="span4">
 			<h3>Instructed by:</h3>
