@@ -11,7 +11,7 @@ class AppCoursesController extends CoursesAppController {
 
 	public $uses = array('Courses.Course', 'Courses.CourseSeries');
 	
-	public $components = array('RequestHandler', 'Template', 'Categories');
+	public $components = array('RequestHandler', 'Template');
 	
 	public $helpers = array('Calendar');
 
@@ -42,7 +42,7 @@ class AppCoursesController extends CoursesAppController {
 	public function index() {
 		$this->set('page_title_for_layout', __('Available Courses'));
 		
-		// $channelData is used when calling as index.rss (/app/View/Layouts/rss/default.ctp)
+		// $channelData is only used when calling as index.rss (/app/View/Layouts/rss/default.ctp)
 		$this->set('channelData', array(
 			'title' => __SYSTEM_SITE_NAME . ' Available Courses',
 			'link' => Router::url('/', true),
@@ -62,13 +62,21 @@ class AppCoursesController extends CoursesAppController {
 			'SubCourse',
 			'CourseUser' => array('conditions' => array('user_id' => $this->userId))
 		);
+		
+		if ($this->request->query['school']) {
+			$conditions[]['Course.school'] = $this->request->query['school'];
+		}
+		
 		$this->paginate['conditions'] += $conditions;
 		$this->paginate += array(
 			'contain' => $contain,
 		);
 		
 		$this->paginate['order']['Course.start'] = 'ASC';
+		
 		$this->request->data = $this->paginate();
+		$this->set('schools', $this->Course->schoolsWithCourses());
+		
 	}
 	
 	public function _categoryIndex($categoryId = null) {

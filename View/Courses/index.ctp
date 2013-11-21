@@ -1,7 +1,8 @@
-<div class="courses index">
 <?php $courses = $this->request->data; ?>
+<div class="courses index">
 	<h2><?php echo $page_title_for_layout;?></h2>
 	<hr>
+	<span class="muted">Categories</span>
 	<ul class="nav nav-pills">
 		<?php
 		$active = isset($this->request->query['category']) ? 'inactive' : 'active';
@@ -9,6 +10,23 @@
 		foreach ($categories as $id => $category) {
 			$active = $this->request->query['category'] == $id || $this->request->query['category'] == $category ? 'active' : 'inactive';
 			echo __('<li class="%s">%s</li>', $active, $this->Html->link($category, array('action' => 'index', '?' => array('category' => urlencode($category)))));
+		} ?>
+	</ul>
+	<span class="muted">Schools</span>
+	<ul class="nav nav-pills">
+		<?php
+		$active = isset($this->request->query['school']) ? 'inactive' : 'active';
+		echo __('<li class="%s">%s</li>', $active, $this->Html->link('All', array('action' => 'index')));
+		foreach ($schools as $id => $school) {
+			$queryParams = '';
+			$active = ($this->request->query['school'] === $id || $this->request->query['school'] == $school) ? 'active' : 'inactive';
+
+			if (isset($this->request->query['category'])) {
+				$queryParams['category'] = urlencode($this->request->query['category']);
+			}
+			$queryParams['school'] = urlencode($school);
+
+			echo __('<li class="%s">%s</li>', $active, $this->Html->link($school, array('action' => 'index', '?' => $queryParams)));
 		} ?>
 	</ul>
 	<hr>

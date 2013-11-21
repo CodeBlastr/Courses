@@ -259,6 +259,32 @@ class AppCourse extends CoursesAppModel {
 		return $results;
 	}
 	
+	
+	/**
+	 * Returns the unique schools from the Course.school column.
+	 * 
+	 * @review MediaAttachable was the one that really gets in the way when you're trying to do a DISTINCT query.
+	 * @return array Strings of the names of schools
+	 */
+	public function schoolsWithCourses() {
+		$this->Behaviors->detach('Ratable');
+		$this->Behaviors->detach('MediaAttachable');
+		$schools = $this->find('all', array(
+			'conditions' => array('Course.type' => 'course'),
+			'fields' => array('DISTINCT (Course.school) AS school_name'),
+			'order' => array('Course.school ASC')
+		));
+		$this->Behaviors->attach('Ratable');
+		$this->Behaviors->attach('MediaAttachable');
+		$schools = Set::extract('/Course/school_name', $schools);
+		foreach ($schools as &$school) {
+			if (empty($school)) {
+				$school = '?';
+			}
+		}
+		return $schools;
+	}
+	
 }
 
 if (!isset($refuseInit)) {
