@@ -19,7 +19,7 @@
 		echo __('<li class="%s">%s</li>', $active, $this->Html->link('All', array('action' => 'index')));
 		foreach ($schools as $id => $school) {
 			$queryParams = '';
-			$active = ($this->request->query['school'] === $id || $this->request->query['school'] == $school) ? 'active' : 'inactive';
+			$active = ($this->request->query['school'] === $id || urldecode($this->request->query['school']) == $school) ? 'active' : 'inactive';
 
 			if (isset($this->request->query['category'])) {
 				$queryParams['category'] = urlencode($this->request->query['category']);
@@ -35,20 +35,23 @@
 		$end = strtotime($course['Course']['end']);
 		$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );?>
 		
-		<?php if($course['Course']['type'] == 'series'): ?>
+		<?php if ($course['Course']['type'] == 'series'): ?>
 		<div class="row-fluid">
 			<div class="span2">
-				<img data-src="holder.js/100%x150" />
+				<img src="<?php
+				echo ($course['MediaThumbnail'][0]) ? '/media/images/'.$course['MediaThumbnail'][0]['filename'].'.'.$course['MediaThumbnail'][0]['extension'] : '/courses/img/book-ed2.jpg';
+				?>" />
+				<!--<img data-src="holder.js/100%x150" />-->
 			</div>
 			<div class="span8">
 					<div class="span7">
 						<div class="course-item">
-						<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'course_series', 'action' => 'view', $course['Course']['id']))); ?></h4>
-						<h6><small><?php echo __($course['Course']['school']); ?></small></h6>
-						<h6><small><?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
-						<div class="description">
-							<div class="truncate"><?php echo __( $course['Course']['description'] ); ?></div>
-						</div>
+							<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'course_series', 'action' => 'view', $course['Course']['id']))); ?></h4>
+							<h6><small><?php echo __($course['Course']['school']); ?></small></h6>
+							<h6><small><?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
+							<div class="description">
+								<div class="truncate"><?php echo __( $course['Course']['description'] ); ?></div>
+							</div>
 						</div>
 					</div>
 					<div class="span5">
@@ -84,7 +87,10 @@
 		<?php elseif($course['Course']['type'] == 'course'): ?>
 		<div class="row-fluid">
 			<div class="span2">
-				<img data-src="holder.js/100%x150" />
+				<img src="<?php
+				echo ($course['MediaThumbnail'][0]) ? '/media/images/'.$course['MediaThumbnail'][0]['filename'].'.'.$course['MediaThumbnail'][0]['extension'] : '/courses/img/book-ed2.jpg';
+				?>" />
+				<!--<img data-src="holder.js/100%x150" />-->
 			</div>
 			<div class="span8">
 				<div class="course-item">

@@ -57,6 +57,7 @@ class AppCoursesController extends CoursesAppController {
 		);
 		
 		$contain = array(
+			'School' => array('fields' => array('id', 'name')),
 			'Teacher',
 			'Category',
 			'SubCourse',
@@ -64,7 +65,7 @@ class AppCoursesController extends CoursesAppController {
 		);
 		
 		if ($this->request->query['school']) {
-			$conditions[]['Course.school'] = $this->request->query['school'];
+			$conditions[]['School.name'] = urldecode($this->request->query['school']);
 		}
 		
 		$this->paginate['conditions'] += $conditions;
@@ -75,6 +76,7 @@ class AppCoursesController extends CoursesAppController {
 		$this->paginate['order']['Course.start'] = 'ASC';
 		
 		$this->request->data = $this->paginate();
+		
 		$this->set('schools', $this->Course->schoolsWithCourses());
 		
 	}
@@ -310,10 +312,10 @@ class AppCoursesController extends CoursesAppController {
 		}
 		
 		$parentCourses = $this->Course->CourseLesson->find('list');
-		$this->set('title_for_layout', 'Editing' . $this->request->data['Course']['name'] . '   | ' . __SYSTEM_SITE_NAME);
+		$this->set('title_for_layout', 'Editing ' . $this->request->data['Course']['name'] . '   | ' . __SYSTEM_SITE_NAME);
 		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
 		$this->set(compact('parentCourses'));
-		if (in_array('Categories', CakePlugin::loaded())) {
+		if (CakePlugin::loaded('Categories')) {
 			$this->set('categories', $this->Course->Category->find('list', array(
 				'conditions' => array(
 					'model' => 'Course'

@@ -95,18 +95,22 @@ class AppCourse extends CoursesAppModel {
 		'Teacher' => array(
 			'className' => 'Users.User',
 			'foreignKey' => 'creator_id'
+		),
+		'School' => array(
+			'className' => 'Contacts.Contact',
+			'foreignKey' => 'school',
+			'conditions' => array('contact_type' => 'school')
 		)
 	);
 	
 	public $hasAndBelongsToMany = array(
-        'Users' =>
-            array(
-                'className' => 'Users.User',
-                'joinTable' => 'course_users',
-                'foreignKey' => 'course_id',
-                'associationForeignKey' => 'user_id',
-                'unique' => true,
-            )
+        'Users' => array(
+            'className' => 'Users.User',
+            'joinTable' => 'course_users',
+            'foreignKey' => 'course_id',
+            'associationForeignKey' => 'user_id',
+            'unique' => true,
+        )
     );
 	
 	public $hasOne = array(
@@ -157,16 +161,19 @@ class AppCourse extends CoursesAppModel {
 	public function beforeSave(array $options = array()) {
 		parent::beforeSave($options);
 		
-		if(!empty($this->data)) {
-			if(isset($this->data['Course']['start'])) {
+		if (!empty($this->data)) {
+			if (isset($this->data['Course']['start'])) {
 				$this->data['Course']['start'] = date('Y-m-d G:i:s', strtotime($this->data['Course']['start']));
 			}
-			if(isset($this->data['Course']['end'])) {
+			if (isset($this->data['Course']['end'])) {
 				$this->data['Course']['end'] = date('Y-m-d G:i:s', strtotime($this->data['Course']['end']));
 			}
 		}
-		if(!isset($this->data[$this->alias]['type'])) {
+		if (!isset($this->data[$this->alias]['type'])) {
 			$this->data[$this->alias]['type'] = 'course';
+		}
+		if (empty($this->data[$this->alias]['parent_id'])) {
+			$this->data[$this->alias]['parent_id'] = null;
 		}
 		
 		return true;
@@ -263,25 +270,22 @@ class AppCourse extends CoursesAppModel {
 	/**
 	 * Returns the unique schools from the Course.school column.
 	 * 
-	 * @review MediaAttachable was the one that really gets in the way when you're trying to do a DISTINCT query.
 	 * @return array Strings of the names of schools
 	 */
 	public function schoolsWithCourses() {
-		$this->Behaviors->detach('Ratable');
 		$this->Behaviors->detach('MediaAttachable');
-		$schools = $this->find('all', array(
-			'conditions' => array('Course.type' => 'course'),
+		$courseSchools = $this->find('all', array(
 			'fields' => array('DISTINCT (Course.school) AS school_name'),
-			'order' => array('Course.school ASC')
+			'conditions' => array('NOT' => array('name' => null))
 		));
-		$this->Behaviors->attach('Ratable');
 		$this->Behaviors->attach('MediaAttachable');
-		$schools = Set::extract('/Course/school_name', $schools);
-		foreach ($schools as &$school) {
-			if (empty($school)) {
-				$school = '?';
-			}
-		}
+		$courseSchools = Set::extract('/Course/school_name', $courseSchools);
+		$this->School->Behaviors->detach('MediaAttachable');
+		$schools = $this->School->find('all', array(
+			'fields' => array('DISTINCT (School.name) AS school_name'),
+			'conditions' => array('id' => $courseSchools)
+		));
+		$schools = Set::extract('/School/school_name', $schools);
 		return $schools;
 	}
 	

@@ -5,7 +5,12 @@
 	<?php
 		//echo $this->Form->input('Course.parent_id');
 		echo $this->Html->tag('div',
-			$this->Form->input('Course.parent_id', array('div' => array('class' => 'span4'), 'options' => $series, 'selected' => $this->request->query['series'], 'empty' => array(null => '- existing series -'), 'label' => 'Part of a Series? <a href="'.$this->Html->url(array('controller' => 'course_series', 'action' => 'add')).'" class="toggleSeriesAdd">(create new series)</a>'))
+			$this->Form->input('Course.parent_id', array(
+				'div' => array('class' => 'span4'),
+				'options' => $series,
+				'selected' => $this->request->query['series'],
+				'empty' => array(null => '- existing series -'),
+				'label' => 'Part of a Series? <a href="'.$this->Html->url(array('controller' => 'course_series', 'action' => 'add')).'" class="toggleSeriesAdd">(create new series)</a>'))
 			. $this->Form->input('Category', array('div' => array('class' => 'span4'), 'type' => 'select', 'label' => 'Subject', 'empty' => '-- Choose Subject --'))
 			);			
 		echo $this->Form->input('Course.name', array('class' => 'required', 'placeholder' => 'Course Name', 'label' => false, 'class' => 'input-xxlarge'));
