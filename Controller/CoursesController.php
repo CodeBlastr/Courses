@@ -135,7 +135,7 @@ class AppCoursesController extends CoursesAppController {
 			'conditions' => array(
 					'CourseUser.user_id' => $this->Auth->user('id')
 			),
-			'contain' => array('Course')
+			'contain' => array('Course' => 'MediaThumbnail')
 		)));
 		
 		//debug($this->viewVars['coursesAsStudent']);break;
