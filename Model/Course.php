@@ -246,20 +246,22 @@ class AppCourse extends CoursesAppModel {
 	public function afterFind($results, $primary = false) {
 		parent::afterFind($results, $primary);
 		
-		if(isset($results['Course'])) {
+		if (isset($results['Course'])) {
 			if($results['Course']['creator_id'] == $this->userId) {
 				$results['Course']['is_teacher'] = true;
 			}else {
 				$results['Course']['is_teacher'] = false;
 			}
-		}else {
+		} else {
 			foreach ($results as $i => $result) {
-				if($result['Course']['creator_id'] == $this->userId) {
-					$result['Course']['is_teacher'] = true;
-				}else {
-					$result['Course']['is_teacher'] = false;
+				if (!empty($result['Course']['id'])) {
+					if ($result['Course']['creator_id'] == $this->userId) {
+						$result['Course']['is_teacher'] = true;
+					} else {
+						$result['Course']['is_teacher'] = false;
+					}
+					$results[$i] = $result;
 				}
-				$results[$i] = $result;
 			}
 		}
 		
