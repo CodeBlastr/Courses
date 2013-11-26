@@ -38,10 +38,7 @@
 		<?php if ($course['Course']['type'] == 'series'): ?>
 		<div class="row-fluid">
 			<div class="span2">
-				<img src="<?php
-				echo ($course['MediaThumbnail'][0]) ? '/media/images/'.$course['MediaThumbnail'][0]['filename'].'.'.$course['MediaThumbnail'][0]['extension'] : '/courses/img/book-ed2.jpg';
-				?>" />
-				<!--<img data-src="holder.js/100%x150" />-->
+				<?php echo $this->Media->display($course['Media'][0], array('width' => '100%', 'height' => 150)); ?>
 			</div>
 			<div class="span8">
 					<div class="span7">
@@ -60,7 +57,7 @@
 						<?php foreach ($course['SubCourse'] as $subcourse): ?>
 						 	<div class="media">
 							  <a class="pull-left" href="#">
-							    <img class="media-object" data-src="holder.js/50x50">
+							  	<?php echo $this->Media->display($subcourse['Media'][0], array('width' => 50, 'height' => 50)); ?>
 							  </a>
 							  <div class="media-body">
 							    <p class="media-heading"><b><?php echo __($subcourse['name'])?></b></p>
@@ -87,10 +84,7 @@
 		<?php elseif($course['Course']['type'] == 'course'): ?>
 		<div class="row-fluid">
 			<div class="span2">
-				<img src="<?php
-				echo ($course['MediaThumbnail'][0]) ? '/media/images/'.$course['MediaThumbnail'][0]['filename'].'.'.$course['MediaThumbnail'][0]['extension'] : '/courses/img/book-ed2.jpg';
-				?>" />
-				<!--<img data-src="holder.js/100%x150" />-->
+				<?php echo $this->Media->display($course['Media'][0], array('width' => '100%', 'height' => 150)); ?>
 			</div>
 			<div class="span8">
 				<div class="course-item">
