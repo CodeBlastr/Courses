@@ -218,7 +218,8 @@ class AppCoursesController extends CoursesAppController {
 				),
 				'UserGroup' => array(
 					'fields' => array('UserGroup.id')
-				)
+				),
+				'School'
 			)	
 			
 		));

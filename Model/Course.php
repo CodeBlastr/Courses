@@ -96,11 +96,15 @@ class AppCourse extends CoursesAppModel {
 			'className' => 'Users.User',
 			'foreignKey' => 'creator_id'
 		),
+		// 'School' => array(
+			// 'className' => 'Contacts.Contact',
+			// 'foreignKey' => 'school',
+			// 'conditions' => array('contact_type' => 'school')
+		// ),
 		'School' => array(
-			'className' => 'Contacts.Contact',
+			'className' => 'Courses.CourseSchool',
 			'foreignKey' => 'school',
-			'conditions' => array('contact_type' => 'school')
-		)
+		),
 	);
 	
 	public $hasAndBelongsToMany = array(

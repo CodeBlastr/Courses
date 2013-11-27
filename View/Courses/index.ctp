@@ -30,7 +30,7 @@
 		} ?>
 	</ul>
 	<hr>
-	<?php foreach ($courses as $course): 
+	<?php foreach ($courses as $course):
 		$start = strtotime($course['Course']['start']);
 		$end = strtotime($course['Course']['end']);
 		$lengthOfCourse = round( abs($end - $start) / 60 / 60 / 24 / 7 );?>
@@ -44,7 +44,7 @@
 					<div class="span7">
 						<div class="course-item">
 							<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'course_series', 'action' => 'view', $course['Course']['id']))); ?></h4>
-							<h6><small><?php echo __($schools[$course['Course']['school']]); ?></small></h6>
+							<h6><small><?php echo __($course['School']['name']); ?></small></h6>
 							<h6><small><?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
 							<div class="description">
 								<div class="truncate"><?php echo __( $course['Course']['description'] ); ?></div>
@@ -90,7 +90,7 @@
 				<div class="course-item">
 					<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'courses', 'action' => 'view', $course['Course']['id']))); ?></h4>
 					<h6><small><?php echo __('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
-					<h6><small><?php echo __($schools[$course['Course']['school']]); ?></small></h6>
+					<h6><small><?php echo __($course['School']['name']); ?></small></h6>
 					<div class="description">
 						<div class="truncate"><?php echo __($course['Course']['description']); ?></div>
 					</div>

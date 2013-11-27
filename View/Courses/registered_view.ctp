@@ -7,7 +7,7 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 ?>
 <div class="courses view span8">
 	<h2><?php echo $course['Course']['name'] ?> <small>Grade <?php echo $course['Course']['grade'] ?></small></h2>
-	<p><b><?php echo $course['Course']['school'] ?></b></p>
+	<p><b><?php echo $course['School']['name'] ?></b></p>
 	<p><?php echo $course['Course']['description'] ?></p>
 
 	<?php
