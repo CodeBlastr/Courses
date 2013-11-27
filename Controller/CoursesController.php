@@ -40,6 +40,7 @@ class AppCoursesController extends CoursesAppController {
  * @return void
  */
 	public function index() {
+		$this->set('title_for_layout', __('Available Courses') . ' | ' . __SYSTEM_SITE_NAME);
 		$this->set('page_title_for_layout', __('Available Courses'));
 		
 		// $channelData is only used when calling as index.rss (/app/View/Layouts/rss/default.ctp)
@@ -138,9 +139,6 @@ class AppCoursesController extends CoursesAppController {
 			'contain' => array('Course' => 'MediaThumbnail')
 		)));
 		
-		//debug($this->viewVars['coursesAsStudent']);break;
-		
-		
 
 		// get an array of all Course.id this user is related to
 		$courseIdsAsTeacher = array_unique(
@@ -175,7 +173,7 @@ class AppCoursesController extends CoursesAppController {
 			'limit' => 5
 		)));
 		
-		if(CakePlugin::loaded('Categories')) {
+		if (CakePlugin::loaded('Categories')) {
 			$this->set('categories', $this->Course->Category->find('list', array(
 				'conditions' => array(
 					'model' => 'Course'

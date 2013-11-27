@@ -1,7 +1,7 @@
 <?php $courses = $this->request->data; ?>
 <div class="courses index">
 	<h2><?php echo $page_title_for_layout;?></h2>
-	<hr>
+	<hr />
 	<span class="muted">Categories</span>
 	<ul class="nav nav-pills">
 		<?php
@@ -33,9 +33,9 @@
 	<?php foreach ($courses as $course): 
 		$start = strtotime($course['Course']['start']);
 		$end = strtotime($course['Course']['end']);
-		$lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );?>
+		$lengthOfCourse = round( abs($end - $start) / 60 / 60 / 24 / 7 );?>
 		
-		<?php if ($course['Course']['type'] == 'series'): ?>
+		<?php if ($course['Course']['type'] == 'series') : ?>
 		<div class="row-fluid">
 			<div class="span2">
 				<?php echo $this->Media->display($course['Media'][0], array('width' => '100%', 'height' => 150)); ?>
@@ -44,7 +44,7 @@
 					<div class="span7">
 						<div class="course-item">
 							<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'course_series', 'action' => 'view', $course['Course']['id']))); ?></h4>
-							<h6><small><?php echo __($course['Course']['school']); ?></small></h6>
+							<h6><small><?php echo __($schools[$course['Course']['school']]); ?></small></h6>
 							<h6><small><?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
 							<div class="description">
 								<div class="truncate"><?php echo __( $course['Course']['description'] ); ?></div>
@@ -54,7 +54,7 @@
 					<div class="span5">
 						<h5>Available Courses:</h5>
 						<div class="course-list-series" style="overflow-y:auto;">
-						<?php foreach ($course['SubCourse'] as $subcourse): ?>
+						<?php foreach ($course['SubCourse'] as $subcourse) : ?>
 						 	<div class="media">
 							  <a class="pull-left" href="#">
 							  	<?php echo $this->Media->display($subcourse['Media'][0], array('width' => 50, 'height' => 50)); ?>
@@ -72,7 +72,7 @@
 			<div class="span2">
 				<div class="actions">
 					<ul class="nav nav-tabs nav-stacked">
-						<?php if(empty($course['CourseUser'])): ?>
+						<?php if (empty($course['CourseUser'])) : ?>
 						<li><?php echo $this->Html->link('Register', array('controller' => 'courses_series', 'action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'))?></li>
 						<?php else: ?>
 						<li>You are already Registered <br /><?php echo $this->Html->link('View Series', array('controller' => 'courses_series', 'action' => 'view', $course['Course']['id']), array('class' => 'btn btn-mini btn-primary'))?></li>
@@ -81,25 +81,25 @@
 				</div>
 			</div>
 		</div>
-		<?php elseif($course['Course']['type'] == 'course'): ?>
+		<?php elseif ($course['Course']['type'] == 'course') : ?>
 		<div class="row-fluid">
 			<div class="span2">
 				<?php echo $this->Media->display($course['Media'][0], array('width' => '100%', 'height' => 150)); ?>
 			</div>
 			<div class="span8">
 				<div class="course-item">
-						<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'courses', 'action' => 'view', $course['Course']['id']))); ?></h4>
-						<h6><small><?php echo	__('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
-						<h6><small><?php echo __($course['Course']['school']); ?></small></h6>
-						<div class="description">
-							<div class="truncate"><?php echo __( $course['Course']['description'] ); ?></div>
-						</div>
+					<h4><?php echo __($this->Html->link($course['Course']['name'], array('controller' => 'courses', 'action' => 'view', $course['Course']['id']))); ?></h4>
+					<h6><small><?php echo __('<b>%s</b><br />Starts : %s<br /> %s weeks long <br />', array($course['Category'][0]['name'], ZuhaInflector::datify($course['Course']['start']), $lengthOfCourse)); ?></small></h6>
+					<h6><small><?php echo __($schools[$course['Course']['school']]); ?></small></h6>
+					<div class="description">
+						<div class="truncate"><?php echo __($course['Course']['description']); ?></div>
+					</div>
 				</div>
 			</div>
 			<div class="span2">
 				<div class="actions">
-				<ul class="nav nav-tabs nav-stacked">
-						<?php if(empty($course['CourseUser'])): ?>
+					<ul class="nav nav-tabs nav-stacked">
+						<?php if (empty($course['CourseUser'])) : ?>
 						<li><?php echo $this->Html->link('Register', array('controller' => 'courses', 'action' => 'register', $course['Course']['id']), array('class' => 'btn btn-primary'))?></li>
 						<?php else: ?>
 						<li><span class="label label-info">Already Registered</span> <br /><?php echo $this->Html->link('View Course', array('controller' => 'courses', 'action' => 'view', $course['Course']['id']), array('class' => 'btn btn-small'))?></li>
@@ -122,9 +122,9 @@
 
 	<div class="paging">
 		<?php
-			echo $this->Paginator->prev(' << ' . __('previous'), array(), null, array('class' => 'prev disabled hidden'));
-			echo $this->Paginator->numbers(array('separator' => ''));
-			echo $this->Paginator->next(__('next') . ' << ', array(), null, array('class' => 'next disabled hidden'));
+		echo $this->Paginator->prev(' << ' . __('previous'), array(), null, array('class' => 'prev disabled hidden'));
+		echo $this->Paginator->numbers(array('separator' => ''));
+		echo $this->Paginator->next(__('next') . ' << ', array(), null, array('class' => 'next disabled hidden'));
 		?>
 	</div>
 </div>
