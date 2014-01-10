@@ -26,7 +26,6 @@
 	
 <?php
 		//echo $this->Form->input('Task.parent_id', array('empty' => true, 'label' => 'Which task list should this be on?'));
-		
 		echo $this->Form->input('Task.foreign_key', array('options' => $parentCourses, 'value' => $course_id, 'empty' => '- Select Course -', 'label' => 'Course Assignment Belongs to', 'class' => 'required'));
 
 		echo $this->Form->input('Task.settings', array('type' => 'select', 'label' => 'Assignment Type', 'required' => true, 'options' => $assignmentTypes, 'empty' => '-- Choose a Category --'));
@@ -40,72 +39,7 @@
 	</fieldset>
 	
 	<fieldset>
-		<div class="accordion" id="attachablesContainer">
-		<?php foreach($attachables as $name => $attachment): ?>
-		  <div class="accordion-group">
-		    <div class="accordion-heading">
-		      <a class="accordion-toggle" data-toggle="collapse" data-parent="#attachablesContainer" href="#collapse<?php echo $name; ?>">
-		        <h5>Attach a Test or Quiz</h5>
-		      </a>
-		    </div>
-		    <div id="collapse<?php echo $name; ?>" class="accordion-body collapse">
-		      <div class="accordion-inner">
-		      	<div class="row-fluid">
-		      		
-		      		<div class="control-group">
-					  <div class="controls">
-					
-		        <?php 
-		        	$i = 0;
-					$j = 0;
-		        	foreach($attachment as $item): 
-		        	?>
-		        	
-		   			<?php 
-		   				if ($j == 0){
-		   					echo '<div class="span4">';
-						} ?>
-						
-					<label class="radio" label for='<?php echo $name.'-'.$i; ?>'>
-					<input type="radio" name="data[TaskAttachment][0][foreign_key]" id="<?php echo  $name.'-'.$i; ?>" value="<?php echo $item['id']; ?>"<?php echo isset($this->request->data['TaskAttachment'][0]) && $this->request->data['TaskAttachment'][0]['foreign_key'] == $item['id'] ? 'checked' : '' ?>>
-						<?php echo $item['title']; ?>
-					</label>
-    				
-    				<?php 
-    					echo $this->Form->hidden('TaskAttachment.0.model', array('value' => isset($this->request->data['TaskAttachment'][0]) ? $this->request->data['TaskAttachment'][0]['model'] : $name));
-    					$i++; 
-						$j++;
-						if($j > 3 && $i < count($attachment)) { 
-							$j = 0;
-							echo '</div>';
-						}
-    					?>
-		        	
-		        	
-		        <?php endforeach; ?>
-			        <label class="radio" for='<?php echo $name.'-'.$i; ?>'>
-						<input type="radio" name="data[TaskAttachment][0][foreign_key]" id="<?php echo $name.'-'.$i; ?>" value="">
-							None
-					</label>
-					
-					<?php if(isset($this->request->data['TaskAttachment'][0])) {
-						
-						echo $this->Form->hidden('TaskAttachment.0.id');
-						echo $this->Form->hidden('TaskAttachment.0.task_id');
-						echo $this->Form->hidden('TaskAttachment.0.id');
-						
-					} ?>
-					
-				  </div>
-				 </div>
-		        </div>
-		      </div>
-		    </div>
-		  </div>
-		  <?php endforeach; ?>
-
-		</div>
-
+		<?php echo $this->form->input('Task.data.quizzes', array('label' => 'Quizzes shown for this assignment', 'selected' => $chosen, 'options' => $quizzes, 'type' => 'select', 'multiple' => 'checkbox')); ?>
 	</fieldset>
 		
 		

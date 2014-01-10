@@ -384,19 +384,11 @@ class AppCoursesController extends CoursesAppController {
 			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
 			
 			if(!empty($this->request->data)) {
-				if(isset($this->request->data['TaskAttachment'][0]['model']) && $this->request->data['TaskAttachment'][0]['model'] == 'Answer') {
-					 $this->loadModel('Answers.Answer');
-					  $Answer = $this->Answer->read('data', $this->request->data['TaskAttachment'][0]['foreign_key']);
-					  if(!empty($Answer['Answer']['data'])) {
-					  	 $this->request->data['CourseGradeDetail']['right_answers'] = $Answer['Answer']['data'];
-					  }
+				debug($this->request->data['Task']);
+				if(isset($this->request->data['Task']['data'])) {
+					$this->request->data['Task']['data'] = serialize($this->request->data['Task']['data']);
 				}
-				//$this->request->data['CourseGradeDetail']['total_worth'] = !empty($this->request->data['CourseGradeDetail']['total_worth']) ? ($this->request->data['CourseGradeDetail']['total_worth'] / 100) : 0;
-				//$this->request->data['CourseGradeDetail']['type'] = $this->request->data['Task']['settings'];
-				if(isset($this->request->data['TaskAttachment'][0]['id']) && empty($this->request->data['TaskAttachment'][0]['foreign_key'])) {
-					$this->Course->Task->TaskAttachment->delete($this->request->data['TaskAttachment'][0]['id']);
-					unset($this->request->data['TaskAttachment']);
-				}
+				
 				if($this->Course->Task->saveAll($this->request->data)) {
 					$this->Session->setFlash('Assigment Saved');
 					$this->redirect(array('action' => 'assignment', $this->Course->Task->id));
@@ -408,8 +400,7 @@ class AppCoursesController extends CoursesAppController {
 			
 			if ( !empty($id) ) {
 				$this->request->data = $this->Course->Task->find('first', array(
-					'conditions' => array('Task.id' => $id),
-					'contain' => array('TaskAttachment', 'CourseGradeDetail')
+					'conditions' => array('Task.id' => $id)
 				));
 				
 				$courseid = $this->request->data['Task']['model'] == 'Course' ? $this->request->data['Task']['foreign_key'] : $courseid;
@@ -447,10 +438,16 @@ class AppCoursesController extends CoursesAppController {
 				)));
 			}
 			
-			$this->set('assignmentTypes', $this->Course->CourseGradeDetail->gettypes($courseid));
+			$this->loadModel('Answers.Answer');
+			$this->set('quizzes', $this->Answer->find('list', array(
+					'conditions' => array('creator_id' => $this->userId),
+			)));
+			
+			$this->set('chosen', isset($this->request->data['Task']['data']['quizzes']) ? $this->request->data['Task']['data']['quizzes'] : array());
+			
+			$this->set('assignmentTypes', $this->Course->CourseGradeDetail->gettypes($this->Course->alias, $courseid));
 			
 			$this->set('course_id', $courseid);
-			$this->set('attachables', $this->Course->Task->getAttachablesByUser());
 
 			$this->view = 'teacher_assignment';
 	}
@@ -465,10 +462,16 @@ class AppCoursesController extends CoursesAppController {
 			
 			$this->request->data = $this->Course->Task->find('first', array(
 				'conditions' => array('Task.id' => $id),
-				'contain' => array(
-					'TaskAttachment',
-				),
 			));
+			
+			$this->loadModel('Answers.Answer');
+			if(isset($this->request->data['Task']['data']['quizzes'])) {
+				$this->set('quizzes', $this->Answer->find('list', 
+						array(
+							'conditions' => array(
+								'id' => $this->request->data['Task']['data']['quizzes']
+				))));
+			}
 			
 			//Set view depending on person viewing it.
 			if($this->request->data['Task']['creator_id'] == $this->userId) {

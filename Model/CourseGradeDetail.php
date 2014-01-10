@@ -70,11 +70,11 @@ class CourseGradeDetail extends CoursesAppModel {
 		return $results;
 	}
 	
-	public function gettypes($courseid) {
+	public function gettypes($model, $id) {
 		$types = $this->find('first', array(
 			'conditions' => array(
-				'course_id' => $courseid,
-				'foreign_key' => $courseid
+				'model' => $model,
+				'foreign_key' => $id
 		)));
 		
 		if(!$types) {

@@ -14,11 +14,6 @@
 	}
 	$completedCheck = Set::extract('/assignee_id', $completedTask);
 	$taskattachment = $this->request->data['TaskAttachment'];
-	$quizzes = array();
-	foreach($taskattachment as $q) {
-		if($q['model'] == 'Answer') { $quizzes[] = $q; }
-	}
-
 ?>
 
 <div id="Task-<?php echo $task['id']; ?> class="row-fluid">
@@ -30,10 +25,10 @@
 </div>
 	
 <?php if(!empty($quizzes)): ?>
-	<?php foreach ($quizzes as $quiz): ?>
+	<?php foreach ($quizzes as $id => $name): ?>
 		<hr />
 		<div class="quiz">
-			<p>Create and answer key for <?php echo $task['name']; ?> : <?php echo $this->Html->link('Create', array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'answerkey', $quiz['foreign_key']), array('style' => 'margin-left:20px', 'class' => 'btn')); ?></p>
+			<p>Create and answer key for <?php echo $name; ?> : <?php echo $this->Html->link('Create', array('plugin' => 'courses', 'controller' => 'course_grades', 'action' => 'answerkey', $id), array('style' => 'margin-left:20px', 'class' => 'btn')); ?></p>
 		</div>
 		<hr />
 	<?php endforeach; ?>
