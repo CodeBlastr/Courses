@@ -384,7 +384,7 @@ class AppCoursesController extends CoursesAppController {
 			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
 
 			if(!empty($this->request->data)) {
-				debug($this->request->data['Task']);
+				//debug($this->request->data['Task']);
 				if(isset($this->request->data['Task']['data'])) {
 					$this->request->data['Task']['data'] = serialize($this->request->data['Task']['data']);
 				}
