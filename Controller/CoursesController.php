@@ -10,14 +10,14 @@ class AppCoursesController extends CoursesAppController {
 	public $name = 'Courses';
 
 	public $uses = array('Courses.Course', 'Courses.CourseSeries');
-	
+
 	public $components = array('RequestHandler', 'Template');
-	
+
 	public $helpers = array('Calendar');
 
 /**
  * Constructor method
- * 
+ *
  * @param
  * @param
  */
@@ -26,11 +26,11 @@ class AppCoursesController extends CoursesAppController {
 			$this->components[] = 'Ratings.Ratings';
 			$this->helpers[] = 'Ratings.Rating';
 		}
-		
+
 		if (CakePlugin::loaded('Categories')) {
 			$this->components[] = 'Categories.Categories';
 		}
-		
+
 		parent::__construct($request, $response);
 	}
 
@@ -42,21 +42,21 @@ class AppCoursesController extends CoursesAppController {
 	public function index() {
 		$this->set('title_for_layout', __('Available Courses') . ' | ' . __SYSTEM_SITE_NAME);
 		$this->set('page_title_for_layout', __('Available Courses'));
-		
+
 		// $channelData is only used when calling as index.rss (/app/View/Layouts/rss/default.ctp)
 		$this->set('channelData', array(
 			'title' => __SYSTEM_SITE_NAME . ' Available Courses',
 			'link' => Router::url('/', true),
 			'description' => ''
 		));
-		
+
 		$conditions = array(
 			'Course.type' => array('course', 'series'),
 			'Course.parent_id' => null,
 			'Course.is_private' => false,
 			'Course.is_published' => true
 		);
-		
+
 		$contain = array(
 			'School' => array('fields' => array('id', 'name')),
 			'Teacher',
@@ -64,24 +64,24 @@ class AppCoursesController extends CoursesAppController {
 			'SubCourse',
 			'CourseUser' => array('conditions' => array('user_id' => $this->userId))
 		);
-		
+
 		if ($this->request->query['school']) {
 			$conditions[]['School.name'] = urldecode($this->request->query['school']);
 		}
-		
+
 		$this->paginate['conditions'] += $conditions;
 		$this->paginate += array(
 			'contain' => $contain,
 		);
-		
+
 		$this->paginate['order']['Course.start'] = 'ASC';
-		
+
 		$this->request->data = $this->paginate();
-		
+
 		$this->set('schools', $this->Course->schoolsWithCourses());
-		
+
 	}
-	
+
 	public function _categoryIndex($categoryId = null) {
 		$ids = Set::extract('/Categorized/foreign_key', $this->Course->Category->Categorized->find('all', array(
 			'conditions' => array(
@@ -98,9 +98,9 @@ class AppCoursesController extends CoursesAppController {
 
 
 	public function dashboard() {
-		
+
 		$this->set('title_for_layout', 'Courses Dashboard' . ' | ' . __SYSTEM_SITE_NAME);
-		
+
 		$this->set('upcomingCourses', $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.start > NOW()',
@@ -109,7 +109,7 @@ class AppCoursesController extends CoursesAppController {
 			),
 			'order' => array('Course.start' => 'ASC')
 		)));
-		
+
 		// teachers
 		$this->set('seriesAsTeacher', $seriesAsTeacher = $this->Course->CourseSeries->find('all', array(
 			'conditions' => array(
@@ -120,7 +120,7 @@ class AppCoursesController extends CoursesAppController {
 			'contain' => array('Course' => array('order' => 'Course.order')),
 			'order' => array('CourseSeries.end' => 'ASC')
 		)));
-		
+
 		$this->set('coursesAsTeacher', $coursesAsTeacher = $this->Course->find('all', array(
 			'conditions' => array(
 				'Course.creator_id' => $this->Auth->user('id'),
@@ -129,8 +129,8 @@ class AppCoursesController extends CoursesAppController {
 			),
 			'order' => array('Course.end' => 'ASC')
 		)));
-		
-		
+
+
 		// students
 		$this->set('coursesAsStudent', $this->Course->CourseUser->find('all', array(
 			'conditions' => array(
@@ -138,7 +138,7 @@ class AppCoursesController extends CoursesAppController {
 			),
 			'contain' => array('Course' => 'MediaThumbnail')
 		)));
-		
+
 
 		// get an array of all Course.id this user is related to
 		$courseIdsAsTeacher = array_unique(
@@ -151,7 +151,7 @@ class AppCoursesController extends CoursesAppController {
 				Set::extract('/Course/id', $this->viewVars['coursesAsStudent'])
 				);
 		$allCourseIds = array_unique( Set::merge($courseIdsAsTeacher, $courseIdsAsStudent ) );
-		
+
 		$this->set(compact('courseIdsAsTeacher', 'courseIdsAsStudent', 'allCourseIds'));
 
 		// all tasks
@@ -172,7 +172,7 @@ class AppCoursesController extends CoursesAppController {
 			'order' => array('Task.start_date' => 'ASC'),
 			'limit' => 5
 		)));
-		
+
 		if (CakePlugin::loaded('Categories')) {
 			$this->set('categories', $this->Course->Category->find('list', array(
 				'conditions' => array(
@@ -180,14 +180,14 @@ class AppCoursesController extends CoursesAppController {
 				)
 			)));
 		}
-		
+
 	}
-	
+
 /**
  * view method
  *
  * @todo might need to have different view upon course completion
- * 
+ *
  * @param string $id
  * @return void
  */
@@ -196,7 +196,7 @@ class AppCoursesController extends CoursesAppController {
 		if (!$this->Course->exists()) {
 			throw new NotFoundException(__('Invalid course'));
 		}
-		
+
 		$course = $this->Course->find('first', array(
 			'conditions' => array('Course.id' => $this->Course->id),
 			'contain' => array(
@@ -220,8 +220,8 @@ class AppCoursesController extends CoursesAppController {
 					'fields' => array('UserGroup.id')
 				),
 				'School'
-			)	
-			
+			)
+
 		));
 		// list of all students so we can display the Roster
 		$courseUsers = $this->Course->CourseUser->find('all', array(
@@ -255,16 +255,16 @@ class AppCoursesController extends CoursesAppController {
 
 /**
  * add method
- * 
+ *
  * @return void
  */
 	public function add() {
 		$this->set('title_for_layout', 'Create a New Course | ' . __SYSTEM_SITE_NAME);
-		
+
 		if ($this->request->is('post')) {
 			//$this->Course->create();
 			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
-			
+
 			if ($this->Course->save($this->request->data)) {
 				$this->Session->setFlash(__('The course has been created'));
 				$this->redirect(array('action' => 'index'));
@@ -278,7 +278,7 @@ class AppCoursesController extends CoursesAppController {
 				'creator_id' => $this->userId
 			)
 		)));
-		
+
 	}
 
 /**
@@ -292,9 +292,9 @@ class AppCoursesController extends CoursesAppController {
 		if (!$this->Course->exists()) {
 			throw new NotFoundException(__('Invalid course'));
 		}
-		
+
 		if ($this->request->is('post') || $this->request->is('put')) {
-			
+
 			if ($this->Course->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The course has been saved'));
 				$this->redirect(array('action' => 'view', $this->Course->id));
@@ -309,7 +309,7 @@ class AppCoursesController extends CoursesAppController {
 				'contain' => array('Category', 'Task'),
 			));
 		}
-		
+
 		$parentCourses = $this->Course->CourseLesson->find('list');
 		$this->set('title_for_layout', 'Editing ' . $this->request->data['Course']['name'] . '   | ' . __SYSTEM_SITE_NAME);
 		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
@@ -341,10 +341,10 @@ class AppCoursesController extends CoursesAppController {
 		$this->Session->setFlash(__('Course was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
-	
+
 /**
  * register method
- * 
+ *
  * @param string $id
  */
 	public function register($id = null) {
@@ -361,7 +361,7 @@ class AppCoursesController extends CoursesAppController {
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
 	}
-	
+
 	public function unregister($id = null) {
 		$this->Course->id = $id;
 		if (!$this->Course->exists()) {
@@ -377,18 +377,18 @@ class AppCoursesController extends CoursesAppController {
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
 	}
-	
+
 
 	public function editAssignment($id = null) {
-			
+
 			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
-			
+
 			if(!empty($this->request->data)) {
 				debug($this->request->data['Task']);
 				if(isset($this->request->data['Task']['data'])) {
 					$this->request->data['Task']['data'] = serialize($this->request->data['Task']['data']);
 				}
-				
+
 				if($this->Course->Task->saveAll($this->request->data)) {
 					$this->Session->setFlash('Assigment Saved');
 					$this->redirect(array('action' => 'assignment', $this->Course->Task->id));
@@ -397,15 +397,15 @@ class AppCoursesController extends CoursesAppController {
 					$this->redirect($this->referer());
 				}
 			}
-			
+
 			if ( !empty($id) ) {
 				$this->request->data = $this->Course->Task->find('first', array(
 					'conditions' => array('Task.id' => $id)
 				));
-				
+
 				$courseid = $this->request->data['Task']['model'] == 'Course' ? $this->request->data['Task']['foreign_key'] : $courseid;
 			}
-			
+
 			$courseUsers = $this->Course->CourseUser->find('all', array(
 				'conditions' => array('CourseUser.course_id' => $courseid),
 				'contain' => array(
@@ -437,42 +437,42 @@ class AppCoursesController extends CoursesAppController {
 					)
 				)));
 			}
-			
+
 			$this->loadModel('Answers.Answer');
 			$this->set('quizzes', $this->Answer->find('list', array(
 					'conditions' => array('creator_id' => $this->userId),
 			)));
-			
+
 			$this->set('chosen', isset($this->request->data['Task']['data']['quizzes']) ? $this->request->data['Task']['data']['quizzes'] : array());
-			
+
 			$this->set('assignmentTypes', $this->Course->CourseGradeDetail->gettypes($this->Course->alias, $courseid));
-			
+
 			$this->set('course_id', $courseid);
 
 			$this->view = 'teacher_assignment';
 	}
-	
+
 	/**
 	 * View a task
-	 * 
+	 *
 	 * @param string $id The Task ID
 	 */
 	public function assignment($id, $completed = null) {
 		if ( $id ) {
-			
+
 			$this->request->data = $this->Course->Task->find('first', array(
 				'conditions' => array('Task.id' => $id),
 			));
-			
+
 			$this->loadModel('Answers.Answer');
 			if(isset($this->request->data['Task']['data']['quizzes'])) {
-				$this->set('quizzes', $this->Answer->find('list', 
+				$this->set('quizzes', $this->Answer->find('list',
 						array(
 							'conditions' => array(
 								'id' => $this->request->data['Task']['data']['quizzes']
 				))));
 			}
-			
+
 			//Set view depending on person viewing it.
 			if($this->request->data['Task']['creator_id'] == $this->userId) {
 				$this->view = 'teacher_assignment_view';
@@ -499,22 +499,22 @@ class AppCoursesController extends CoursesAppController {
 			}else {
 				$grade = $this->Course->CourseGrade->find('first', array('conditions' => array('CourseGrade.model' => 'Task', 'CourseGrade.foreign_key' => $id, 'CourseGrade.student_id' => $this->userId)));
 				if(is_array($grade)) {
-					$this->request->data = array_merge($this->request->data, $grade);	
+					$this->request->data = array_merge($this->request->data, $grade);
 				}
 			}
-			
+
 			$this->set('title_for_layout', $this->request->data['Task']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 		} else {
 			$this->Session->setFlash(__('Assignment ID not specified.'));
 			$this->redirect($this->referer());
 		}
-		
+
 	}
-	
+
 	public function completeAssignment() {
-		
+
 		$userid = isset($this->request->data['Task']['assignee_id']) ? $this->request->data['Task']['assignee_id'] : $this->userId;
-		
+
 		if($this->Course->Task->find('first', array('conditions' => array('assignee_id' => $userid, 'parent_id' => $this->request->data['Task']['parent_id'])))) {
 			$this->Session->setFlash('This assignment has already been completed by this user');
 			$this->response->statusCode(500);
@@ -534,7 +534,7 @@ class AppCoursesController extends CoursesAppController {
 		}else {
 			$this->response->statusCode(500);
 		}
-		
+
 		if($this->request->isAjax()) {
 			$this->layout = null;
 			$this->autoRender = false;
@@ -552,7 +552,7 @@ class AppCoursesController extends CoursesAppController {
 		}else {
 			$this->response->statusCode(500);
 		}
-		
+
 		if($this->request->isAjax()) {
 			$this->layout = null;
 			$this->autoRender = false;
@@ -561,9 +561,9 @@ class AppCoursesController extends CoursesAppController {
 			$this->redirect($this->referer());
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param integer $courseId The ID of the Course that these messages belong to
 	 */
 	public function message($courseId) {
@@ -591,10 +591,10 @@ class AppCoursesController extends CoursesAppController {
 //				),
 //			);
 //		$this->set('messages', $this->paginate('Message'));
-		
+
 		// set the foreign_key
 		$this->request->data['Message']['foreign_key'] = !empty($courseId) ? $courseId : null;
-		
+
 		// setup the array of possible recipients
 		$users = $this->Course->CourseUser->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $courseId),
@@ -606,13 +606,13 @@ class AppCoursesController extends CoursesAppController {
 		}
 		$this->set(compact('users'));
 	}
-	
-	
+
+
 	/**
 	 * @todo I'd like to move the finding and combining to the Model.  Separate functions foreach event Model possibly.
 	 */
 	public function calendar($type = 'teacher', $courseId) {
-		
+
 		// get all Tasks for the requested course
 		$tasks = $this->Course->Task->find('all', array(
 			'conditions' => array(
@@ -674,9 +674,9 @@ class AppCoursesController extends CoursesAppController {
 			$this->redirect($this->referer());
 		}
 	}
-	
+
 	public function grade_settings($courseid=false) {
-		
+
 		if($this->request->is('post') && !empty($this->request->data)) {
 			$this->request->data['CourseGradeDetail']['model'] = 'Course';
 			$this->request->data['CourseGradeDetail']['foreign_key'] = $this->request->data['Course']['id'];
@@ -689,15 +689,15 @@ class AppCoursesController extends CoursesAppController {
 				$this->Session->setFlash('Settings not saved!');
 				$this->redirect(array('action'=>'view', $this->request->data['Course']['id']));
 			}
-			
+
 		}
-		
+
 		if($courseid) {
 			$this->request->data = $this->Course->findById($courseid);
 		}else{
 			throw new BadRequestException('No Course id');
 		}
-		
+
 		if(!$this->request->data) {
 			throw new NotFoundException();
 		}
