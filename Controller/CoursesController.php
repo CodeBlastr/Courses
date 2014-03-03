@@ -243,7 +243,7 @@ class AppCoursesController extends CoursesAppController {
 			$isOwner = false;
 			// If this course is in a sequence, we need to check to see if the Student passed the previous course..
 			if ( !$this->Course->canUserTakeCourse($this->userId, $course['Course']['id']) ) {
-				$this->Session->setFlash('You must complete the prerequisites in this series to view this course.');
+				$this->Session->setFlash('You must complete the prerequisites in this series to view this course.', 'flash_info');
 				$this->redirect(array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']));
 			}
 		}
@@ -266,10 +266,10 @@ class AppCoursesController extends CoursesAppController {
 			$this->request->data['Course']['creator_id'] = $this->Auth->user('id');
 
 			if ($this->Course->save($this->request->data)) {
-				$this->Session->setFlash(__('The course has been created'));
+				$this->Session->setFlash(__('The course has been created'), 'flash_success');
 				$this->redirect(array('action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The course could not be created. Please, try again.'));
+				$this->Session->setFlash(__('The course could not be created. Please, try again.'), 'flash_warning');
 			}
 		}
 		$this->set('series', $this->Course->CourseSeries->find('list', array(
@@ -296,10 +296,10 @@ class AppCoursesController extends CoursesAppController {
 		if ($this->request->is('post') || $this->request->is('put')) {
 
 			if ($this->Course->saveAll($this->request->data)) {
-				$this->Session->setFlash(__('The course has been saved'));
+				$this->Session->setFlash(__('The course has been saved'), 'flash_success');
 				$this->redirect(array('action' => 'view', $this->Course->id));
 			} else {
-				$this->Session->setFlash(__('The course could not be saved. Please, try again.'));
+				$this->Session->setFlash(__('The course could not be saved. Please, try again.'), 'flash_warning');
 			}
 		} else {
 			$this->request->data = $this->Course->find('first', array(
@@ -335,10 +335,10 @@ class AppCoursesController extends CoursesAppController {
 			throw new NotFoundException(__('Invalid course'));
 		}
 		if ($this->Course->delete()) {
-			$this->Session->setFlash(__('Course deleted'));
+			$this->Session->setFlash(__('Course deleted'), 'flash_success');
 			$this->redirect(array('action' => 'index'));
 		}
-		$this->Session->setFlash(__('Course was not deleted'));
+		$this->Session->setFlash(__('Course was not deleted'), 'flash_danger');
 		$this->redirect(array('action' => 'index'));
 	}
 
@@ -357,7 +357,7 @@ class AppCoursesController extends CoursesAppController {
 		$newRegistration['CourseUser']['user_id'] = $this->Auth->user('id');
 		$newRegistration['CourseUser']['course_id'] = $this->Course->id;
 		if ( $this->Course->CourseUser->save($newRegistration) ) {
-			$this->Session->setFlash(__('Registration Successful.'));
+			$this->Session->setFlash(__('Registration Successful.'), 'flash_success');
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
 	}
@@ -373,7 +373,7 @@ class AppCoursesController extends CoursesAppController {
 			'CourseUser.course_id' => $this->Course->id
 		), true, true);
 		if ( $unregistered ) {
-			$this->Session->setFlash(__('You are no longer registered for this course.'));
+			$this->Session->setFlash(__('You are no longer registered for this course.'), 'flash_success');
 			$this->redirect(array('action' => 'view', $this->Course->id));
 		}
 	}
@@ -390,10 +390,10 @@ class AppCoursesController extends CoursesAppController {
 				}
 
 				if($this->Course->Task->saveAll($this->request->data)) {
-					$this->Session->setFlash('Assigment Saved');
+					$this->Session->setFlash('Assigment Saved', 'flash_success');
 					$this->redirect(array('action' => 'assignment', $this->Course->Task->id));
 				}else{
-					$this->Session->setFlash('Assignment not saved');
+					$this->Session->setFlash('Assignment not saved', 'flash_danger');
 					$this->redirect($this->referer());
 				}
 			}
@@ -505,7 +505,7 @@ class AppCoursesController extends CoursesAppController {
 
 			$this->set('title_for_layout', $this->request->data['Task']['name'] . ' | ' . __SYSTEM_SITE_NAME);
 		} else {
-			$this->Session->setFlash(__('Assignment ID not specified.'));
+			$this->Session->setFlash(__('Assignment ID not specified.'), 'flash_danger');
 			$this->redirect($this->referer());
 		}
 
@@ -516,7 +516,7 @@ class AppCoursesController extends CoursesAppController {
 		$userid = isset($this->request->data['Task']['assignee_id']) ? $this->request->data['Task']['assignee_id'] : $this->userId;
 
 		if($this->Course->Task->find('first', array('conditions' => array('assignee_id' => $userid, 'parent_id' => $this->request->data['Task']['parent_id'])))) {
-			$this->Session->setFlash('This assignment has already been completed by this user');
+			$this->Session->setFlash('This assignment has already been completed by this user', 'flash_warning');
 			$this->response->statusCode(500);
 			return;
 		}
@@ -539,7 +539,7 @@ class AppCoursesController extends CoursesAppController {
 			$this->layout = null;
 			$this->autoRender = false;
 		}else {
-			$this->Session->setFlash('Assignment Completed!');
+			$this->Session->setFlash('Assignment Completed!', 'flash_success');
 			$this->redirect($this->referer());
 		}
 	}
@@ -557,7 +557,7 @@ class AppCoursesController extends CoursesAppController {
 			$this->layout = null;
 			$this->autoRender = false;
 		}else {
-			$this->Session->setFlash('Completed Status has been removed!');
+			$this->Session->setFlash('Completed Status has been removed!', 'flash_success');
 			$this->redirect($this->referer());
 		}
 	}
@@ -670,7 +670,7 @@ class AppCoursesController extends CoursesAppController {
 				return false;
 			}
 		} else {
-			$this->Session->setFlash('Invalid request');
+			$this->Session->setFlash('Invalid request', 'flash_danger');
 			$this->redirect($this->referer());
 		}
 	}
@@ -683,10 +683,10 @@ class AppCoursesController extends CoursesAppController {
 			$this->request->data['CourseGradeDetail']['name'] = $this->request->data['Course']['name'];
 			//debug($this->request->data);exit;
 			if($this->Course->saveAll($this->request->data)) {
-				$this->Session->setFlash('Course Grade Settings Saved');
+				$this->Session->setFlash('Course Grade Settings Saved', 'flash_success');
 				$this->redirect(array('action'=>'view', $this->request->data['Course']['id']));
 			}else {
-				$this->Session->setFlash('Settings not saved!');
+				$this->Session->setFlash('Settings not saved!', 'flash_danger');
 				$this->redirect(array('action'=>'view', $this->request->data['Course']['id']));
 			}
 
