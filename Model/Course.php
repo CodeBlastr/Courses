@@ -124,14 +124,6 @@ class AppCourse extends CoursesAppModel {
     
 	public function __construct($id = null, $table = null, $ds = null) {
 		if (CakePlugin::loaded('Categories')) {
-			$this->hasAndBelongsToMany['Category'] = array(
-	            'className' => 'Categories.Category',
-	       		'joinTable' => 'categorized',
-	            'foreignKey' => 'foreign_key',
-	            'associationForeignKey' => 'category_id',
-	    		'conditions' => 'Categorized.model = "Course"',
-	    		// 'unique' => true,
-	            );
 			$this->actsAs['Categories.Categorizable'] = array('modelAlias' => 'Course');
 		}
 		if (CakePlugin::loaded('Subscribers')) {
