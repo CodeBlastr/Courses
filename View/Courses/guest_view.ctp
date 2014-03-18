@@ -21,15 +21,9 @@ $lengthOfCourse = round( abs( $end - $start ) / 60 / 60 / 24 / 7 );
 			</table>
 			<hr />
 
-			<?php
-			if ( !empty($course['CourseSeries']['name']) ) {
-				echo $this->Html->tag('p',
-					$this->Html->tag('i',
-						'This course is part of the series: ' . $this->Html->link($course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id']))
-					)
-				);
-			}
-			?>
+			<?php if (!empty($course['CourseSeries']['name'])): ?>
+			<p><i>This course is part of the series: <?php echo $this->Html->link($course['CourseSeries']['name'], array('controller' => 'courseSeries', 'action' => 'view', $course['CourseSeries']['id'])) ?></i></p>
+			<?php endif; ?>
 
 			<p>
 				<?php
