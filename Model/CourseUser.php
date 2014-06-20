@@ -46,7 +46,7 @@ class CourseUser extends CoursesAppModel {
 /**
  * after save callback
  */
-	public function afterSave() {
+	public function afterSave($created, $options = array()) {
 		// we say in the model when people get subscribed
 		if (in_array('Subscribers', CakePlugin::loaded())) {
 			$subscriber['Subscriber']['model'] = 'Course';
@@ -61,7 +61,7 @@ class CourseUser extends CoursesAppModel {
  * @param int $courseId
  * @return array
  */
-	public function getCourseUsers ( $courseId ) {
+	public function getCourseUsers ($courseId) {
 		$courseUsers = $this->find('all', array(
 			'conditions' => array('CourseUser.course_id' => $courseId),
 			'contain' => array('User')

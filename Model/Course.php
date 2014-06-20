@@ -149,7 +149,7 @@ class AppCourse extends CoursesAppModel {
  * @param array $options
  * @return true
  */
-	public function beforeSave(array $options = array()) {
+	public function beforeSave($options = array()) {
 		parent::beforeSave($options);
 		
 		if (!empty($this->data)) {
@@ -175,8 +175,8 @@ class AppCourse extends CoursesAppModel {
  * after save call back
  * @param boolean $created
  */
-	public function afterSave($created) {
-		parent::afterSave($created);
+	public function afterSave($created, $options = array()) {
+		parent::afterSave($created, $options);
 		if ( $created ) {	
 			// we say in the model when people get subscribed
 			if (CakePlugin::loaded('Subscribers')) {
