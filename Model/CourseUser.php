@@ -6,7 +6,7 @@ App::uses('CoursesAppModel', 'Courses.Model');
  * @property User $User
  * @property Course $Course
  */
-class CourseUser extends CoursesAppModel {
+class AppCourseUser extends CoursesAppModel {
 	public $name = 'CourseUser';
 /**
  * Primary key field
@@ -71,4 +71,9 @@ class CourseUser extends CoursesAppModel {
 		return $courseUsers;
 	}
 	
+}
+
+
+if (!isset($refuseInit)) {
+	class CourseUser extends AppCourseUser {}
 }
