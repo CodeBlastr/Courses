@@ -205,7 +205,7 @@ class AppCourse extends CoursesAppModel {
 					'fields' => array('CourseSeries.id', 'CourseSeries.is_sequential'),
 					'Course' => array(
 						'fields' => array('Course.order'),
-						'media' => false
+//						'media' => false // seems to be looking for Course.media = false.. ^JB 1.14.2015
 					)
 				),
 			),
