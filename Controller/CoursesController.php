@@ -69,6 +69,9 @@ class AppCoursesController extends CoursesAppController {
 			$conditions[]['School.name'] = urldecode($this->request->query['school']);
 		}
 
+		if ($this->paginate['conditions'] === null) {
+			$this->paginate['conditions'] = array();
+		}
 		$this->paginate['conditions'] += $conditions;
 		$this->paginate += array(
 			'contain' => $contain,
