@@ -69,11 +69,12 @@ class CourseSeriesController extends CoursesAppController {
 			throw new NotFoundException(__('Invalid series'));
 		}
 		$this->set('series', $this->CourseSeries->find('first', array(
-			'conditions' => array('id' => $id),
+			'conditions' => array('CourseSeries.id' => $id),
 			'contain' => array(
 				'Course' => array(
 					'order' => array('Course.order' => 'asc')
-				)
+				),
+				'Teacher'
 			)
 		)));
 
