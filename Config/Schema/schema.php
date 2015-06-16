@@ -116,7 +116,7 @@ class CoursesSchema extends CakeSchema {
 		'location' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'school' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'grade' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'language' => array('type' => 'string', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
+		'language' => array('type' => 'text', 'null' => false, 'default' => NULL, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
 		'start' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'end' => array('type' => 'datetime', 'null' => false, 'default' => NULL),
 		'is_published' => array('type' => 'boolean', 'null' => false, 'default' => NULL),

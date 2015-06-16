@@ -383,9 +383,7 @@ class AppCoursesController extends CoursesAppController {
 
 
 	public function editAssignment($id = null) {
-
 			$courseid = isset($this->request->query['course_id']) ? $this->request->query['course_id'] : '';
-
 			if(!empty($this->request->data)) {
 				//debug($this->request->data['Task']);
 				if(isset($this->request->data['Task']['data'])) {
@@ -400,7 +398,6 @@ class AppCoursesController extends CoursesAppController {
 					$this->redirect($this->referer());
 				}
 			}
-
 			if ( !empty($id) ) {
 				$this->request->data = $this->Course->Task->find('first', array(
 					'conditions' => array('Task.id' => $id)
@@ -408,7 +405,6 @@ class AppCoursesController extends CoursesAppController {
 
 				$courseid = $this->request->data['Task']['model'] == 'Course' ? $this->request->data['Task']['foreign_key'] : $courseid;
 			}
-
 			$courseUsers = $this->Course->CourseUser->find('all', array(
 				'conditions' => array('CourseUser.course_id' => $courseid),
 				'contain' => array(
@@ -424,7 +420,6 @@ class AppCoursesController extends CoursesAppController {
 				'order' => array('User.last_name ASC')
 			));
 			$this->set('courseUsers', Set::combine($courseUsers, '{n}.User.id', '{n}'));
-
 			// get my Courses to attach to
 			$this->set('parentCourses', $this->Course->find('list', array(
 				'conditions' => array(
@@ -432,7 +427,6 @@ class AppCoursesController extends CoursesAppController {
 					'Course.type' => 'course'
 				)
 			)));
-
 			if (CakePlugin::loaded('Categories')) {
 				$this->set('categories', $this->Course->Category->find('list', array(
 					'conditions' => array(
@@ -440,18 +434,13 @@ class AppCoursesController extends CoursesAppController {
 					)
 				)));
 			}
-
 			$this->loadModel('Answers.Answer');
 			$this->set('quizzes', $this->Answer->find('list', array(
 					'conditions' => array('creator_id' => $this->userId),
 			)));
-
 			$this->set('chosen', isset($this->request->data['Task']['data']['quizzes']) ? $this->request->data['Task']['data']['quizzes'] : array());
-
 			$this->set('assignmentTypes', $this->Course->CourseGradeDetail->gettypes($this->Course->alias, $courseid));
-
 			$this->set('course_id', $courseid);
-
 			$this->view = 'teacher_assignment';
 	}
 

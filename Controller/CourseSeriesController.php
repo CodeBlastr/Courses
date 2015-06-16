@@ -5,7 +5,7 @@ App::uses('CoursesAppController', 'Courses.Controller');
  *
  * @property Series $Series
  */
-class CourseSeriesController extends CoursesAppController {
+class AppCourseSeriesController extends CoursesAppController {
 
 	public $name = 'CourseSeries';
 	public $uses = 'Courses.CourseSeries';
@@ -249,4 +249,8 @@ class CourseSeriesController extends CoursesAppController {
 		$this->Session->setFlash(__('Series was not deleted'));
 		$this->redirect(array('action' => 'index'));
 	}
+}
+
+if (!isset($refuseInit)) {
+	class CourseSeriesController extends AppCourseSeriesController {}
 }
