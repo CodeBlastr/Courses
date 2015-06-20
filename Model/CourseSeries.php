@@ -55,6 +55,16 @@ class CourseSeries extends CoursesAppModel {
 		}
 		return true;
 	}
+    
+/**
+ * constructor
+ */
+	public function __construct($id = null, $table = null, $ds = null) {
+		if(CakePlugin::loaded('Media')) {
+			$this->actsAs[] = 'Media.MediaAttachable';
+		}
+		parent::__construct($id, $table, $ds);
+	}
 
 /**
  * 

@@ -297,7 +297,6 @@ class AppCoursesController extends CoursesAppController {
 		}
 
 		if ($this->request->is('post') || $this->request->is('put')) {
-
 			if ($this->Course->saveAll($this->request->data)) {
 				$this->Session->setFlash(__('The course has been saved'), 'flash_success');
 				$this->redirect(array('action' => 'view', $this->Course->id));
@@ -315,7 +314,8 @@ class AppCoursesController extends CoursesAppController {
 
 		$parentCourses = $this->Course->CourseLesson->find('list');
 		$this->set('title_for_layout', 'Editing ' . $this->request->data['Course']['name'] . '   | ' . __SYSTEM_SITE_NAME);
-		$this->set('series', $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
+		// hmm... the default for the edit() method should not be only viewing series you created, that should be a custom thing to the site using this... $this->set('series', $series = $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.creator_id' => $this->Auth->user('id')))));
+		$this->set('series', $series = $this->Course->CourseSeries->find('list', array('conditions' => array('CourseSeries.type' => 'series'))));
 		$this->set(compact('parentCourses'));
 		if (CakePlugin::loaded('Categories')) {
 			$this->set('categories', $this->Course->Category->find('list', array(

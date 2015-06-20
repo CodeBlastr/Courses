@@ -1,5 +1,5 @@
 <div class="courses form">
-<?php echo $this->Form->create('Course'); ?>
+<?php echo $this->Form->create('Course', array('type' => 'file')); ?>
 	<fieldset>
 		<legend><?php echo __('Edit Course'); ?></legend>
 	<?php

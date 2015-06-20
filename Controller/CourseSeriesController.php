@@ -68,18 +68,19 @@ class AppCourseSeriesController extends CoursesAppController {
 		if (!$this->CourseSeries->exists()) {
 			throw new NotFoundException(__('Invalid series'));
 		}
-		$this->set('series', $this->CourseSeries->find('first', array(
+		$this->set('series', $series = $this->CourseSeries->find('first', array(
 			'conditions' => array('CourseSeries.id' => $id),
 			'contain' => array(
 				'Course' => array(
-					'order' => array('Course.order' => 'asc')
+					'order' => array('Course.order' => 'asc'),
+					'Media'
 				),
 				'Teacher'
 			)
 		)));
 
-		$this->set( 'isEnrolled', $this->CourseSeries->isUserEnrolled($this->userId, $this->viewVars['series']['CourseSeries']['id']) );
-		$this->set( 'isOwner', ($this->userId == $this->viewVars['series']['CourseSeries']['creator_id']) );
+		$this->set('isEnrolled', $this->CourseSeries->isUserEnrolled($this->userId, $this->viewVars['series']['CourseSeries']['id']) );
+		$this->set('isOwner', ($this->userId == $this->viewVars['series']['CourseSeries']['creator_id']) );
 
 		$this->set('title_for_layout', $this->viewVars['series']['CourseSeries']['name'] . ' < Series | ' . __SYSTEM_SITE_NAME);
 	}
