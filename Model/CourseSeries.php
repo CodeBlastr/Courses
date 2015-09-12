@@ -49,11 +49,23 @@ class CourseSeries extends CoursesAppModel {
 	);
 	
 	public function beforeSave($options = array()) {
+		if (!empty($this->data[$this->alias]['settings'])) {
+			$this->data[$this->alias]['settings'] = json_encode($this->data[$this->alias]['settings']);
+		}
 		parent::beforeSave($options);
 		if(!isset($this->data[$this->alias]['type'])) {
 			$this->data[$this->alias]['type'] = 'series';
 		}
 		return true;
+	}
+	
+	public function afterFind($results = array(), $primary = false) {
+		for ($i=0; $i < count($results); $i++) {
+			if (!empty($results[$i][$this->alias]['settings'])) {
+				$results[$i][$this->alias]['settings'] = json_decode($results[$i][$this->alias]['settings'], true);
+			}
+		}
+		return parent::afterFind($results, $primary);
 	}
     
 /**
